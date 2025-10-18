@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,15 +19,21 @@ public class ChatSession {
     private Long sessionId;
 
     @ManyToOne
-    @JoinColumn(name ="user_id")
-    private  User user;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "source_id")
-    private  Source source;
+    private Source source;
 
     private LocalDate createdAt;
 
-    @OneToMany(mappedBy = "chatSession")
-    private List<ChatMessage> chatMessages;
+
+    @OneToMany(mappedBy = "chatSession", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    public void addMessage(ChatMessage msg) {
+        chatMessages.add(msg);
+        msg.setChatSession(this);
+    }
 }
