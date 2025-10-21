@@ -7,6 +7,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 @Service
 public class GeminiService implements AIService {
 
@@ -134,25 +138,23 @@ public class GeminiService implements AIService {
 
     @Override
     public byte[] generateSpeech(String text) {
+        Path pcmFile = null;
+        Path wavFile = null;
         try {
+            // 1. Get audio data from API
             String payload = """
                     {
-                      "input": {
-                        "text": "%s"
-                      },
-                      "voice": {
-                        "languageCode": "en-US",
-                        "name": "en-US-Studio-O"
-                      },
-                      "audioConfig": {
-                        "audioEncoding": "MP3"
-                      }
+                        "model": "gemini-2.5-flash-preview-tts",
+                        "contents": [{"parts":[{"text": "%s"}]}],
+                        "generationConfig": {
+                            "responseModalities": ["AUDIO"],
+                            "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Kore"}}}
+                        }
                     }
-                    """.formatted(text.replace("", "\""));
+                    """.formatted(text.replace("\"", "\\\""));
 
-            // Note: This uses the Google Cloud Text-to-Speech API endpoint, which is different from the Gemini API endpoint.
             String responseJson = webClient.post()
-                    .uri("https://texttospeech.googleapis.com/v1/text:synthesize?key=" + apiKey)
+                    .uri("/models/gemini-2.5-flash-preview-tts:generateContent?key=" + apiKey)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(payload)
                     .retrieve()
@@ -160,13 +162,47 @@ public class GeminiService implements AIService {
                     .block();
 
             JsonNode root = objectMapper.readTree(responseJson);
-            String audioContent = root.path("audioContent").asText();
-            return java.util.Base64.getDecoder().decode(audioContent);
+            String audioContent = root.path("candidates").get(0).path("content").path("parts").get(0).path("inlineData").path("data").asText();
+            byte[] pcmData = java.util.Base64.getDecoder().decode(audioContent);
+
+            // 2. Save PCM data to a temporary file
+            pcmFile = Files.createTempFile("mindspace-audio", ".pcm");
+            Files.write(pcmFile, pcmData);
+
+            // 3. Define path for the output WAV file
+            wavFile = pcmFile.resolveSibling(pcmFile.getFileName().toString().replace(".pcm", ".wav"));
+
+            // 4. Run ffmpeg to convert PCM to WAV
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                    "ffmpeg", "-y", // -y to overwrite output file if it exists
+                    "-f", "s16le",
+                    "-ar", "24000",
+                    "-ac", "1",
+                    "-i", pcmFile.toAbsolutePath().toString(),
+                    wavFile.toAbsolutePath().toString()
+            );
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();
+
+            if (exitCode != 0) {
+                // In a real application, you would add more robust error handling here
+                throw new RuntimeException("ffmpeg process failed with exit code " + exitCode);
+            }
+
+            // 5. Read the generated WAV file into a byte array
+            return Files.readAllBytes(wavFile);
+
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Proper logging should be used here
             return new byte[0];
+        } finally {
+            // 6. Clean up temporary files
+            try {
+                if (pcmFile != null) Files.deleteIfExists(pcmFile);
+                if (wavFile != null) Files.deleteIfExists(wavFile);
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
-
-
