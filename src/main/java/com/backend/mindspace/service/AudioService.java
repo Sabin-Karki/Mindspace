@@ -2,8 +2,12 @@ package com.backend.mindspace.service;
 
 import com.backend.mindspace.entity.AudioOverview;
 import com.backend.mindspace.entity.Source;
+import com.backend.mindspace.entity.User;
 import com.backend.mindspace.repository.AudioRepository;
 import com.backend.mindspace.repository.SourceRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
@@ -34,9 +38,11 @@ public class AudioService {
         }
     }
 
+    @Transactional
     public AudioOverview generateAudioOverview(Long sourceId) throws IOException {
-        Source source = sourceRepository.findById(sourceId)
-                .orElseThrow(() -> new RuntimeException("Source not found with id: " + sourceId));
+        Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        Source source = sourceRepository.findBySourceIdAndUser_UserId(sourceId, currentUserId)
+                .orElseThrow(() -> new AccessDeniedException("Source not found with id: " + sourceId + " or access denied."));
 
         // 1. Generate podcast script
         String script = geminiService.generatePodcastScript(source.getContent());
@@ -45,7 +51,7 @@ public class AudioService {
         byte[] audioData = geminiService.generateSpeech(script);
 
         // 3. Save audio to a file
-        String fileName = "overview_" + sourceId + "_" + UUID.randomUUID() + ".mp3";
+        String fileName = "overview_" + sourceId + "_" + UUID.randomUUID() + ".wav";
         Path filePath = audioStoragePath.resolve(fileName);
         try (OutputStream os = new FileOutputStream(filePath.toFile())) {
             os.write(audioData);
