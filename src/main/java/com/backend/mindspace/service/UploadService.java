@@ -1,8 +1,11 @@
 package com.backend.mindspace.service;
 
 import com.backend.mindspace.dto.UploadResponse;
+import com.backend.mindspace.entity.ChatSession;
 import com.backend.mindspace.entity.Chunk;
 import com.backend.mindspace.entity.Source;
+import com.backend.mindspace.entity.User;
+import com.backend.mindspace.repository.ChatSessionRepository;
 import com.backend.mindspace.repository.ChunkRepository;
 import com.backend.mindspace.repository.SourceRepository;
 import org.apache.tika.Tika;
@@ -23,28 +26,35 @@ public class UploadService {
     private final  GeminiService geminiService;
     private final SourceRepository sourceRepository;
     private final ChunkRepository chunkRepository;
-    public UploadService(GeminiService geminiService, SourceRepository sourceRepository, ChunkRepository chunkRepository){
+    private final ChatSessionRepository chatSessionRepository;
+    public UploadService(GeminiService geminiService, SourceRepository sourceRepository, ChunkRepository chunkRepository, ChatSessionRepository chatSessionRepository){
         this.geminiService=geminiService;
         this.sourceRepository=sourceRepository;
         this.chunkRepository=chunkRepository;
+        this.chatSessionRepository = chatSessionRepository;
     }
 
-    public UploadResponse processContent(MultipartFile file , String textContent) throws IOException, TikaException {
+    public UploadResponse processContent(User user, Long sessionId, MultipartFile file , String textContent) throws IOException, TikaException {
         // so my goal is that i read through the file and the text content and basically store it as string in some variable,first i also have to recognize the type of file is it ,and then that variable what it will have is the "Source - content" and once it is there,i can call gemini service for ai to generate the title and the summary,and i can also store them into the database then..//use tika to extract pdf or docx  too
+
             String rawContent = extractText(file,textContent);
 
             String summary = geminiService.generateSummary(rawContent);
             String title = geminiService.generateTitle(rawContent);
+            Source sources = new Source();
+            sources.setTitle(title);
+            sources.setContent(rawContent);
+            sources.setSummary(summary);
+            sources.setFileName(file != null ? file.getOriginalFilename() : "No file found");
+            sources.setCreatedAt(LocalDate.now());
+            sources.setUser(user);
 
-            Source source = new Source();
-            source.setTitle(title);
-            source.setContent(rawContent);
-            source.setSummary(summary);
-            source.setFileName(file!=null?file.getOriginalFilename():"No file found");
-            source.setCreatedAt(LocalDate.now());
-            sourceRepository.save(source);
+            ChatSession chatSession = chatSessionRepository.findById(sessionId)
+                    .orElseThrow(() -> new RuntimeException("ChatSession not found"));
+            sources.setChatSession(chatSession);
 
-            //chunking object is to be created here i believe but i want to finish the summary and title ai generation first
+            sourceRepository.save(sources);
+        //chunking object is to be created here i believe but i want to finish the summary and title ai generation first
         //chunking the source now/the raw content
         List<String> chunks=chunkText(rawContent,420);
         for(String chunkText:chunks){
@@ -52,14 +62,15 @@ public class UploadService {
             Chunk chunk = new Chunk();
             chunk.setChunkText(chunkText);
             chunk.setEmbedding(embedding);
-            chunk.setSource(source);
+            chunk.setSource(sources);
+            chunk.setCreatedAt(LocalDate.now());
             chunkRepository.save(chunk);
 
         }
-        return new UploadResponse(summary,title,source.getSourceId(),chunks.size());
+        return new UploadResponse(summary,title,sources.getSourceId(),chunks.size());
     }
     private String extractText(MultipartFile file,String textContent)throws IOException,TikaException{
-       if(file!=null||!file.isEmpty()){
+       if(file != null && !file.isEmpty()){
            String fileName=file.getOriginalFilename();
            if(fileName!=null&&fileName.endsWith(".txt")){
                return new String(file.getBytes(),StandardCharsets.UTF_8);
