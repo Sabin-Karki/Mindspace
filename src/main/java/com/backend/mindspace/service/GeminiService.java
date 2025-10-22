@@ -44,22 +44,32 @@ public class GeminiService implements AIService {
     }
     @Override
     public String generateFlashCard(String content){
-        String prompt="Generate 10 minimum and 12 maximum flashcard appropriate question based on  the following content which is provided. Return the output of each question too . Return it in a well formed array , the object in the json should represent 'question ' and 'answer' in the response : \n\n" + content;
+        String prompt = """
+Generate 10–12 flashcards based on the following content.Each flashcard must have a 'question' and an 'answer' field.Return ONLY valid JSON, no explanations, no markdown.
+Example format:
+[
+  {"question": "...", "answer": "..."},
+  {"question": "...", "answer": "..."}
+]
+Content:
+
+""" + content;
         return callGeminiTextApi(prompt);
     }
     @Override
     public float[] generateEmbedding(String content) {
         try {
             String payload = """
-                    {
-                      "model": "models/embedding-001",
-                      "content": {
-                        "parts": [
-                          {"text": "%s"}
-                        ]
-                      }
-                    }
-                    """.formatted(content.replace("\"", "\\\""));
+                {
+                  "model": "models/embedding-001",
+                  "content": {
+                    "parts": [
+                      {"text": "%s"}
+                    ]
+                  },
+                  "outputDimensionality": 1536
+                }
+                """.formatted(content.replace("\"", "\\\""));
 
             String responseJson = webClient.post()
                     .uri("/models/gemini-embedding-001:embedContent?key=" + apiKey)
@@ -81,12 +91,10 @@ public class GeminiService implements AIService {
             }
             return new float[0];
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error generating embedding: " + e.getMessage());
             return new float[0];
         }
     }
-
-
     public String callGeminiTextApi(String prompt) {
         try {
             String payload = """
@@ -125,8 +133,9 @@ public class GeminiService implements AIService {
             }
             return "No text response";
         } catch (Exception e) {
-            e.printStackTrace();
-            return "Error " + e.getMessage();
+            System.err.println("Error calling Gemini Text API: " + e.getMessage());
+            // e.printStackTrace(); // Keep for full stack trace if needed
+            return "Error: " + e.getMessage();
         }
     }
 
