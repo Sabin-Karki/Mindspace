@@ -39,6 +39,23 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+		<dependency>
+		     <groupId>io.jsonwebtoken</groupId>
+		     <artifactId>jjwt-impl</artifactId>
+		     <version>0.11.5</version>
+		     <scope>runtime</scope>
+		 </dependency>
+		 <dependency>
+		     <groupId>io.jsonwebtoken</groupId>
+		     <artifactId>jjwt-jackson</artifactId>
+		     <version>0.11.5</version>
+		     <scope>runtime</scope>
+		 </dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
@@ -52,6 +69,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<version>42.7.1</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -85,11 +103,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tika</groupId>
-			<artifactId>tika-parsers-standard</artifactId>
+			<artifactId>tika-parsers-standard-package</artifactId>
 			<version>2.9.0</version> <!-- Use the latest stable version, matching tika-core -->
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
