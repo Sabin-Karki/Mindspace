@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 public class FlashCard {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private  Long flashCardId;
-    @ManyToOne
-    @JoinColumn(name = "sourceId")
-    private Source source;
+    private  Long  id;
     @Column(columnDefinition = "TEXT")
     private String question;
     @Column(columnDefinition = "TEXT")
     private String answer;
+    @ManyToOne
+    @JoinColumn(name = "flashcardId",nullable = false)
+    private  FlashCardOverview flashCard;
 
 }
