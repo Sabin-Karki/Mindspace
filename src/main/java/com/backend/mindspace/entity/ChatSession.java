@@ -21,14 +21,10 @@ public class ChatSession {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "source_id")
-    private Source source;
-
     private LocalDate createdAt;
 
-
+    @OneToMany(mappedBy = "chatSession")
+    private List<Source> sources;
     @OneToMany(mappedBy = "chatSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
