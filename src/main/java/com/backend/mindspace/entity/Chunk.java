@@ -3,8 +3,12 @@ package com.backend.mindspace.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Array;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -16,9 +20,12 @@ public class Chunk {
     @Column(name = "chunk_id")
     private Long chunkId;
 
+    @Column(columnDefinition = "TEXT")
     private String chunkText;
+
+
     @Column(name = "embedding", columnDefinition ="vector(1536)")
-    private  float[] embedding;
+    private float[] embedding;
     private LocalDate createdAt;
 
     @ManyToOne
