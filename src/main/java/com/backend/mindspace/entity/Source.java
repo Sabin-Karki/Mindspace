@@ -20,7 +20,9 @@ public class Source {
     private Long sourceId;
 
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String content;
+    @Column(columnDefinition = "TEXT")
     private String summary;
     private String fileName;
     private LocalDate createdAt;
@@ -32,8 +34,9 @@ public class Source {
     @OneToMany(mappedBy = "source")
     private List<Chunk> chunks;
 
-    @OneToMany(mappedBy = "source")
-    private List<ChatSession> chatSessions;
+    @ManyToOne
+    @JoinColumn(name = "session_id")
+    private ChatSession chatSession;
 
     @OneToMany(mappedBy = "source")
     private List<AudioOverview> audioOverviews;
@@ -42,7 +45,7 @@ public class Source {
     private List<QuizOverview> quizOverviews;
 
     @OneToMany(mappedBy = "source")
-    private List<FlashCard> flashCards;
+    private List<FlashCardOverview> flashCardOverviews;
 
 
 }
