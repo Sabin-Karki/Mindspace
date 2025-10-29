@@ -14,12 +14,21 @@ public class AudioOverview {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "source_id")
-    private Source source;
+    private String title;
+
+    private LocalDate createdAt;
+
     @Column(columnDefinition = "TEXT")
     private String script;
 
+    @ManyToOne
+    @JoinColumn(name = "source_id", nullable = true)
+    private Source source;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(columnDefinition = "TEXT")
     private String audioUrl;
-    private LocalDate createdAt;
 }
