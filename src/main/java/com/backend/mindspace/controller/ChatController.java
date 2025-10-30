@@ -1,6 +1,7 @@
 package com.backend.mindspace.controller;
 
 
+import com.backend.mindspace.dto.ChatMessageDTO;
 import com.backend.mindspace.dto.ChatRequest;
 import com.backend.mindspace.dto.ChatResponse;
 import com.backend.mindspace.entity.ChatSession;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -40,5 +42,11 @@ public class ChatController {
     public  ResponseEntity<ChatResponse> askQuestion(@AuthenticationPrincipal User user, @PathVariable Long sessionId, @RequestBody ChatRequest chatRequest){
         ChatResponse response = chatService.askQuestion(user, chatRequest.getQuestion(), sessionId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/session/{sessionId}")
+    public ResponseEntity<List<ChatMessageDTO>> getChatHistory(@AuthenticationPrincipal User user, @PathVariable Long sessionId) {
+        List<ChatMessageDTO> chatHistory = chatService.getChatHistory(sessionId, user);
+        return ResponseEntity.ok(chatHistory);
     }
 }
