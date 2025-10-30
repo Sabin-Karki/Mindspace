@@ -25,10 +25,6 @@ public class AudioOverview {
     @JoinColumn(name = "source_id", nullable = true)
     private Source source;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @Column(columnDefinition = "TEXT")
     private String audioUrl;
 }
