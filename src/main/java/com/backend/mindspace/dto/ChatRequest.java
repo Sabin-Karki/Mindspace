@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChatRequest {
 private String question;
-private Long sourceId;
 }
