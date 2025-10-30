@@ -16,10 +16,11 @@ public class QuizOverview {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String title;
     private LocalDate createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "source_id", nullable = false)
+    @JoinColumn(name = "source_id", nullable = true)
     private Source source;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
