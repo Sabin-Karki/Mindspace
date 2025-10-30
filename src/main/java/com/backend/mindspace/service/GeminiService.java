@@ -21,7 +21,13 @@ public class GeminiService implements AIService {
     private String apiKey;
 
     public GeminiService(WebClient.Builder builder, ObjectMapper objectMapper) {
-        this.webClient = builder.baseUrl("https://generativelanguage.googleapis.com/v1beta").build();
+        this.webClient = builder.baseUrl("https://generativelanguage.googleapis.com/v1beta")
+                .exchangeStrategies(org.springframework.web.reactive.function.client.ExchangeStrategies.builder()
+                        .codecs(configurer -> configurer
+                                .defaultCodecs()
+                                .maxInMemorySize(20 * 1024 * 1024)) // 10 MB
+                        .build())
+                .build();
         this.objectMapper = objectMapper;
     }
 
@@ -39,7 +45,32 @@ public class GeminiService implements AIService {
 
     @Override
     public String generateQuiz(String content){
-        String prompt = "Generate a quiz with 12 to 16 multiple-choice questions based on the following content. Return the output as a single, well-formed JSON array. Each object in the array should represent a question and must contain the following three fields ONLY: 'questionText' (a string), 'options' (an array of exactly 4 strings), and 'correctAnswerIndex' (an integer from 0 to 3 indicating the correct option). Do not include any other text or explanations outside of the JSON array. The content is: \n\n " + content;
+        String prompt = """
+Generate a quiz with 12 to 16 multiple-choice questions based on the following content.
+Return ONLY valid JSON — no explanations, no markdown, and no text outside the JSON array.
+
+Each object in the JSON array must contain EXACTLY these three fields:
+- "questionText" (a string)
+- "options" (an array of exactly 4 strings)
+- "correctAnswerIndex" (an integer from 0 to 3 indicating the correct option)
+
+Example format:
+[
+  {
+    "questionText": "What is the capital of France?",
+    "options": ["Paris", "Rome", "Madrid", "Berlin"],
+    "correctAnswerIndex": 0
+  },
+  {
+    "questionText": "Which planet is known as the Red Planet?",
+    "options": ["Venus", "Mars", "Jupiter", "Mercury"],
+    "correctAnswerIndex": 1
+  }
+]
+
+Content:
+
+""" + content;
         return callGeminiTextApi(prompt);
     }
     @Override
@@ -141,7 +172,7 @@ Content:
 
     @Override
     public String generatePodcastScript(String content) {
-        String prompt = "Generate a 6-to-9-minute podcast script based on the following content. The script should be engaging, conversational, and structured like a podcast episode with an intro, main body discussing the key points, and an outro. The content is:\n\n" + content;
+        String prompt = "Generate a 3-to-4-minute podcast script based on the following content. The script should be engaging, conversational, and structured like a podcast episode with an intro, main body discussing the key points, and an outro. The content is:\n\n" + content;
         return callGeminiTextApi(prompt);
     }
 
@@ -171,7 +202,13 @@ Content:
                     .block();
 
             JsonNode root = objectMapper.readTree(responseJson);
-            String audioContent = root.path("candidates").get(0).path("content").path("parts").get(0).path("inlineData").path("data").asText();
+            JsonNode candidates = root.path("candidates");
+            if (candidates == null || !candidates.isArray() || candidates.isEmpty()) {
+                // Log the full response for debugging if possible
+                System.err.println("Error from Gemini API: No candidates returned. Response: " + responseJson);
+                throw new RuntimeException("Failed to generate speech. The API returned no content, possibly due to safety filters.");
+            }
+            String audioContent = candidates.get(0).path("content").path("parts").get(0).path("inlineData").path("data").asText();
             byte[] pcmData = java.util.Base64.getDecoder().decode(audioContent);
 
             // 2. Save PCM data to a temporary file
@@ -194,8 +231,9 @@ Content:
             int exitCode = process.waitFor();
 
             if (exitCode != 0) {
-                // In a real application, you would add more robust error handling here
-                throw new RuntimeException("ffmpeg process failed with exit code " + exitCode);
+                String errorOutput = new String(process.getErrorStream().readAllBytes());
+                System.err.println("ffmpeg error: " + errorOutput);
+                throw new RuntimeException("ffmpeg process failed with exit code " + exitCode + ": " + errorOutput);
             }
 
             // 5. Read the generated WAV file into a byte array

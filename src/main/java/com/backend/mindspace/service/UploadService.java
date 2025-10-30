@@ -10,7 +10,10 @@ import com.backend.mindspace.repository.ChunkRepository;
 import com.backend.mindspace.repository.SourceRepository;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -86,7 +89,7 @@ public class UploadService {
 }
 
 private List<String> chunkText(String text,int maxWords){
-        String[] words = text.split("\\s+"); //returns array of substring seperated by whitespaces
+        String[] words = text.split("\s+"); //returns array of substring seperated by whitespaces
         List<String> chunks = new ArrayList<>();
         StringBuilder currentChunk = new StringBuilder();
         int count = 0;
@@ -104,4 +107,48 @@ private List<String> chunkText(String text,int maxWords){
         }
         return chunks;
 }
+
+@Transactional
+public UploadResponse getSourceById(Long sourceId){
+        Source source = sourceRepository.findById(sourceId)
+                .orElseThrow(()-> new RuntimeException("Source not found with id" + sourceId));
+        int chunksSize = chunkRepository.countBySource(source);
+        return new UploadResponse(source.getSummary(),source.getTitle(),source.getSourceId(),chunksSize);
+}
+
+    @Transactional
+    public Source updateSourceTitle(Long sourceId, String newTitle) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Source source = sourceRepository.findById(sourceId)
+                .orElseThrow(() -> new RuntimeException("Source not found with id: " + sourceId));
+
+        if (!source.getUser().getUserId().equals(currentUser.getUserId())) {
+            throw new AccessDeniedException("You do not have permission to update this source.");
+        }
+
+        source.setTitle(newTitle);
+        return sourceRepository.save(source);
+    }
+
+    @Transactional
+    public void deleteSource(Long sourceId) {
+        User currentUser = (User) org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Source source = sourceRepository.findById(sourceId)
+                .orElseThrow(() -> new RuntimeException("Source not found with id: " + sourceId));
+
+        if (!source.getUser().getUserId().equals(currentUser.getUserId())) {
+            throw new org.springframework.security.access.AccessDeniedException("You do not have permission to delete this source.");
+        }
+
+        chunkRepository.deleteBySource(source);
+        sourceRepository.delete(source);
+    }
+
+    public List<UploadResponse> getSourcesBySessionId(Long sessionId, User currentUser) {
+        List<Source> sources = sourceRepository.findByChatSession_SessionIdAndUser_UserId(sessionId, currentUser.getUserId());
+        return sources.stream()
+                .map(source -> new UploadResponse(source.getSummary(), source.getTitle(), source.getSourceId(), chunkRepository.countBySource(source)))
+                .toList();
+    }
+
 }
