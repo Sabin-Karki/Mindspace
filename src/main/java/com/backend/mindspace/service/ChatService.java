@@ -112,6 +112,12 @@ public class ChatService {
                 .toList();
     }
 
+     public void deleteChatSession(Long sessionId){
+        if(!chatSessionRepository.existsById(sessionId)){
+            throw new RuntimeException("Chat session not found with id: " + sessionId);
+        }
+        chatSessionRepository.deleteById(sessionId);
+     }
     private float cosineSimilarity(float[] v1, float[] v2) {
         float dot = 0, normA = 0, normB = 0;
 
