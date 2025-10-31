@@ -49,4 +49,14 @@ public class ChatController {
         List<ChatMessageDTO> chatHistory = chatService.getChatHistory(sessionId, user);
         return ResponseEntity.ok(chatHistory);
     }
+
+    @DeleteMapping("/{sessionId}")
+   public ResponseEntity<Void> deleteChatSession(@PathVariable Long sessionId){
+   try {
+       chatService.deleteChatSession(sessionId);
+       return ResponseEntity.noContent().build();
+   }catch (RuntimeException e){
+       return ResponseEntity.notFound().build();
+   }
+    }
 }
