@@ -4,6 +4,7 @@ package com.backend.mindspace.controller;
 import com.backend.mindspace.dto.ChatMessageDTO;
 import com.backend.mindspace.dto.ChatRequest;
 import com.backend.mindspace.dto.ChatResponse;
+import com.backend.mindspace.dto.ChatSessionGetDTO;
 import com.backend.mindspace.entity.ChatSession;
 import com.backend.mindspace.entity.User;
 import com.backend.mindspace.repository.ChatSessionRepository;
@@ -34,8 +35,19 @@ public class ChatController {
         ChatSession newSession = new ChatSession();
         newSession.setUser(user);
         newSession.setCreatedAt(LocalDate.now());
+        newSession.setTitle("Untitled Notebook");
         ChatSession savedSession = chatSessionRepository.save(newSession);
         return ResponseEntity.ok(savedSession);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<ChatSessionGetDTO>> getChatSessionByUserId(@AuthenticationPrincipal User user){
+        try{
+          List  <ChatSessionGetDTO> session = chatService.getChatSessionById(user.getUserId());
+            return ResponseEntity.ok(session);
+        }catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/{sessionId}/ask")
