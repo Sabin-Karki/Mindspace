@@ -55,7 +55,11 @@ public class UploadService {
             ChatSession chatSession = chatSessionRepository.findById(sessionId)
                     .orElseThrow(() -> new RuntimeException("ChatSession not found"));
             sources.setChatSession(chatSession);
-
+            //when the upload request is triggered,the title of chatsession is also to be updated with the 1st source title
+        if(  !chatSession.getTitle().isEmpty()  && chatSession.getTitle().contains("Untitled Notebook")){
+            chatSession.setTitle(title);
+            chatSessionRepository.save(chatSession);
+        }
             sourceRepository.save(sources);
         //chunking object is to be created here i believe but i want to finish the summary and title ai generation first
         //chunking the source now/the raw content
