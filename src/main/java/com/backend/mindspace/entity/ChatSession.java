@@ -22,6 +22,8 @@ public class ChatSession {
     @JoinColumn(name = "user_id")
     private User user;
     private LocalDate createdAt;
+    //new added field
+    private String title;
 
     @OneToMany(mappedBy = "chatSession")
     private List<Source> sources;
