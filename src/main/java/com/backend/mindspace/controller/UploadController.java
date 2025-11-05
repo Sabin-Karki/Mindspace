@@ -2,6 +2,7 @@ package com.backend.mindspace.controller;
 
 import com.backend.mindspace.dto.SourceUpdateDTO;
 import com.backend.mindspace.dto.UploadResponse;
+import com.backend.mindspace.entity.Source;
 import com.backend.mindspace.entity.User;
 import com.backend.mindspace.service.UploadService;
 import org.apache.tika.exception.TikaException;
@@ -46,7 +47,7 @@ public class UploadController {
     @PutMapping("/{sourceId}")
     public ResponseEntity<UploadResponse> updateSourceTitle(@PathVariable Long sourceId, @RequestBody SourceUpdateDTO sourceUpdateDTO) {
         try {
-            com.backend.mindspace.entity.Source updatedSource = uploadService.updateSourceTitle(sourceId, sourceUpdateDTO.getTitle());
+           Source updatedSource = uploadService.updateSourceTitle(sourceId, sourceUpdateDTO.getTitle());
             return ResponseEntity.ok(new UploadResponse(updatedSource.getSummary(), updatedSource.getTitle(), updatedSource.getSourceId(), 0)); // Chunk size not needed for this response
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
