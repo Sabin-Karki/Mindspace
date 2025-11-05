@@ -2,14 +2,17 @@ package com.backend.mindspace.service;
 
 import com.backend.mindspace.dto.ChatMessageDTO;
 import com.backend.mindspace.dto.ChatResponse;
+import com.backend.mindspace.dto.ChatSessionGetDTO;
 import com.backend.mindspace.entity.*;
 import com.backend.mindspace.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
@@ -112,6 +115,13 @@ public class ChatService {
                 .toList();
     }
 
+    @Transactional
+    public List<ChatSessionGetDTO> getChatSessionById(Long userId){
+      List<ChatSession> chatSession = chatSessionRepository.findByUser_UserId(userId);
+     return  chatSession.stream()
+              .map(session-> new ChatSessionGetDTO(session.getSessionId(),session.getCreatedAt(), session.getTitle()))
+              .toList();
+    }
      public void deleteChatSession(Long sessionId){
         if(!chatSessionRepository.existsById(sessionId)){
             throw new RuntimeException("Chat session not found with id: " + sessionId);
