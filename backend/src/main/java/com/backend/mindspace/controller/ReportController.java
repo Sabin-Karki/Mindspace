@@ -23,5 +23,6 @@ public class ReportController {
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
+		return null;
     }
 }

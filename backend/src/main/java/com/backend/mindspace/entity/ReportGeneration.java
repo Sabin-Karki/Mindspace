@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
+@Entity
 public class ReportGeneration {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

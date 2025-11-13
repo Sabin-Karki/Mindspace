@@ -44,7 +44,8 @@ public class ReportService {
         ReportGeneration rg = new ReportGeneration();
         rg.setReportTitle(reportTitle);
         rg.setReportContent(reportJson);
-        rg.setSource(selectedSource);
-
+//        rg.setSource(selectedSource);
+        
+        return new ReportResponseDTO();
   }
 }
