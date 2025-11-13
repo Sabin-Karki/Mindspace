@@ -20,9 +20,9 @@ public class ReportController {
     public ResponseEntity<ReportResponseDTO> generateReport(@AuthenticationPrincipal User user, @PathVariable(name="sessionId") Long sessionId, @RequestBody ReportRequestDTO reportRequestDTO){
         try{
             ReportResponseDTO reportResponse = reportService.generateAndSaveReport(user.getUserId(),sessionId,reportRequestDTO.getSourceIds());
+            return reportResponse;
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
-		return null;
     }
 }
