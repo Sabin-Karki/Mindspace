@@ -27,6 +27,9 @@ public class ReportService {
         this.reportRepository = reportRepository;
     }
 
+        //you are taking list of sources and 
+        //then adding only one source to report??
+
     public ReportResponseDTO generateAndSaveReport(Long userId, Long sessionId, List<Long> sourceIds){
       List<Source> selectedSource = sourceRepository.findByChatSession_SessionIdAndUser_UserIdAndSourceIdIn(sessionId,userId,sourceIds)
               .orElseThrow(()->new RuntimeException("No sources found for the given session and user." + sourceIds));
@@ -44,7 +47,11 @@ public class ReportService {
         ReportGeneration rg = new ReportGeneration();
         rg.setReportTitle(reportTitle);
         rg.setReportContent(reportJson);
-        rg.setSource(selectedSource);
-
+        
+        //this is list ?? //
+//        rg.setSource(selectedSource);
+        
+        //retrn proper ok //
+        return new ReportResponseDTO();
   }
 }

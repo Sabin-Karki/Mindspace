@@ -1,0 +1,37 @@
+import { credApi } from '../config/axios'; 
+import { useAuthStore } from '../store/authStore';
+import type{ ChatSessionGetDTO, IChatMessage, IChatRequest, IChatResponse, IChatSession } from '../types/index';
+import type{ AxiosResponse } from 'axios';
+
+
+export const createChatSession = async (): Promise<IChatSession> => {
+  const res: AxiosResponse<IChatSession> = await credApi.post<IChatSession>('/chat');
+  return res.data;
+};
+
+
+export const fetchAllChatSessions = async (): Promise<ChatSessionGetDTO[]> => {
+  const token = useAuthStore.getState().token;
+  console.log('Token before request:', token); // Debug log
+  
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+  const res: AxiosResponse<ChatSessionGetDTO[]> = await credApi.get('/chat/getAll');
+  return res.data;
+};
+
+
+export const askQuestion = async (sessionId: number, question: string): Promise<IChatResponse> => {
+  const chatRequest: IChatRequest = { question };
+
+  const res: AxiosResponse<IChatResponse> = await credApi.post(`/chat/${sessionId}/ask`, chatRequest);
+  return res.data;
+};
+
+
+export const getChatHistory = async (sessionId: number): Promise<IChatMessage[]> => {
+
+  const res: AxiosResponse<IChatMessage[]> = await credApi.get(`/chat/session/${sessionId}`);
+  return res.data;
+};
