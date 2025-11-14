@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
 import { uploadContent } from "../../api/contentApi";
 
+
 const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
@@ -14,6 +15,17 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+
+  const isValidFileType = useCallback((file: File)=>{
+    const allowedFileTypes =[
+      "application/pdf",
+      "text/plain",
+      "application/msword", //old doc type
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", //new doc type
+    ]
+    return allowedFileTypes.includes(file.type);
+  },[]);
 
 
   const handleFileOrTextUpload = async() =>{
@@ -33,13 +45,20 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
         setError("Please upload either a file OR enter text content, not both.");
         return;
       }
+      //file validation
+      if(file){
+        if(!isValidFileType(file)){
+          setError("Invalid file type. Please upload a PDF file.");
+          return;
+        }
+      }
+
       setIsLoading(true);
       setError(null);
-      
       const response = await uploadContent(sessionId, file, textValue );
+      
       setFile(null);
       setTextValue('');
-
       //handle response 
       console.log(response);
       addSource(response);
@@ -57,12 +76,13 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
   if(error) return <div>{error}</div>;
 
 
+  //handling file draggin events
+
   //hovering over dragging area
   const handleDragOver = useCallback((e: DragEvent) =>{
     e.stopPropagation();
     e.preventDefault();
   },[]);
-
 
   //entering dragging area
   const handleDragEnter = useCallback((e: DragEvent) =>{  
@@ -76,7 +96,6 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
     }
   },[]);
 
-
   //leaving dragging area
   const handleDragLeave = useCallback((e: DragEvent) =>{  
     e.stopPropagation();
@@ -88,7 +107,6 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
     }
     console.log('handleDragLeave');
   },[]);
-
 
   //dropping file 
   const handleDrop = useCallback((e: DragEvent) =>{ 
@@ -126,6 +144,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
   },[]);
 
 
+  
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextValue(e.target.value);
   };
@@ -159,6 +178,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
           id="fileSource"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
           className="hidden"
+          
           disabled={!!textValue.trim()} //disabled file input if textValue is empty
         />
         {/* when clicked on label the input will be triggered then we can add files  */}

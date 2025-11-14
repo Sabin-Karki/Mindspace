@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { IUploadResponse } from "../types";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface SessionState {
   sources : IUploadResponse[]; //array of sources
@@ -11,21 +12,29 @@ interface SessionState {
 }
 
 //that particular chat session id upload sources info
-export const useSessionStore = create<SessionState>((set) =>({
-  
-  sessionId: null,
-  sources: [],
+export const useSessionStore = create<SessionState>()(
+  persist(
+    (set) =>({
 
-  setSessionId: (newSessionId: number) => set({ sessionId: newSessionId }),
-  
-  clearSessionId: () => set({ sessionId: null }),
+      sessionId: null,
+      sources: [],
 
-  addSource : (source: IUploadResponse) => set ( 
-    (state) => ({
-      sources : state.sources? [...state.sources, source] : [source]
-    })
-  )
-}))
+      setSessionId: (newSessionId: number) => set({ sessionId: newSessionId }),
+      
+      clearSessionId: () => set({ sessionId: null }),
+
+      addSource : (source: IUploadResponse) => set ( 
+        (state) => ({
+          sources : state.sources? [...state.sources, source] : [source]
+        })
+      ),
+    }),
+  {
+    name: "session-storage",// A unique name for key in localStorage
+    storage: createJSONStorage( () => localStorage),  //tell zustland to use local storage
+    partialize: (state) => ({sessionId: state.sessionId}),  //only persist store session id 
+  })
+)
 
 
 

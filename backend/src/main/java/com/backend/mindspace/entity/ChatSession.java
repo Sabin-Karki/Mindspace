@@ -29,6 +29,7 @@ public class ChatSession {
     @JsonIgnore
     @OneToMany(mappedBy = "chatSession")
     private List<Source> sources;
+    
     @OneToMany(mappedBy = "chatSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import UploadPanel from "../components/upload/UploadPanel";
 import ChatWindow from "../components/chat/ChatWindow";
-import { useSessionStore } from "../store/sessionStore";
 
 const InitialWidth = {
   dragpos1: 20,
@@ -16,7 +15,6 @@ type DragPosition = 'dragpos1' | 'dragpos2' | null;
 
 
 const ThreeWindowPanel = () =>{
-  const sessionId = useSessionStore((state) => state.sessionId);
 
   const [dividerPos, setDividerPos] = useState(InitialWidth);
   const isDragging = useRef<DragPosition>(null); 
@@ -108,7 +106,6 @@ const ThreeWindowPanel = () =>{
     <>
     <div className="flex h-screen w-full bg-amber-900"
       ref={containerRef}>
-        <div>{sessionId}</div>
       <div
         className="bg-gray-100 border border-gray-300 p-4 overflow-auto"
         style={{ width: `${panel1}%` }}>

@@ -32,12 +32,16 @@ public class ChatController {
 
     @PostMapping
     public ResponseEntity<ChatSession> createChatSession(@AuthenticationPrincipal User user) {
-        ChatSession newSession = new ChatSession();
-        newSession.setUser(user);
-        newSession.setCreatedAt(LocalDate.now());
-        newSession.setTitle("Untitled Notebook");
-        ChatSession savedSession = chatSessionRepository.save(newSession);
-        return ResponseEntity.ok(savedSession);
+    	try{    		
+    		ChatSession newSession = new ChatSession();
+    		newSession.setUser(user);
+    		newSession.setCreatedAt(LocalDate.now());
+    		newSession.setTitle("Untitled Notebook");
+    		ChatSession savedSession = chatSessionRepository.save(newSession);
+    		return ResponseEntity.ok(savedSession);
+    	}catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/getAll")

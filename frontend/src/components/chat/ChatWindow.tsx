@@ -24,7 +24,7 @@ const ChatWindow: React.FC = () => {
 
   useEffect( () =>{
     getMessageHistory();
-  },[messages]);
+  },[]);
 
   //scroll animation
   useEffect(() => {
