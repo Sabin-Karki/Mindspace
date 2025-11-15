@@ -5,7 +5,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface SessionState {
   sources : IUploadResponse[]; //array of sources
   sessionId : number | null;
-  
+  chatTitle : string | null;
+  changeChatTitle: (title: string) => void;
   setSessionId: (sessionId: number) => void;
   clearSessionId: () => void;
   addSource: (source: IUploadResponse) => void;
@@ -15,13 +16,14 @@ interface SessionState {
 export const useSessionStore = create<SessionState>()(
   persist(
     (set) =>({
-
       sessionId: null,
+      chatTitle: null,
       sources: [],
 
       setSessionId: (newSessionId: number) => set({ sessionId: newSessionId }),
-      
       clearSessionId: () => set({ sessionId: null }),
+
+      changeChatTitle: (title: string) => set({ chatTitle: title }),
 
       addSource : (source: IUploadResponse) => set ( 
         (state) => ({
@@ -32,7 +34,11 @@ export const useSessionStore = create<SessionState>()(
   {
     name: "session-storage",// A unique name for key in localStorage
     storage: createJSONStorage( () => localStorage),  //tell zustland to use local storage
-    partialize: (state) => ({sessionId: state.sessionId}),  //only persist store session id 
+    partialize: (state) => ({
+      sessionId: state.sessionId,
+      chatTitle: state.chatTitle,
+      sources: state.sources,
+    }),
   })
 )
 

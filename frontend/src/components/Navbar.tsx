@@ -1,48 +1,59 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import ChatTitle from "./chat/ChatTitle";
+
 
 const Navbar = () => {
-  // const { isAuthenticated, logout } = useAuthStore(); 
+  const navigate = useNavigate();
+
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const logout = useAuthStore((state) => state.logout);
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
 
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate("/"); // Redirect to home page after logout
   };
 
+  const isChatPage =window.location.pathname === "/chat";
+
   // If the store hasn't finished loading from local storage,
   // render a minimal/loading UI (to prevent flickering)
-  if (!hasHydrated) {
-      return (
-        <nav className="sticky top-0 z-10 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
-                    <Link to="/" className="text-2xl font-bold text-gray-900 flex items-center">
-                        <span className="text-blue-600 mr-1">📝</span> Mindspace
-                    </Link>
-                    Loading...
-                </div>
-            </div>
-        </nav>
-      );
-  }
+  // if (!hasHydrated) {
+  //   return (
+  //     <nav className="sticky top-0 z-10 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+  //       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  //           <div className="flex justify-between items-center h-16">
+  //               <Link to="/" className="text-2xl font-bold text-gray-900 flex items-center">
+  //                   <span className="text-blue-600 mr-1">📝</span> Mindspace
+  //               </Link>
+  //               Loading...
+  //           </div>
+  //       </div>
+  //     </nav>
+  //   );
+  // }
 
 
   return (
     // Sticky navbar for a professional feel
     <nav className="sticky top-0 z-10 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div className=" mx-auto px-4">
+
+        <div className="flex items-center w-full h-16">
           {/* Logo/Branding */}
           <Link to="/" className="text-2xl font-bold text-gray-900 flex items-center">
             <span className="text-blue-600 mr-1">📝</span> Mindspace
           </Link>
 
-          <div className="flex items-center space-x-4">
+          { isChatPage && (
+            <div className="flex items-center p-4">
+              <ChatTitle />
+            </div>
+          )}
+
+          <div className="flex items-center space-x-4 ml-auto">
             {isAuthenticated ? (
               // --- Logged In View ---
               <>
@@ -78,6 +89,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
+        
       </div>
     </nav>
   );

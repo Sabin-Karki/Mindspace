@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { IChatMessage, IChatResponse, IUploadResponse, MessageRole } from "../../types";
+import type { IChatMessage, IChatResponse, MessageRole } from "../../types";
 import { askQuestion, getChatHistory } from "../../api/chatApi";
 import { useSessionStore } from "../../store/sessionStore";
 
@@ -9,6 +9,7 @@ interface IDisplayMessage {
   role: 'user' | 'model' | 'system';
   timestamp: Date;
 }
+
 
 const ChatWindow: React.FC = () => {
 
@@ -49,14 +50,14 @@ const ChatWindow: React.FC = () => {
  
       const displayMessages: IDisplayMessage[] = history.map(
         (msg) =>({
-          id: `message-${msg.message}`,
+          id: `message-${msg.createdAt}`,
           text: msg.message,
           role: msg.role === "user" ? "user" : msg.role,
           timestamp: new Date(msg.createdAt),
           })
         );
       
-      setMessages(displayMessages)
+      setMessages(displayMessages);
     } catch (error) {
       console.log(error);
     }finally{
@@ -64,6 +65,40 @@ const ChatWindow: React.FC = () => {
     }
   }
 
+  const handleSendMessage = async() =>{
+    if(!sessionId || !input){
+      setError("session or question not found");
+      return;
+    }
+    setError(null);
+    setIsLoading(true);
+    try {
+      const chatResponse: IChatResponse = await askQuestion(sessionId, input);
+
+      //this should work 
+      setMessages( (prev) =>[
+        ...prev , 
+          {
+            id: `message-${Date.now()}`,
+            text: chatResponse.question,
+            role: "user",
+            timestamp: new Date(),
+          },
+          {
+            id: `message-${Date.now() + 1 }`,
+            text: chatResponse.answer,
+            role: "model",
+            timestamp: new Date(), 
+          },
+        ] 
+      );
+
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setIsLoading(false);
+    }
+  }
 
 
   //for diplaying messages based on
@@ -89,7 +124,7 @@ return (
   <>
     <div>
       <div>
-        <h2>Chat Window</h2>
+        <h2>Chat</h2>
         {sessionId && <p>Session: {sessionId}</p>}
         
         {error && (
@@ -129,7 +164,7 @@ return (
           placeholder="Type your message..."
         />
 
-        <button onClick={() => {/* add your send handler */}}>
+        <button onClick={() => {handleSendMessage}}>
           Send
         </button>
       </div>

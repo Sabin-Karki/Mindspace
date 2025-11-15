@@ -11,9 +11,9 @@ import ChatInput from './components/chat/ChatInput';
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-50"> 
+    <div className="h-screen flex flex-col bg-gray-50"> 
      <Navbar /> 
-      <main>
+      <main className="flex-1 overflow-y-auto scrollbar-hide"> 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<Signin />} />
@@ -30,3 +30,11 @@ const App = () => {
 };
 
 export default App;
+
+
+
+//notes
+
+{/* flex-1 takes all space 
+  overflow-y-auto makes content scrollable
+  content-hide is from index.css which hides default scrollbar */}

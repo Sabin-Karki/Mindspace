@@ -5,16 +5,22 @@ import com.backend.mindspace.dto.ChatMessageDTO;
 import com.backend.mindspace.dto.ChatRequest;
 import com.backend.mindspace.dto.ChatResponse;
 import com.backend.mindspace.dto.ChatSessionGetDTO;
+import com.backend.mindspace.dto.ChatTitleRenameRequest;
 import com.backend.mindspace.entity.ChatSession;
 import com.backend.mindspace.entity.User;
 import com.backend.mindspace.repository.ChatSessionRepository;
 import com.backend.mindspace.service.ChatService;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -43,7 +49,30 @@ public class ChatController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @PatchMapping("session/{sessionId}")
+    public ResponseEntity<ChatSession> renameChatTitle (@AuthenticationPrincipal User user,
+    		@PathVariable Long sessionId,
+    		@RequestBody ChatTitleRenameRequest renameRequest) {
+    	try{    		
+    		ChatSession existingChatSession = chatSessionRepository.findById(sessionId)
+    				.orElseThrow(() -> new EntityNotFoundException("ChatSession not found with id: " + sessionId));
 
+    		if(existingChatSession.getTitle().equals(renameRequest.getTitle()) ) {
+    			return ResponseEntity.ok(existingChatSession);
+    		}
+    		
+    		//update title
+    		existingChatSession.setTitle(renameRequest.getTitle());
+    		
+    		ChatSession savedSession = chatSessionRepository.save(existingChatSession);
+    		return ResponseEntity.ok(savedSession);
+    	}catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    
     @GetMapping("/getAll")
     public ResponseEntity<List<ChatSessionGetDTO>> getChatSessionByUserId(@AuthenticationPrincipal User user){
         try{
@@ -62,8 +91,9 @@ public class ChatController {
 
     @GetMapping("/session/{sessionId}")
     public ResponseEntity<List<ChatMessageDTO>> getChatHistory(@AuthenticationPrincipal User user, @PathVariable Long sessionId) {
-        List<ChatMessageDTO> chatHistory = chatService.getChatHistory(sessionId, user);
-        return ResponseEntity.ok(chatHistory);
+     
+		List<ChatMessageDTO> chatHistory = chatService.getChatHistory(sessionId, user.getUserId());
+		return ResponseEntity.ok(chatHistory);
     }
 
     @DeleteMapping("/{sessionId}")

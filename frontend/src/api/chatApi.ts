@@ -1,12 +1,20 @@
 import { credApi } from '../config/axios'; 
 import { useAuthStore } from '../store/authStore';
-import type{ ChatSessionGetDTO, IChatMessage, IChatRequest, IChatResponse, IChatSession } from '../types/index';
+import type{ ChatSessionGetDTO, IChatMessage, IChatRenameRequest, IChatRequest, IChatResponse, IChatSession } from '../types/index';
 import type{ AxiosResponse } from 'axios';
 
 
 export const createChatSession = async (): Promise<IChatSession> => {
   const res: AxiosResponse<IChatSession> = await credApi.post('/chat');
   return res.data;
+};
+
+
+export const renameChatTitle = async (sessionId: number, title: string): Promise<IChatSession> => {
+  const chatRenameDto: IChatRenameRequest = { title };
+
+  const res: AxiosResponse<IChatSession> = await credApi.patch(`/chat/session/${sessionId}`, chatRenameDto);
+  return res.data; 
 };
 
 
