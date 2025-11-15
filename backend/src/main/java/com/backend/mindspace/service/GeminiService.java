@@ -25,7 +25,7 @@ public class GeminiService implements AIService {
                 .exchangeStrategies(org.springframework.web.reactive.function.client.ExchangeStrategies.builder()
                         .codecs(configurer -> configurer
                                 .defaultCodecs()
-                                .maxInMemorySize(20 * 1024 * 1024)) // 10 MB
+                                .maxInMemorySize(20 * 1024 * 1024)) // 20 MB
                         .build())
                 .build();
         this.objectMapper = objectMapper;
@@ -104,8 +104,8 @@ Content:
                         - Ensure the output is clean, scannable, and professional—no extra fluff or plain paragraphs without breaks.
                         Output only the formatted document; no intro/explanatory text.
                 
-                        Sources: %s
-             
+                      Content:
+                
                 """ + content ;
         return callGeminiTextApi(prompt);
     }
