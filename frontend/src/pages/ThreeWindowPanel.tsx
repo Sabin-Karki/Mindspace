@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import UploadPanel from "../components/upload/UploadPanel";
 import ChatWindow from "../components/chat/ChatWindow";
-import { useSessionStore } from "../store/sessionStore";
 
 const InitialWidth = {
   dragpos1: 20,
@@ -16,7 +15,6 @@ type DragPosition = 'dragpos1' | 'dragpos2' | null;
 
 
 const ThreeWindowPanel = () =>{
-  const sessionId = useSessionStore((state) => state.sessionId);
 
   const [dividerPos, setDividerPos] = useState(InitialWidth);
   const isDragging = useRef<DragPosition>(null); 
@@ -106,9 +104,8 @@ const ThreeWindowPanel = () =>{
 
   return  (
     <>
-    <div className="flex h-screen w-full bg-amber-900"
+    <div className="flex h-full w-full bg-red-900 scrollbar-hide border-6 border-gray-400 rounded-lg "  
       ref={containerRef}>
-        <div>{sessionId}</div>
       <div
         className="bg-gray-100 border border-gray-300 p-4 overflow-auto"
         style={{ width: `${panel1}%` }}>
@@ -139,7 +136,7 @@ const ThreeWindowPanel = () =>{
 
       { /* another content panel */}
       <div
-        className="bg-gray-100 border border-gray-300 p-4 overflow-auto"
+        className="bg-gray-100 border border-gray-300 p-4 overflow-auto "
         style={{ width: `${panel3}%` }}>
         content here
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda, illum. Pariatur assumenda atque tenetur distinctio eligendi voluptatibus autem illum quae. Maxime ullam iste beatae voluptatum autem minus tenetur delectus id.

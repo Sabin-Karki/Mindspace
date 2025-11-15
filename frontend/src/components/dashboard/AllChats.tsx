@@ -8,9 +8,12 @@ import { useSessionStore } from "../../store/sessionStore";
 const AllChats = () =>{
   const loggedInUserId = useAuthStore((state) => state.token);
   const navigate = useNavigate();
-  const { sessionId, setSessionId } = useSessionStore();
-  const [sessions, setSessions] = useState<ChatSessionGetDTO[]>([]);
 
+  // const sessionId = useSessionStore((state) => state.sessionId);
+  const setSessionId = useSessionStore((state) => state.setSessionId);
+  const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
+
+  const [sessions, setSessions] = useState<ChatSessionGetDTO[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -36,8 +39,10 @@ const AllChats = () =>{
     handleUserChats();
   },[loggedInUserId])
   
- const handleChatClick = (sessionId: number) => {
+  //update global sessionId and chat title
+ const handleChatClick = (sessionId: number, title: string) => {
     setSessionId(sessionId);
+    changeChatTitle(title);
     navigate(`/chat`);
   };
   
@@ -50,7 +55,7 @@ const AllChats = () =>{
     {sessions.map((session) => (
       <button className="border-amber-500 "
         key={session.sessionId}
-        onClick={() => handleChatClick(session.sessionId)}
+        onClick={() => handleChatClick(session.sessionId, session.title)}
       >
         <div>{session.title}</div>
         <div>{session.createdAt}</div>

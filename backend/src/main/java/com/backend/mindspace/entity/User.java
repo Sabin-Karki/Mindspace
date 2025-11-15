@@ -38,6 +38,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Source> sources;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<ChatSession> chatSessions;
 

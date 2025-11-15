@@ -98,23 +98,27 @@ public class ChatService {
         return new ChatResponse(question, answer);
     }
 
+    //this is throwing error fix this 
+//    http://localhost:8080/api/v1/chat/session/202 500 (Internal Server Error)
+    
     @Transactional
-    public List<ChatMessageDTO> getChatHistory(Long sessionId, User currentUser) {
+    public List<ChatMessageDTO> getChatHistory(Long sessionId, Long userId) {
         // Verify chat session belongs to the user
         ChatSession chatSession = chatSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("ChatSession not found with id: " + sessionId));
 
-        if (!chatSession.getUser().getUserId().equals(currentUser.getUserId())) {
+        if (!chatSession.getUser().getUserId().equals(userId)) {
             throw new SecurityException("User does not have access to this chat session");
         }
 
-        List<ChatMessage> messages = chatMessageRepository.findByChatSession_SessionIdAndChatSession_User_UserId(sessionId, currentUser.getUserId());
-
+        List<ChatMessage> messages = chatMessageRepository.findByChatSession_SessionIdAndChatSession_User_UserId(sessionId, userId);
+        
         return messages.stream()
                 .map(msg -> new ChatMessageDTO(msg.getMessage(), msg.getRole(), msg.getCreatedAt()))
                 .toList();
     }
 
+    
     @Transactional
     public List<ChatSessionGetDTO> getChatSessionById(Long userId){
       List<ChatSession> chatSession = chatSessionRepository.findByUser_UserId(userId);

@@ -2,11 +2,15 @@ import { useState } from "react";
 import { createChatSession } from "../../api/chatApi";
 import { useSessionStore } from "../../store/sessionStore";
 import { useNavigate } from "react-router-dom";
+import type { IChatSession } from "../../types";
 
 
 const CreateChat = () =>{
-  const { sessionId, setSessionId} = useSessionStore();
+
   const navigate = useNavigate(); 
+  const setSessionId = useSessionStore((state) => state.setSessionId);
+  const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,10 +19,11 @@ const CreateChat = () =>{
     try {
       setIsLoading(true);
       setError(null);
-      const response = await createChatSession();
+      const response: IChatSession = await createChatSession();
       
-      if(response && response.sessionId){
+      if(response && response.sessionId && response.title){
         setSessionId(response.sessionId);
+        changeChatTitle(response.title);
         console.log(response);
         navigate(`/chat`); //navigate to main after creating a chat
 

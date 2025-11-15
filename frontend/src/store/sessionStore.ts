@@ -1,31 +1,46 @@
 import { create } from "zustand";
 import type { IUploadResponse } from "../types";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface SessionState {
   sources : IUploadResponse[]; //array of sources
   sessionId : number | null;
-  
+  chatTitle : string | null;
+  changeChatTitle: (title: string) => void;
   setSessionId: (sessionId: number) => void;
   clearSessionId: () => void;
   addSource: (source: IUploadResponse) => void;
 }
 
 //that particular chat session id upload sources info
-export const useSessionStore = create<SessionState>((set) =>({
-  
-  sessionId: null,
-  sources: [],
+export const useSessionStore = create<SessionState>()(
+  persist(
+    (set) =>({
+      sessionId: null,
+      chatTitle: null,
+      sources: [],
 
-  setSessionId: (newSessionId: number) => set({ sessionId: newSessionId }),
-  
-  clearSessionId: () => set({ sessionId: null }),
+      setSessionId: (newSessionId: number) => set({ sessionId: newSessionId }),
+      clearSessionId: () => set({ sessionId: null }),
 
-  addSource : (source: IUploadResponse) => set ( 
-    (state) => ({
-      sources : state.sources? [...state.sources, source] : [source]
-    })
-  )
-}))
+      changeChatTitle: (title: string) => set({ chatTitle: title }),
+
+      addSource : (source: IUploadResponse) => set ( 
+        (state) => ({
+          sources : state.sources? [...state.sources, source] : [source]
+        })
+      ),
+    }),
+  {
+    name: "session-storage",// A unique name for key in localStorage
+    storage: createJSONStorage( () => localStorage),  //tell zustland to use local storage
+    partialize: (state) => ({
+      sessionId: state.sessionId,
+      chatTitle: state.chatTitle,
+      sources: state.sources,
+    }),
+  })
+)
 
 
 

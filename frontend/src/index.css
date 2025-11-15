@@ -1,1 +1,18 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+/* hide all scroll bar globally */
+html, body, #root { 
+  height: 100%;
+  overflow: hidden; /* THE KEY: Prevents browser-level scrolling */
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* For IE and Edge */
+    scrollbar-width: none;     /* For Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;             /* For Chrome, Safari, and Opera */
+  }
+}
