@@ -23,10 +23,19 @@ export interface IChatRequest {
   question: string;
 }
 
-export interface IChatResponse {
+export interface IChatRenameRequest {
+  title:  string;   ///we should get title too
+}
+
+export interface ICardResponse {
   cardOverViewId: number; //chat generates a flash card 
   title: string;
   sourceId: number;
+  question: string;
+  answer: string;
+}
+
+export interface IChatResponse {
   question: string;
   answer: string;
 }
@@ -58,14 +67,10 @@ export interface IAudioResponseDTO {
   audioUrl: string;
 }
 
-export interface ICardResponse {
-  question: string;
-}
 
 export type MessageRole = 'user' | 'model' | 'system';
 
 export interface IChatMessage {
-  messageId: number;
   message: string;
   role: MessageRole; // Enforcing roles based on common chat structure
   createdAt: string; // LocalDate
@@ -103,7 +108,7 @@ export interface IUser {
 
 export interface IChatSession {
   sessionId: number;
-  userId: number; // Only include the ID of the related entity
+  title:  string;   ///we should get title too
   createdAt: string; // LocalDate
 }
 
