@@ -121,15 +121,10 @@ public class QuizService {
 
     @Transactional
     public QuizOverviewResponse updateQuiz(Long quizId, String newTitle) {
-        Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
-        QuizOverview existingQuiz = quizOverviewRepository.findById(quizId)
+    QuizOverview existingQuiz = quizOverviewRepository.findById(quizId)
                 .orElseThrow(() -> new RuntimeException("Quiz not found with ID: " + quizId));
 
-        if (existingQuiz.getSource() != null && !existingQuiz.getSource().getUser().getUserId().equals(currentUserId)) {
-            throw new AccessDeniedException("You do not have permission to update this quiz.");
-        }
-
-        existingQuiz.setTitle(newTitle);
+              existingQuiz.setTitle(newTitle);
         //i only want the title to be updated just like notebook llm
         quizOverviewRepository.save(existingQuiz);
         return new QuizOverviewResponse(existingQuiz.getId(), existingQuiz.getTitle(), existingQuiz.getSource()!=null? existingQuiz.getSource().getSourceId():null,null);
