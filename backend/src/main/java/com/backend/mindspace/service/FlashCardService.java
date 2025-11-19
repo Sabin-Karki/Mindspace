@@ -130,11 +130,7 @@ public class FlashCardService {
         Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
         FlashCardOverview existingFLashCardOverview = flashCardOverviewRepository.findById(cardId)
                 .orElseThrow(()->new RuntimeException("CardOverview not found with id: " + cardId));
-
-        if (existingFLashCardOverview.getSource() != null && !existingFLashCardOverview.getSource().getUser().getUserId().equals(currentUserId)) {
-            throw new AccessDeniedException("You do not have permission to update this flashcard overview.");
-        }
-
+        
         existingFLashCardOverview.setTitle(newTitle);
         flashCardOverviewRepository.save(existingFLashCardOverview);
         return new CardResponse(existingFLashCardOverview.getId(),existingFLashCardOverview.getTitle(),existingFLashCardOverview.getSource()!=null?existingFLashCardOverview.getSource().getSourceId():null,null,null);
