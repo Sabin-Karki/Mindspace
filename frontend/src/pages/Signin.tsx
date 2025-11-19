@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { signin } from "../api/authApi";
 import type { ISigninRequest, JwtResponse } from "../types";
-import { Link, useNavigate } from "react-router-dom"; // Assuming you use react-router-dom
+import { Link, useNavigate } from "react-router-dom"; 
 import { useAuthStore } from "../store/authStore";
+import { toast } from "sonner";
 
 const Signin = () => {
-  //Select the 'login' action from the store state
-  const login = useAuthStore(state => state.login); 
+
   const navigate = useNavigate();
+  const login = useAuthStore(state => state.login); 
   
   const [form, setForm] = useState<ISigninRequest>({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
@@ -15,14 +16,23 @@ const Signin = () => {
 
   //handle changes in form inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError(null); // Clear previous errors on change
+    setError(null);
+  // The Computed Property Name syntax ([]) is to use the variable's value as the key
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.email || !form.password) {
-      setError("Please fill in all fields.");
+    if ( !form.email ) {
+      setError("Please fill in email field.");
+      return;
+    }
+    if ( !form.password ) {
+      setError("Please fill in password field.");
+      return;
+    }
+    if(form.email.includes('@') === false || form.email.includes('.') === false){
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -33,9 +43,10 @@ const Signin = () => {
       const res: JwtResponse = await signin(form);
       login(res.token);
       navigate("/dashboard");
-      // Success: User is redirected by the AuthContext logic, no alert needed.
+      toast.success("Login successful");
     } catch (err) {
       setError("Invalid email or password. Please try again.");
+      toast.error("Invalid email or password. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -55,9 +66,7 @@ const Signin = () => {
             <input
               id="email"
               name="email"
-              type="email"
               autoComplete="email"
-              required
               value={form.email}
               onChange={handleChange}
               placeholder="you@example.com"
@@ -73,7 +82,6 @@ const Signin = () => {
               name="password"
               type="password"
               autoComplete="current-password"
-              required
               value={form.password}
               onChange={handleChange}
               placeholder="••••••••"
@@ -116,3 +124,4 @@ const Signin = () => {
 };
 
 export default Signin;
+

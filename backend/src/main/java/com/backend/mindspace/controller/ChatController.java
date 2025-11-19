@@ -50,29 +50,6 @@ public class ChatController {
         }
     }
     
-    @PatchMapping("session/{sessionId}")
-    public ResponseEntity<ChatSession> renameChatTitle (@AuthenticationPrincipal User user,
-    		@PathVariable Long sessionId,
-    		@RequestBody ChatTitleRenameRequest renameRequest) {
-    	try{    		
-    		ChatSession existingChatSession = chatSessionRepository.findById(sessionId)
-    				.orElseThrow(() -> new EntityNotFoundException("ChatSession not found with id: " + sessionId));
-
-    		if(existingChatSession.getTitle().equals(renameRequest.getTitle()) ) {
-    			return ResponseEntity.ok(existingChatSession);
-    		}
-    		
-    		//update title
-    		existingChatSession.setTitle(renameRequest.getTitle());
-    		
-    		ChatSession savedSession = chatSessionRepository.save(existingChatSession);
-    		return ResponseEntity.ok(savedSession);
-    	}catch (RuntimeException e){
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    
     @GetMapping("/getAll")
     public ResponseEntity<List<ChatSessionGetDTO>> getChatSessionByUserId(@AuthenticationPrincipal User user){
         try{
@@ -96,13 +73,37 @@ public class ChatController {
 		return ResponseEntity.ok(chatHistory);
     }
 
-    @DeleteMapping("/{sessionId}")
-   public ResponseEntity<Void> deleteChatSession(@PathVariable Long sessionId){
-   try {
-       chatService.deleteChatSession(sessionId);
-       return ResponseEntity.noContent().build();
-   }catch (RuntimeException e){
-       return ResponseEntity.notFound().build();
-   }
+    @PatchMapping("session/{sessionId}")
+    public ResponseEntity<ChatSession> renameChatTitle (@AuthenticationPrincipal User user,
+    		@PathVariable Long sessionId,
+    		@RequestBody ChatTitleRenameRequest renameRequest) {
+    	try{    		
+    		System.out.println(sessionId);
+    		ChatSession existingChatSession = chatSessionRepository.findById(sessionId)
+    				.orElseThrow(() -> new EntityNotFoundException("ChatSession not found with id: " + sessionId));
+
+    		if(existingChatSession.getTitle().equals(renameRequest.getTitle()) ) {
+    			return ResponseEntity.ok(existingChatSession);
+    		}
+    		
+    		//update title
+    		existingChatSession.setTitle(renameRequest.getTitle());
+    		
+    		ChatSession savedSession = chatSessionRepository.save(existingChatSession);
+    		return ResponseEntity.ok(savedSession);
+    	}catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @DeleteMapping("/session/{sessionId}")
+    public ResponseEntity<Void> deleteChatSession(@PathVariable Long sessionId){
+	   try {
+		   System.out.println(sessionId);
+	       chatService.deleteChatSession(sessionId);
+	       return ResponseEntity.noContent().build();
+	   }catch (RuntimeException e){
+	       return ResponseEntity.notFound().build();
+	   }
     }
 }

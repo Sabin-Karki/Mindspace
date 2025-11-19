@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
+import type { IUploadResponse } from "../../types";
 
 const UploadedInfo = () => {
 
-  const { sources } = useSessionStore();
+  const sources = useSessionStore((state) => state.sources);
 
   //this will be later stored in zustland 
   //this is needed by audio quiz flash generator
@@ -109,3 +110,27 @@ const UploadedInfo = () => {
 };
 
 export default UploadedInfo;
+
+
+//data eg
+
+// const sources: IUploadResponse[] = [
+//   {
+//     sourceId: 501,
+//     chunksSize: 125, // This could represent the number of chunks/segments the file was broken into
+//     summary: "A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.",
+//     title: "Annual Budget 2025.pdf",
+//   },
+//   {
+//     sourceId: 502,
+//     chunksSize: 82,
+//     summary: "The main points from the customer feedback survey for Q4, focusing on satisfaction scores for the mobile application.",
+//     title: "Q4 Customer Survey Results.docx",
+//   },
+//   {
+//     sourceId: 503,
+//     chunksSize: 450,
+//     summary: "Full transcript and summary of the 'Future of AI in Web Development' webinar held on November 10th.",
+//     title: "Webinar Transcript - AI Future.txt",
+//   }
+// ];

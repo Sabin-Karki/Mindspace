@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
 import { uploadContent } from "../../api/contentApi";
 
@@ -6,7 +6,7 @@ import { uploadContent } from "../../api/contentApi";
 const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
-  const { addSource } = useSessionStore();
+  const addSource = useSessionStore((state) => state.addSource);
 
   const[file, setFile] = useState<File | null>(null);
   const [textValue, setTextValue] = useState('');
@@ -46,7 +46,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
         return;
       }
       //file validation
-      if(file){
+      if(hasFile){
         if(!isValidFileType(file)){
           setError("Invalid file type. Please upload a PDF file.");
           return;

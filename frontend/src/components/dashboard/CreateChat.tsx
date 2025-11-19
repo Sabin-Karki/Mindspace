@@ -10,6 +10,7 @@ const CreateChat = () =>{
   const navigate = useNavigate(); 
   const setSessionId = useSessionStore((state) => state.setSessionId);
   const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
+  const clearSources = useSessionStore((state) => state.clearSources);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,11 +23,12 @@ const CreateChat = () =>{
       const response: IChatSession = await createChatSession();
       
       if(response && response.sessionId && response.title){
+        //set new id title and clear previous sources
         setSessionId(response.sessionId);
         changeChatTitle(response.title);
-        console.log(response);
-        navigate(`/chat`); //navigate to main after creating a chat
+        clearSources();
 
+        navigate(`/chat`); //navigate to main after creating a chat
       }else {
         setError("Failed to create chat session. Please try again.");
       }

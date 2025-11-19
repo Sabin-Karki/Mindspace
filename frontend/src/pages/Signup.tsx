@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { signup } from "../api/authApi";
 import type { ISignUpRequest } from "../types";
-import { Link, useNavigate } from "react-router-dom"; // Assuming you use react-router-dom
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { toast } from "sonner";
 
 //register account
 const Signup = () => {
@@ -21,8 +22,25 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (Object.values(form).some(val => !val)) {
-      setError("Please fill in all fields.");
+    // if (Object.values(form).some(val => !val)) {
+    //   setError("Please fill in all fields.");
+    //   return;
+    // }
+    
+    if( !form.firstName){
+      setError("Please enter your first name.");
+      return;
+    }
+    if( !form.lastName){
+      setError("Please enter your last name.");
+      return;
+    }
+    if( form.email.includes('@') === false || form.email.includes('.') === false){
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if( !form.password){
+      setError("Please enter your password.");
       return;
     }
     
@@ -32,11 +50,12 @@ const Signup = () => {
     try {
       const res = await signup(form);
       login(res.token);
-      // Success
       navigate("/dashboard");
+      toast.success("Signup successful");
+
     } catch (err) {
-      // Handle different error codes for production (e.g., email already exists)
-      setError("Signup failed. This email might already be registered.");
+      setError("Signup failed. Please Try again.");
+      toast.error("Signup failed. Please Try again.");
     } finally {
       setLoading(false);
     }
@@ -58,7 +77,6 @@ const Signup = () => {
               <input
                 id="firstName"
                 name="firstName"
-                required
                 value={form.firstName}
                 onChange={handleChange}
                 placeholder="John"
@@ -71,7 +89,6 @@ const Signup = () => {
               <input
                 id="lastName"
                 name="lastName"
-                required
                 value={form.lastName}
                 onChange={handleChange}
                 placeholder="Doe"
@@ -86,9 +103,7 @@ const Signup = () => {
             <input
               id="email"
               name="email"
-              type="email"
               autoComplete="email"
-              required
               value={form.email}
               onChange={handleChange}
               placeholder="you@example.com"
@@ -104,7 +119,6 @@ const Signup = () => {
               name="password"
               type="password"
               autoComplete="new-password"
-              required
               value={form.password}
               onChange={handleChange}
               placeholder="At least 8 characters"

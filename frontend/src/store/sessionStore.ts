@@ -3,13 +3,19 @@ import type { IUploadResponse } from "../types";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface SessionState {
-  sources : IUploadResponse[]; //array of sources
   sessionId : number | null;
   chatTitle : string | null;
-  changeChatTitle: (title: string) => void;
+  sources : IUploadResponse[]; //array of sources
+  
   setSessionId: (sessionId: number) => void;
   clearSessionId: () => void;
+  
+  changeChatTitle: (title: string) => void;
+  
   addSource: (source: IUploadResponse) => void;
+  removeSource: (sourceId: number) => void;
+
+  clearSources: () => void;
 }
 
 //that particular chat session id upload sources info
@@ -30,6 +36,11 @@ export const useSessionStore = create<SessionState>()(
           sources : state.sources? [...state.sources, source] : [source]
         })
       ),
+      removeSource: (sourceId: number) => set(
+        (state) => ({ sources: state.sources.filter((source) => source.sourceId !== sourceId) })
+      ),
+
+      clearSources: () => set({ sources: [] }),
     }),
   {
     name: "session-storage",// A unique name for key in localStorage
@@ -37,7 +48,7 @@ export const useSessionStore = create<SessionState>()(
     partialize: (state) => ({
       sessionId: state.sessionId,
       chatTitle: state.chatTitle,
-      sources: state.sources,
+      // sources: state.sources,  //not making sources persistent
     }),
   })
 )
