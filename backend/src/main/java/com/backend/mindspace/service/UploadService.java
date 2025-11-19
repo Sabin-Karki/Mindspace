@@ -136,12 +136,12 @@ public UploadResponse getSourceById(Long sourceId){
 
     @Transactional
     public void deleteSource(Long sourceId) {
-        User currentUser = (User) org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Source source = sourceRepository.findById(sourceId)
                 .orElseThrow(() -> new RuntimeException("Source not found with id: " + sourceId));
 
         if (!source.getUser().getUserId().equals(currentUser.getUserId())) {
-            throw new org.springframework.security.access.AccessDeniedException("You do not have permission to delete this source.");
+            throw new AccessDeniedException("You do not have permission to delete this source.");
         }
 
         chunkRepository.deleteBySource(source);
