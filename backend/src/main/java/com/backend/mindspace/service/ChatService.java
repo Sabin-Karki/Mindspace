@@ -98,9 +98,7 @@ public class ChatService {
         return new ChatResponse(question, answer);
     }
 
-    //this is throwing error fix this 
-//    http://localhost:8080/api/v1/chat/session/202 500 (Internal Server Error)
-    
+
     @Transactional
     public List<ChatMessageDTO> getChatHistory(Long sessionId, Long userId) {
         // Verify chat session belongs to the user

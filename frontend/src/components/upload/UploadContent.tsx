@@ -1,6 +1,7 @@
-import { use, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
 import { uploadContent } from "../../api/contentApi";
+import { toast } from "sonner";
 
 
 const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
@@ -18,11 +19,15 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
 
 
   const isValidFileType = useCallback((file: File)=>{
+
+    if(!file.type){
+      return false;
+    } 
     const allowedFileTypes =[
       "application/pdf",
       "text/plain",
-      "application/msword", //old doc type
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", //new doc type
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ]
     return allowedFileTypes.includes(file.type);
   },[]);
@@ -30,6 +35,9 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
 
   const handleFileOrTextUpload = async() =>{
     try {
+      setError(null);
+      setIsLoading(true);
+
       if (!sessionId) {
         setError("Session ID is missing. Please log in.");
         return;
@@ -38,43 +46,53 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
       const hasFile = !!file;
       const hasText = !!textValue.trim();
       if (!hasFile && !hasText) {
+        console.log("no file or text");
         setError("Please select a file or enter some text content.");
         return;
       }
       if (hasFile && hasText) {
+        console.log("file and text");
         setError("Please upload either a file OR enter text content, not both.");
         return;
       }
+
       //file validation
       if(hasFile){
+        console.log("has file" + file);
+        console.log(file.type);
         if(!isValidFileType(file)){
-          setError("Invalid file type. Please upload a PDF file.");
+          setError("Invalid file type. Please upload a pdf or txt or doc file.");
+          toast.error("Invalid file type. Please upload a pdf or txt or doc file.");
           return;
         }
       }
 
-      setIsLoading(true);
-      setError(null);
       const response = await uploadContent(sessionId, file, textValue );
       
       setFile(null);
       setTextValue('');
-      //handle response 
+      
       console.log(response);
-      addSource(response);
+      addSource(response);  //add source to list
 
     } catch (error: any) {
+      console.log(error);
       const serverMessage = error?.response?.data?.message; 
       const axiosMessage = error?.message; 
       const message = serverMessage || axiosMessage || "Failed to create chat session. Please try again.";
       setError(message);
+      toast.error(message);
     } finally{
       setIsLoading(false);
     }
   }
 
-  if(error) return <div>{error}</div>;
 
+  // if(error && error.length > 0){
+  //   return(
+  //     {error}
+  //   )
+  // }
 
   //handling file draggin events
 
@@ -156,6 +174,11 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
   <div onClick={onClose} className="fixed inset-0 bg-black/50  flex items-center justify-center z-50">
   <div onClick={(e) => e.stopPropagation()} className="bg-gray-800 rounded-lg p-4 w-full max-w-md text-white" >
 
+    {error && (
+      <div style={{ color: 'red', border: '1px solid red', padding: '10px', marginBottom: '15px' }}>
+        {error}
+      </div>
+    )}
     <div>Upload Content</div>
     <div>session:{sessionId}</div>
     {/* text as source */}

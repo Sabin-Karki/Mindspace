@@ -3,7 +3,7 @@ import UploadedInfo from "./UploadedInfo";
 import UploadContent from "./UploadContent";
 
 const UploadPanel = () =>{
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleShowModal = () => {

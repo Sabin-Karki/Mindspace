@@ -10,14 +10,13 @@ import { useChatsListStore } from "../../store/useChatsListStore";
 import { toast } from "sonner";
 
 const AllChats = () =>{
-  const loggedInUserId = useAuthStore((state) => state.token);
-  const navigate = useNavigate();
 
-  // const sessionId = useSessionStore((state) => state.sessionId);
+  const navigate = useNavigate();
+  const loggedInUserId = useAuthStore((state) => state.token);
+
   const setSessionId = useSessionStore((state) => state.setSessionId);
   const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
 
-  // const [sessions, setSessions] = useState<ChatSessionGetDTO[]>([]);
   const sessions = useChatsListStore((state) => state.sessions);
   const setSessions = useChatsListStore((state) => state.setSessions);
 
@@ -38,8 +37,10 @@ const AllChats = () =>{
         setError(null);
   
         const response = await fetchAllChatSessions();
+
         console.log(response);
-        setSessions(response)
+        setSessions(response);  //set all chat sessions
+
       } catch (error: any) {
         const serverMessage = error?.response?.data?.message; 
         const axiosMessage = error?.message; 
@@ -62,9 +63,16 @@ const AllChats = () =>{
 
 
   //update global sessionId and chat title
+  //before navigation
+  //?????????
+  
  const handleChatClick = (sessionId: number, title: string) => {
     setSessionId(sessionId);
     changeChatTitle(title);
+
+    //handle upload sources 
+    //fetch all sources of this session
+    //and set in sessionStore
     navigate(`/chat`);
   };
 
@@ -78,10 +86,9 @@ const AllChats = () =>{
   };
 
   const handleDeleteChatSession = async(sessionId: number) =>{
-    console.log("deleting");
-    console.log(sessionId);
     try {
       await deleteChat(sessionId);
+      toast.success("Chat deleted successfully.");
     } catch (error) {
       console.log(error);
       toast.error("Failed to delete chat. Please try again.");
@@ -89,13 +96,10 @@ const AllChats = () =>{
   }
 
   const handleRenameChatTitle = async (sessionId: number, title: string) =>{
-    console.log(sessionId, title);
-    console.log("renaming");
     try {   
-      //handle rename api
       const response = await renameChatTitle(sessionId, title);
-      console.log(response);
       changeChatTitle(response.title);
+      toast.success("Chat renamed successfully. New title: " + response.title);
     } catch (error) {
       console.log(error);
       toast.error("Failed to rename chat. Please try again.");

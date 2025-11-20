@@ -3,6 +3,7 @@ import { createChatSession } from "../../api/chatApi";
 import { useSessionStore } from "../../store/sessionStore";
 import { useNavigate } from "react-router-dom";
 import type { IChatSession } from "../../types";
+import { toast } from "sonner";
 
 
 const CreateChat = () =>{
@@ -28,14 +29,18 @@ const CreateChat = () =>{
         changeChatTitle(response.title);
         clearSources();
 
-        navigate(`/chat`); //navigate to main after creating a chat
+        navigate(`/chat`); //navigate to /chat after creating a chat
       }else {
         setError("Failed to create chat session. Please try again.");
+        toast.error("Failed to create chat session. Please try again.");
       }
 
     } catch (error: any) {
-      const message = error?.response?.data || error?.message || "Failed to create chat session. Please try again.";
+      const serverMessage = error?.response?.data?.message; 
+      const axiosMessage = error?.message; 
+      const message = serverMessage || axiosMessage || "Failed to create chat session. Please try again.";
       setError(message);
+      toast.error(message);
     }finally {
       setIsLoading(false);
     }

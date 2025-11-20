@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import type { IChatMessage, IChatResponse, MessageRole } from "../../types";
 import { askQuestion, getChatHistory } from "../../api/chatApi";
 import { useSessionStore } from "../../store/sessionStore";
+import { toast } from "sonner";
 
 interface IDisplayMessage {
   id: string; // Unique identifier for React key
   text: string;
-  role: 'user' | 'model' | 'system';
+  role: 'user' | 'assistant' | 'system';
   timestamp: Date;
 }
 
@@ -58,8 +59,13 @@ const ChatWindow: React.FC = () => {
         );
       
       setMessages(displayMessages);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      const serverMessage = error?.response?.data?.message; 
+      const axiosMessage = error?.message; 
+      const message = serverMessage || axiosMessage || "Failed to get Message History. Please try again.";
+      setError(message);
+      toast.error(message);
     }finally{
       setIsLoading(false);
     }
@@ -88,7 +94,7 @@ const ChatWindow: React.FC = () => {
           {
             id: `message-${timestamp + 1 }`,
             text: chatResponse.answer,
-            role: "model",
+            role: "assistant",
             timestamp: new Date(timestamp), 
           },
         ] 
@@ -111,7 +117,7 @@ const ChatWindow: React.FC = () => {
   const getMessageStyle = (role: MessageRole) => {
     if (role === 'user') {
       return 'bg-blue-500 text-white self-end rounded-br-none'; 
-    } else if (role === 'model') {
+    } else if (role === 'assistant') {
       return 'bg-gray-200 text-gray-800 self-start rounded-tl-none'; 
     } else { // 'system' role
       return 'bg-yellow-100 text-yellow-800 self-center rounded-lg italic text-sm max-w-lg';

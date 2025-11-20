@@ -1,24 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
-import type { IUploadResponse } from "../../types";
+import { getSourcesBySessionId } from "../../api/contentApi";
+
 
 const UploadedInfo = () => {
 
+  const sessionId = useSessionStore((state) => state.sessionId);
   const sources = useSessionStore((state) => state.sources);
-
+  const setSources = useSessionStore((state) => state.setSources);
+  
   //this will be later stored in zustland 
   //this is needed by audio quiz flash generator
   const [selectedSourceIds, setSelectedSourceIds] = useState<number[]>([]);
-
   const [expandedSourceId, setExpandedSourceId] = useState<number| null>(null);
 
-//  const selectedSources = sources.filter(
-//     (source: IUploadResponse) => selectedSourceIds.includes(source.sourceId));
+
+  useEffect( () =>{
+    const fetchSources = async(sessionId: number) =>{   
+      try {
+        const response = await getSourcesBySessionId(sessionId);
+
+        setSources(response); //set sources in session store
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  if(!sessionId) {
+    return;
+  }
+  fetchSources(sessionId)
+  },[]);
 
 
-  //check whether all sources are selected or not
-  const isSelectAllChecked = sources.length > 0 && selectedSourceIds.length === sources.length;
-  
   //handle selectall checkbox
   const handleSelectAll = () =>{
     if(isSelectAllChecked) {
@@ -27,7 +40,7 @@ const UploadedInfo = () => {
     }else{
       setSelectedSourceIds(sources.map(source => source.sourceId));
     }
-  }
+  };
 
   //handle select courses from checkbox
   //add and remove sources
@@ -41,6 +54,8 @@ const UploadedInfo = () => {
     })
   } 
 
+  //check whether all sources are selected or not
+  const isSelectAllChecked = sources.length > 0 && selectedSourceIds.length === sources.length;
   
   //check whether the title is clicked or not
   //to toggle visibility for summary

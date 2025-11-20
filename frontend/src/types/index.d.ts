@@ -68,7 +68,7 @@ export interface IAudioResponseDTO {
 }
 
 
-export type MessageRole = 'user' | 'model' | 'system';
+export type MessageRole = 'user' | 'assistant' | 'system';
 
 export interface IChatMessage {
   message: string;

@@ -2,19 +2,22 @@ import { create } from "zustand";
 import type { IUploadResponse } from "../types";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+//this is for specific chat session 
+//it has sessionId chattitle 
+//multiple sources
 interface SessionState {
   sessionId : number | null;
   chatTitle : string | null;
-  sources : IUploadResponse[]; //array of sources
+  sources : IUploadResponse[]; //sources list
   
   setSessionId: (sessionId: number) => void;
   clearSessionId: () => void;
-  
   changeChatTitle: (title: string) => void;
-  
-  addSource: (source: IUploadResponse) => void;
-  removeSource: (sourceId: number) => void;
 
+  setSources :(sources: IUploadResponse[]) => void;//set sources list
+
+  addSource: (source: IUploadResponse) => void; //add source to list of sources
+  removeSource: (sourceId: number) => void;
   clearSources: () => void;
 }
 
@@ -22,7 +25,7 @@ interface SessionState {
 export const useSessionStore = create<SessionState>()(
   persist(
     (set) =>({
-      sessionId: null,
+      sessionId: null, 
       chatTitle: null,
       sources: [],
 
@@ -31,6 +34,7 @@ export const useSessionStore = create<SessionState>()(
 
       changeChatTitle: (title: string) => set({ chatTitle: title }),
 
+      setSources: (sources: IUploadResponse[]) => set({ sources }),
       addSource : (source: IUploadResponse) => set ( 
         (state) => ({
           sources : state.sources? [...state.sources, source] : [source]
