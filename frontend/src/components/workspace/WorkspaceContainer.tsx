@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import UploadPanel from "../components/upload/UploadPanel";
-import ChatWindow from "../components/chat/ChatWindow";
+import UploadPanel from "../upload/UploadPanel";
+import ChatWindow from "../chat/ChatWindow";
+import StudioPanel from "../studio/StudioPanel";
 
 const InitialWidth = {
   dragpos1: 20,
@@ -14,7 +15,7 @@ const MAX_CONTAINER_WIDTH = 100;
 type DragPosition = 'dragpos1' | 'dragpos2' | null;
 
 
-const ThreeWindowPanel = () =>{
+const WorkspaceContainer = () =>{
 
   const [dividerPos, setDividerPos] = useState(InitialWidth);
   const isDragging = useRef<DragPosition>(null); 
@@ -54,10 +55,11 @@ const ThreeWindowPanel = () =>{
       if(key === "dragpos1"){
         const min = MIN_WIDTH;   
         const max = prev.dragpos2 - MIN_WIDTH;
-      
+        
         //find max from minimum and
         //minimum from max
         const newWidth = Math.min(max, Math.max(min, newPos));
+        // console.log(newWidth);
         return {...prev, dragpos1: newWidth};
 
       }else if(key ==="dragpos2"){
@@ -97,19 +99,39 @@ const ThreeWindowPanel = () =>{
   },[ handleMouseMove, handleMouseUp]);
 
 
+  const closeLeftSideBar = useCallback(() => {
+    console.log("close left sidebar");
+    dividerPos.dragpos1 = 0;
+  },[]);
+
+  const closeRightSideBar = useCallback(() => {
+    console.log("close right sidebar");
+  },[]);
+
+  const openLeftSideBar = useCallback(() => {
+    console.log("open left sidebar");
+  },[]);
+
+  const openRightSideBar = useCallback(() => {
+    console.log("open right sidebar");
+  },[]);
+
   //calculate the width of each panel
-  const panel1 = dividerPos.dragpos1;
-  const panel2 = dividerPos.dragpos2 - dividerPos.dragpos1;
-  const panel3 = MAX_CONTAINER_WIDTH - dividerPos.dragpos2;
+  let panel1 = dividerPos.dragpos1;
+  let panel2 = dividerPos.dragpos2 - dividerPos.dragpos1;
+  let panel3 = MAX_CONTAINER_WIDTH - dividerPos.dragpos2;
 
   return  (
     <>
-    <div className="flex h-full w-full bg-red-900 scrollbar-hide border-6 border-gray-400 rounded-lg "  
+    <div className="flex h-full w-full"  
       ref={containerRef}>
+      {/* first content panel */}
       <div
         className="bg-gray-100 border border-gray-300 p-4 overflow-auto"
         style={{ width: `${panel1}%` }}>
-          <UploadPanel />
+          <UploadPanel 
+          closeLeftSideBar={closeLeftSideBar}
+          openLeftSideBar={openLeftSideBar} />
       </div>
       {/* the div to be dragged */}
       <div 
@@ -130,23 +152,20 @@ const ThreeWindowPanel = () =>{
       <div 
         onMouseDown={() => handleMouseDown("dragpos2")}
         title="Drag to resize" 
-        className="w-2 cursor-col-resize bg-gray-400 h-full hover:bg-gray-500"
-      >
+        className="w-2 cursor-col-resize bg-gray-400 h-full hover:bg-gray-500">
       </div>
 
       { /* another content panel */}
       <div
         className="bg-gray-100 border border-gray-300 p-4 overflow-auto "
         style={{ width: `${panel3}%` }}>
-        content here
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda, illum. Pariatur assumenda atque tenetur distinctio eligendi voluptatibus autem illum quae. Maxime ullam iste beatae voluptatum autem minus tenetur delectus id.
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda, illum. Pariatur assumenda atque tenetur distinctio eligendi voluptatibus autem illum quae. Maxime ullam iste beatae voluptatum autem minus tenetur delectus id.
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda, illum. Pariatur assumenda atque tenetur distinctio eligendi voluptatibus autem illum quae. Maxime ullam iste beatae voluptatum autem minus tenetur delectus id.
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda, illum. Pariatur assumenda atque tenetur distinctio eligendi voluptatibus autem illum quae. Maxime ullam iste beatae voluptatum autem minus tenetur delectus id. 
+          <StudioPanel 
+          closeRightSideBar={closeRightSideBar}
+          openRightSideBar={openRightSideBar} />
       </div>
     </div>
     </>
   )
 }
 
-export default ThreeWindowPanel;
+export default WorkspaceContainer;

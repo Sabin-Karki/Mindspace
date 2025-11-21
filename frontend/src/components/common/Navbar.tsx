@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
-import ChatTitle from "./chat/ChatTitle";
+import { useAuthStore } from "../../store/authStore";
+import ChatTitle from "../chat/ChatTitle";
 
 
 const Navbar = () => {

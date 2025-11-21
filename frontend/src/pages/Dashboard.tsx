@@ -5,8 +5,11 @@ const Dashboard = () => {
 
   return(
     <>
-    <CreateChat />
-    <AllChats />
+    <div>
+      <div>Recent notebooks</div>
+      <CreateChat />
+      <AllChats />
+    </div>
     </>
   )
 }

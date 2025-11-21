@@ -69,10 +69,7 @@ const AllChats = () =>{
  const handleChatClick = (sessionId: number, title: string) => {
     setSessionId(sessionId);
     changeChatTitle(title);
-
-    //handle upload sources 
-    //fetch all sources of this session
-    //and set in sessionStore
+    
     navigate(`/chat`);
   };
 
@@ -98,7 +95,6 @@ const AllChats = () =>{
   const handleRenameChatTitle = async (sessionId: number, title: string) =>{
     try {   
       const response = await renameChatTitle(sessionId, title);
-      changeChatTitle(response.title);
       toast.success("Chat renamed successfully. New title: " + response.title);
     } catch (error) {
       console.log(error);

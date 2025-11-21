@@ -16,7 +16,7 @@ const RenameChatModal = ({handleHideRenameModal, handleRenameChatTitle, localSes
     if (e.key === 'Enter') {
       handleRenameChatTitle(localSessionId, localTitle);
       handleHideRenameModal();
-      renameSession(localSessionId, localTitle);
+      renameSession(localSessionId, localTitle);  //update list
     }
   };
 
