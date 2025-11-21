@@ -1,23 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
+import { getSourcesBySessionId } from "../../api/contentApi";
+
 
 const UploadedInfo = () => {
 
-  const { sources } = useSessionStore();
-
+  const sessionId = useSessionStore((state) => state.sessionId);
+  const sources = useSessionStore((state) => state.sources);
+  const setSources = useSessionStore((state) => state.setSources);
+  
   //this will be later stored in zustland 
   //this is needed by audio quiz flash generator
   const [selectedSourceIds, setSelectedSourceIds] = useState<number[]>([]);
-
   const [expandedSourceId, setExpandedSourceId] = useState<number| null>(null);
 
-//  const selectedSources = sources.filter(
-//     (source: IUploadResponse) => selectedSourceIds.includes(source.sourceId));
+
+  useEffect( () =>{
+    const fetchSources = async(sessionId: number) =>{   
+      try {
+        const response = await getSourcesBySessionId(sessionId);
+
+        setSources(response); //set sources in session store
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  if(!sessionId) {
+    return;
+  }
+  fetchSources(sessionId)
+  },[]);
 
 
-  //check whether all sources are selected or not
-  const isSelectAllChecked = sources.length > 0 && selectedSourceIds.length === sources.length;
-  
   //handle selectall checkbox
   const handleSelectAll = () =>{
     if(isSelectAllChecked) {
@@ -26,7 +40,7 @@ const UploadedInfo = () => {
     }else{
       setSelectedSourceIds(sources.map(source => source.sourceId));
     }
-  }
+  };
 
   //handle select courses from checkbox
   //add and remove sources
@@ -40,6 +54,8 @@ const UploadedInfo = () => {
     })
   } 
 
+  //check whether all sources are selected or not
+  const isSelectAllChecked = sources.length > 0 && selectedSourceIds.length === sources.length;
   
   //check whether the title is clicked or not
   //to toggle visibility for summary
@@ -109,3 +125,27 @@ const UploadedInfo = () => {
 };
 
 export default UploadedInfo;
+
+
+//data eg
+
+// const sources: IUploadResponse[] = [
+//   {
+//     sourceId: 501,
+//     chunksSize: 125, // This could represent the number of chunks/segments the file was broken into
+//     summary: "A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.",
+//     title: "Annual Budget 2025.pdf",
+//   },
+//   {
+//     sourceId: 502,
+//     chunksSize: 82,
+//     summary: "The main points from the customer feedback survey for Q4, focusing on satisfaction scores for the mobile application.",
+//     title: "Q4 Customer Survey Results.docx",
+//   },
+//   {
+//     sourceId: 503,
+//     chunksSize: 450,
+//     summary: "Full transcript and summary of the 'Future of AI in Web Development' webinar held on November 10th.",
+//     title: "Webinar Transcript - AI Future.txt",
+//   }
+// ];

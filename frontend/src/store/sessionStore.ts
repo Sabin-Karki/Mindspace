@@ -2,21 +2,30 @@ import { create } from "zustand";
 import type { IUploadResponse } from "../types";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+//this is for specific chat session 
+//it has sessionId chattitle 
+//multiple sources
 interface SessionState {
-  sources : IUploadResponse[]; //array of sources
   sessionId : number | null;
   chatTitle : string | null;
-  changeChatTitle: (title: string) => void;
+  sources : IUploadResponse[]; //sources list
+  
   setSessionId: (sessionId: number) => void;
   clearSessionId: () => void;
-  addSource: (source: IUploadResponse) => void;
+  changeChatTitle: (title: string) => void;
+
+  setSources :(sources: IUploadResponse[]) => void;//set sources list
+
+  addSource: (source: IUploadResponse) => void; //add source to list of sources
+  removeSource: (sourceId: number) => void;
+  clearSources: () => void;
 }
 
 //that particular chat session id upload sources info
 export const useSessionStore = create<SessionState>()(
   persist(
     (set) =>({
-      sessionId: null,
+      sessionId: null, 
       chatTitle: null,
       sources: [],
 
@@ -25,11 +34,17 @@ export const useSessionStore = create<SessionState>()(
 
       changeChatTitle: (title: string) => set({ chatTitle: title }),
 
+      setSources: (sources: IUploadResponse[]) => set({ sources }),
       addSource : (source: IUploadResponse) => set ( 
         (state) => ({
           sources : state.sources? [...state.sources, source] : [source]
         })
       ),
+      removeSource: (sourceId: number) => set(
+        (state) => ({ sources: state.sources.filter((source) => source.sourceId !== sourceId) })
+      ),
+
+      clearSources: () => set({ sources: [] }),
     }),
   {
     name: "session-storage",// A unique name for key in localStorage
@@ -37,7 +52,7 @@ export const useSessionStore = create<SessionState>()(
     partialize: (state) => ({
       sessionId: state.sessionId,
       chatTitle: state.chatTitle,
-      sources: state.sources,
+      // sources: state.sources,  //not making sources persistent
     }),
   })
 )

@@ -50,11 +50,39 @@ public class ChatController {
         }
     }
     
+    @GetMapping("/getAll")
+    public ResponseEntity<List<ChatSessionGetDTO>> getChatSessionByUserId(@AuthenticationPrincipal User user){
+        try{
+          List  <ChatSessionGetDTO> session = chatService.getChatSessionById(user.getUserId());
+            return ResponseEntity.ok(session);
+        }catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    //fix this 
+	//org.postgresql.util.PSQLException: No results were returned by the query.
+	//	at org.postgresql.jdbc.TypeInfoCache.getArrayDelimiter(TypeInfoCache.java:648) ~[postgresql-42.7.1.jar:42.7.1]
+
+    @PostMapping("/{sessionId}/ask")
+    public  ResponseEntity<ChatResponse> askQuestion(@AuthenticationPrincipal User user, @PathVariable Long sessionId, @RequestBody ChatRequest chatRequest){
+        ChatResponse response = chatService.askQuestion(user, chatRequest.getQuestion(), sessionId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/session/{sessionId}")
+    public ResponseEntity<List<ChatMessageDTO>> getChatHistory(@AuthenticationPrincipal User user, @PathVariable Long sessionId) {
+     
+		List<ChatMessageDTO> chatHistory = chatService.getChatHistory(sessionId, user.getUserId());
+		return ResponseEntity.ok(chatHistory);
+    }
+
     @PatchMapping("session/{sessionId}")
     public ResponseEntity<ChatSession> renameChatTitle (@AuthenticationPrincipal User user,
     		@PathVariable Long sessionId,
     		@RequestBody ChatTitleRenameRequest renameRequest) {
     	try{    		
+    		System.out.println(sessionId);
     		ChatSession existingChatSession = chatSessionRepository.findById(sessionId)
     				.orElseThrow(() -> new EntityNotFoundException("ChatSession not found with id: " + sessionId));
 
@@ -71,38 +99,15 @@ public class ChatController {
             return ResponseEntity.notFound().build();
         }
     }
-
     
-    @GetMapping("/getAll")
-    public ResponseEntity<List<ChatSessionGetDTO>> getChatSessionByUserId(@AuthenticationPrincipal User user){
-        try{
-          List  <ChatSessionGetDTO> session = chatService.getChatSessionById(user.getUserId());
-            return ResponseEntity.ok(session);
-        }catch (RuntimeException e){
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/{sessionId}/ask")
-    public  ResponseEntity<ChatResponse> askQuestion(@AuthenticationPrincipal User user, @PathVariable Long sessionId, @RequestBody ChatRequest chatRequest){
-        ChatResponse response = chatService.askQuestion(user, chatRequest.getQuestion(), sessionId);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/session/{sessionId}")
-    public ResponseEntity<List<ChatMessageDTO>> getChatHistory(@AuthenticationPrincipal User user, @PathVariable Long sessionId) {
-     
-		List<ChatMessageDTO> chatHistory = chatService.getChatHistory(sessionId, user.getUserId());
-		return ResponseEntity.ok(chatHistory);
-    }
-
-    @DeleteMapping("/{sessionId}")
-   public ResponseEntity<Void> deleteChatSession(@PathVariable Long sessionId){
-   try {
-       chatService.deleteChatSession(sessionId);
-       return ResponseEntity.noContent().build();
-   }catch (RuntimeException e){
-       return ResponseEntity.notFound().build();
-   }
+    @DeleteMapping("/session/{sessionId}")
+    public ResponseEntity<Void> deleteChatSession(@PathVariable Long sessionId){
+	   try {
+		   System.out.println(sessionId);
+	       chatService.deleteChatSession(sessionId);
+	       return ResponseEntity.noContent().build();
+	   }catch (RuntimeException e){
+	       return ResponseEntity.notFound().build();
+	   }
     }
 }

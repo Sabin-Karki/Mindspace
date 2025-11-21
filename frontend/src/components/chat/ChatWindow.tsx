@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import type { IChatMessage, IChatResponse, MessageRole } from "../../types";
 import { askQuestion, getChatHistory } from "../../api/chatApi";
 import { useSessionStore } from "../../store/sessionStore";
+import { toast } from "sonner";
 
 interface IDisplayMessage {
   id: string; // Unique identifier for React key
   text: string;
-  role: 'user' | 'model' | 'system';
+  role: 'user' | 'assistant' | 'system';
   timestamp: Date;
 }
 
-
+  
 const ChatWindow: React.FC = () => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
@@ -58,8 +59,13 @@ const ChatWindow: React.FC = () => {
         );
       
       setMessages(displayMessages);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      const serverMessage = error?.response?.data?.message; 
+      const axiosMessage = error?.message; 
+      const message = serverMessage || axiosMessage || "Failed to get Message History. Please try again.";
+      setError(message);
+      toast.error(message);
     }finally{
       setIsLoading(false);
     }
@@ -72,23 +78,24 @@ const ChatWindow: React.FC = () => {
     }
     setError(null);
     setIsLoading(true);
+
     try {
       const chatResponse: IChatResponse = await askQuestion(sessionId, input);
+      const timestamp = Date.now();
 
-      //this should work 
       setMessages( (prev) =>[
         ...prev , 
           {
-            id: `message-${Date.now()}`,
+            id: `message-${timestamp}`,
             text: chatResponse.question,
             role: "user",
-            timestamp: new Date(),
+            timestamp: new Date(timestamp),
           },
           {
-            id: `message-${Date.now() + 1 }`,
+            id: `message-${timestamp + 1 }`,
             text: chatResponse.answer,
-            role: "model",
-            timestamp: new Date(), 
+            role: "assistant",
+            timestamp: new Date(timestamp), 
           },
         ] 
       );
@@ -100,12 +107,17 @@ const ChatWindow: React.FC = () => {
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) =>{
+    if(e.key === "Enter"){
+      handleSendMessage();
+    }
+  }
 
   //for diplaying messages based on
   const getMessageStyle = (role: MessageRole) => {
     if (role === 'user') {
       return 'bg-blue-500 text-white self-end rounded-br-none'; 
-    } else if (role === 'model') {
+    } else if (role === 'assistant') {
       return 'bg-gray-200 text-gray-800 self-start rounded-tl-none'; 
     } else { // 'system' role
       return 'bg-yellow-100 text-yellow-800 self-center rounded-lg italic text-sm max-w-lg';
@@ -161,10 +173,11 @@ return (
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Type your message..."
         />
 
-        <button onClick={() => {handleSendMessage}}>
+        <button onClick={handleSendMessage} >
           Send
         </button>
       </div>
@@ -175,3 +188,39 @@ return (
 
 
 export default ChatWindow;
+
+
+
+
+// const sampleMessages: IDisplayMessage[] = [
+//   {
+//     id: "msg-1",
+//     text: "Hello! Can you summarize the key points from the last quarter's sales report for me?",
+//     role: "user",
+//     timestamp: new Date("2025-11-18T10:00:00Z"), // User's first message
+//   },
+//   {
+//     id: "msg-2",
+//     text: "I am currently processing the request. One moment.",
+//     role: "system", // A system message indicating processing or a minor state change
+//     timestamp: new Date("2025-11-18T10:00:02Z"), 
+//   },
+//   {
+//     id: "msg-3",
+//     text: "Certainly! The key points from the Q3 sales report are: 1. Revenue increased by 15% year-over-year. 2. Product Z was the top seller, accounting for 40% of all units sold. 3. New market penetration in the Asia region exceeded projections by 5%.",
+//     role: "model", // The AI model's response
+//     timestamp: new Date("2025-11-18T10:00:35Z"),
+//   },
+//   {
+//     id: "msg-4",
+//     text: "That's helpful, thank you. What was the exact dollar amount of the Q3 revenue?",
+//     role: "user",
+//     timestamp: new Date("2025-11-18T10:01:45Z"),
+//   },
+//   {
+//     id: "msg-5",
+//     text: "The exact Q3 revenue was $4.5 million USD.",
+//     role: "model",
+//     timestamp: new Date("2025-11-18T10:01:59Z"),
+//   },
+// ];

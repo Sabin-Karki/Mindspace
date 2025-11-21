@@ -17,6 +17,9 @@ export const renameChatTitle = async (sessionId: number, title: string): Promise
   return res.data; 
 };
 
+export const deleteChat = async (sessionId: number): Promise<void> => {
+  await credApi.delete(`/chat/session/${sessionId}`);
+};
 
 export const fetchAllChatSessions = async (): Promise<ChatSessionGetDTO[]> => {
   const token = useAuthStore.getState().token;
