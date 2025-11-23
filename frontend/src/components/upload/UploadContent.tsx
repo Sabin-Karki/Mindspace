@@ -7,7 +7,9 @@ import { toast } from "sonner";
 const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
-  const addSource = useSessionStore((state) => state.addSource);
+  const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
+  const { addSource } = useSessionStore();
+
 
   const[file, setFile] = useState<File | null>(null);
   const [textValue, setTextValue] = useState('');
@@ -74,6 +76,9 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
       
       console.log(response);
       addSource(response);  //add source to list
+      addSource(response);
+      changeChatTitle(response.title);
+      
 
     } catch (error: any) {
       console.log(error);

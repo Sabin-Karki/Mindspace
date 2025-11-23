@@ -12,8 +12,9 @@ import java.time.LocalDate;
 @Table(name = "chat_message")
 public class ChatMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
+    @Column(columnDefinition = "TEXT")
     private String message;
     private String role;
     private LocalDate createdAt;

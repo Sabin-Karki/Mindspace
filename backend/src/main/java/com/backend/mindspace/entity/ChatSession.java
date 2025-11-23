@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "chat_session")
 public class ChatSession {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "session_id")
     private Long sessionId;
 

@@ -15,7 +15,7 @@ import java.util.List;
 public class Source {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "source_id")
     private Long sourceId;
 
