@@ -28,7 +28,7 @@ export interface IChatRenameRequest {
 }
 
 export interface ICardResponse {
-  cardOverViewId: number; //chat generates a flash card 
+  cardOverViewId: number;
   title: string;
   sourceId: number;
   question: string;

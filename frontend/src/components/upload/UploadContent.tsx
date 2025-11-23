@@ -7,10 +7,7 @@ import { toast } from "sonner";
 const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
-  const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
-  const { addSource } = useSessionStore();
-
-
+  const addSource = useSessionStore((state) => state.addSource);
   const[file, setFile] = useState<File | null>(null);
   const [textValue, setTextValue] = useState('');
   
@@ -60,8 +57,8 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
 
       //file validation
       if(hasFile){
-        console.log("has file" + file);
-        console.log(file.type);
+        // console.log("has file" + file);
+        // console.log(file.type);
         if(!isValidFileType(file)){
           setError("Invalid file type. Please upload a pdf or txt or doc file.");
           toast.error("Invalid file type. Please upload a pdf or txt or doc file.");
@@ -69,6 +66,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
         }
       }
 
+      // console.log(sessionId)
       const response = await uploadContent(sessionId, file, textValue );
       
       setFile(null);
@@ -76,9 +74,6 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
       
       console.log(response);
       addSource(response);  //add source to list
-      addSource(response);
-      changeChatTitle(response.title);
-      
 
     } catch (error: any) {
       console.log(error);

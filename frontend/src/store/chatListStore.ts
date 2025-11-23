@@ -11,13 +11,17 @@ interface ChatListState{
   deleteSession: (sessionId: number) => void;
 }
 
-export const useChatsListStore = create<ChatListState>(
+export const useChatListStore = create<ChatListState>(
   (set) =>({
 
     sessions: [],
     setSessions: (sessions: ChatSessionGetDTO[]) => set({ sessions }),
     addSession: (session: ChatSessionGetDTO) => set(
-      (state) => ({ sessions: [...state.sessions, session] })
+      (state) => {
+        const alreadyExists = state.sessions.some((s) => s.sessionId === session.sessionId);
+        if(alreadyExists) return state; //do nothing
+        return {sessions: [...state.sessions, session]}; //add chatsession to list
+      }
     ),
     renameSession: (sessionId: number, title: string) => set(
       (state) => ({ sessions: state.sessions.map((session) =>

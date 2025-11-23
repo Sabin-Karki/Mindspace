@@ -9,12 +9,14 @@ export const generateFlashCard = async (sessionId: number, sourceIds: number[]):
   return res.data;
 };
 
-export const getFlashCardCardsByOverviewId = async (cardId: number): Promise<ICardResponse[]> => {
+//get specific flash card
+export const getFlashCardByCardId = async (cardId: number): Promise<ICardResponse[]> => {
   const res: AxiosResponse<ICardResponse[]> = await credApi.get(`/generate/flash-card/${cardId}`);
   return res.data;
 };
 
-export const getFlashCardOverviewsBySessionId = async (sessionId: number): Promise<IFlashCardOverview[]> => {
+//get list of flash cards
+export const getFlashCardsBySessionId = async (sessionId: number): Promise<IFlashCardOverview[]> => {
   const res: AxiosResponse<IFlashCardOverview[]> = await credApi.get(`/generate/flash-card/session/${sessionId}`);
   return res.data;
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useChatsListStore } from "../../store/useChatsListStore";
+import { useChatListStore } from "../../store/chatListStore";
 
 interface RenameChatModalProps {
     handleHideRenameModal: () => void;
@@ -10,7 +10,7 @@ interface RenameChatModalProps {
 const RenameChatModal = ({handleHideRenameModal, handleRenameChatTitle, localSessionId, localChatTitle}: RenameChatModalProps) => {
 
   const [localTitle, setLocalTitle] = useState<string>(localChatTitle || 'Enter chat title');
-  const renameSession = useChatsListStore((state) => state.renameSession);
+  const renameSession = useChatListStore((state) => state.renameSession);
 
   const handleKeyEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

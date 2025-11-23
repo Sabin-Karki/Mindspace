@@ -1,9 +1,7 @@
-import Audio from "./audio/AudioGenerator";
-import AudioGet from "./audio/AudioGet";
-import FlashGet from "./flash/FlashGet";
-import Flash from "./flash/FlashGet";
-import Quiz from "./quiz/QuizGenerator";
-import QuizGet from "./quiz/QuizGet";
+import { AudioGenerator, AudioList } from "./audio";
+import { FlashGenerator, FlashList } from "./flashcards";
+import { QuizGenerator, QuizList } from "./quiz";
+import { ReportGenerator, ReportList } from "./report";
 
 const StudioPanel = ({closeRightSideBar, openRightSideBar} :{closeRightSideBar: () => void; openRightSideBar: () => void;}) =>{
 
@@ -18,16 +16,18 @@ const StudioPanel = ({closeRightSideBar, openRightSideBar} :{closeRightSideBar: 
 
     {/* this section generates  */}
     <div>
-      <Flash />
-      <Quiz /> 
-      <Audio />
+      <FlashGenerator />
+      <QuizGenerator /> 
+      <AudioGenerator />
+      <ReportGenerator />
     </div>
 
     {/* this section gets  */}
     <div>
-      <FlashGet />
-      <QuizGet /> 
-      <AudioGet />
+      <FlashList />
+      <QuizList /> 
+      <AudioList />
+      <ReportList />
     </div>
     </div>
     </>

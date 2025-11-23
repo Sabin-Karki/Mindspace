@@ -36,9 +36,11 @@ export const useSessionStore = create<SessionState>()(
 
       setSources: (sources: IUploadResponse[]) => set({ sources }),
       addSource : (source: IUploadResponse) => set ( 
-        (state) => ({
-          sources : state.sources? [...state.sources, source] : [source]
-        })
+        (state) => {
+          const alreadyExists = state.sources.some( (s) => source.sourceId === s.sourceId);
+          if(alreadyExists) return state; //do nothing
+          return {sources: [...state.sources, source]}; //add new source
+        }
       ),
       removeSource: (sourceId: number) => set(
         (state) => ({ sources: state.sources.filter((source) => source.sourceId !== sourceId) })

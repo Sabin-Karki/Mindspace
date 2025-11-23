@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useSessionStore } from "../../store/sessionStore";
 import DeleteChatModal from "./DeleteChat";
 import RenameChatModal from "./RenameChat";
-import { useChatsListStore } from "../../store/useChatsListStore";
+import { useChatListStore } from "../../store/chatListStore";
 import { toast } from "sonner";
 
 const AllChats = () =>{
@@ -17,8 +17,8 @@ const AllChats = () =>{
   const setSessionId = useSessionStore((state) => state.setSessionId);
   const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
 
-  const sessions = useChatsListStore((state) => state.sessions);
-  const setSessions = useChatsListStore((state) => state.setSessions);
+  const sessions = useChatListStore((state) => state.sessions);
+  const setSessions = useChatListStore((state) => state.setSessions);
 
   const [localSessionId, setLocalSessionId] = useState<number>(0);
   const [localChatTitle, setLocalChatTitle] = useState<string | null>(null);
