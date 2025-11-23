@@ -36,65 +36,89 @@ public class ChatService {
     }
 
     public ChatResponse askQuestion(User user, String question, Long sessionId) {
+        System.out.println("=== START askQuestion ===");
 
-        // 1️⃣ Find the chat session and verify it belongs to the user
+        // Find the chat session and verify it belongs to the user
         ChatSession chatSession = chatSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("ChatSession not found with id: " + sessionId));
+        System.out.println("Found chat session: " + sessionId);
 
         if (!chatSession.getUser().getUserId().equals(user.getUserId())) {
             throw new SecurityException("User does not have access to this chat session");
         }
 
-        // 2️⃣ Save user message
+        //  Save user message
         ChatMessage userMsg = new ChatMessage();
         userMsg.setMessage(question);
         userMsg.setRole("user");
         userMsg.setChatSession(chatSession);
-        userMsg.setCreatedAt(LocalDate.now()); // Set createdAt for user message
+        userMsg.setCreatedAt(LocalDate.now());
         chatMessageRepository.save(userMsg);
+        System.out.println("Saved user message");
 
-        // 3️⃣ Find all sources for the session and gather their chunks
+        //  Find all sources for the session and gather their chunks
         List<Source> sources = sourceRepository.findByChatSession_SessionId(sessionId);
+        System.out.println("Found sources: " + sources.size());
+
         List<Chunk> allChunks = sources.stream()
-                .flatMap(source -> chunkRepository.findBySource_SourceId(source.getSourceId()).stream())
-                .toList();
+                .flatMap(source -> chunkRepository.findAllBySource_SourceId(source.getSourceId()).stream())
+                .collect(Collectors.toList());
+        System.out.println("Found chunks: " + allChunks.size());
 
-        // 4️⃣ Compute embeddings and find the most relevant chunks from all sources
-        float[] questionEmbedding = geminiService.generateEmbedding(question);
+        String answer;
 
-        allChunks.sort((a, b) -> Float.compare(
-                cosineSimilarity(b.getEmbedding(), questionEmbedding),
-                cosineSimilarity(a.getEmbedding(), questionEmbedding)
-        ));
+        //  If no chunks, answer without RAG context
+        if (allChunks.isEmpty()) {
+            System.out.println("No chunks, asking directly");
+            String prompt = "Answer this question directly: %s".formatted(question);
+            answer = geminiService.callGeminiTextApi(prompt);
+        } else {
+            System.out.println("Generating embedding for question");
+            //  Compute embeddings and find the most relevant chunks
+            float[] questionEmbedding = geminiService.generateEmbedding(question);
+            System.out.println("Got embedding, length: " + questionEmbedding.length);
 
-        List<Chunk> topChunks = allChunks.stream().limit(3).toList();
+            allChunks.sort((a, b) -> Float.compare(
+                    cosineSimilarity(b.getEmbedding(), questionEmbedding),
+                    cosineSimilarity(a.getEmbedding(), questionEmbedding)
+            ));
+            System.out.println("Sorted chunks by similarity");
 
-        StringBuilder context = new StringBuilder();
-        for (Chunk c : topChunks) {
-            context.append(c.getChunkText()).append("\n\n");
+            List<Chunk> topChunks = allChunks.stream().limit(3).toList();
+            System.out.println("Selected top " + topChunks.size() + " chunks");
+
+            StringBuilder context = new StringBuilder();
+            for (Chunk c : topChunks) {
+                context.append(c.getChunkText()).append("\n\n");
+            }
+
+            String prompt = """
+                Use the following context to answer the user's question clearly and accurately.
+
+                Context:
+                %s
+
+                Question: %s
+                """.formatted(context, question);
+
+            System.out.println("Calling Gemini with RAG context");
+            // Get answer from Gemini
+            answer = geminiService.callGeminiTextApi(prompt);
         }
 
-        String prompt = """
-            Use the following context to answer the user's question clearly and accurately.
+        System.out.println("Got answer from Gemini");
 
-            Context:
-            %s
-
-            Question: %s
-            """.formatted(context, question);
-
-        // 5️⃣ Get answer from Gemini
-        String answer = geminiService.callGeminiTextApi(prompt);
-
-        // 6️⃣ Save assistant message
+        //  Save assistant message
         ChatMessage assistantMsg = new ChatMessage();
         assistantMsg.setMessage(answer);
         assistantMsg.setRole("assistant");
         assistantMsg.setChatSession(chatSession);
-        assistantMsg.setCreatedAt(LocalDate.now()); // Set createdAt for assistant message
+        assistantMsg.setCreatedAt(LocalDate.now());
         chatMessageRepository.save(assistantMsg);
+        System.out.println("Saved assistant message");
 
-        // 7️⃣ Return response DTO
+        // Return response
+        System.out.println("=== END askQuestion ===");
         return new ChatResponse(question, answer);
     }
 
@@ -110,26 +134,27 @@ public class ChatService {
         }
 
         List<ChatMessage> messages = chatMessageRepository.findByChatSession_SessionIdAndChatSession_User_UserId(sessionId, userId);
-        
+
         return messages.stream()
                 .map(msg -> new ChatMessageDTO(msg.getMessage(), msg.getRole(), msg.getCreatedAt()))
                 .toList();
     }
 
-    
     @Transactional
     public List<ChatSessionGetDTO> getChatSessionById(Long userId){
-      List<ChatSession> chatSession = chatSessionRepository.findByUser_UserId(userId);
-     return  chatSession.stream()
-              .map(session-> new ChatSessionGetDTO(session.getSessionId(),session.getCreatedAt(), session.getTitle()))
-              .toList();
+        List<ChatSession> chatSession = chatSessionRepository.findByUser_UserId(userId);
+        return  chatSession.stream()
+                .map(session-> new ChatSessionGetDTO(session.getSessionId(),session.getCreatedAt(), session.getTitle()))
+                .toList();
     }
-     public void deleteChatSession(Long sessionId){
+
+    public void deleteChatSession(Long sessionId){
         if(!chatSessionRepository.existsById(sessionId)){
             throw new RuntimeException("Chat session not found with id: " + sessionId);
         }
         chatSessionRepository.deleteById(sessionId);
-     }
+    }
+
     private float cosineSimilarity(float[] v1, float[] v2) {
         float dot = 0, normA = 0, normB = 0;
 
