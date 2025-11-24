@@ -14,8 +14,8 @@ export const getFlashCardCardsByOverviewId = async (cardId: number): Promise<ICa
   return res.data;
 };
 
-export const getFlashCardOverviewsBySessionId = async (sessionId: number): Promise<IFlashCardOverview[]> => {
-  const res: AxiosResponse<IFlashCardOverview[]> = await credApi.get(`/generate/flash-card/session/${sessionId}`);
+export const getFlashCardOverviewsBySessionId = async (sessionId: number): Promise<ICardResponse[]> => {
+  const res: AxiosResponse<ICardResponse[]> = await credApi.get(`/generate/flash-card/session/${sessionId}`);
   return res.data;
 };
 
