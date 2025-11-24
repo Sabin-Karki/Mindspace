@@ -35,9 +35,9 @@ public class FlashCardController {
     }
 
     @GetMapping("/flash-card/{cardId}")
-    private ResponseEntity<List<CardResponse>> getFlashCardOverviewById(@PathVariable(name = "cardId") Long id){
+    private ResponseEntity<CardResponse> getFlashCardOverviewById(@PathVariable(name = "cardId") Long id){
         try{
-            List<CardResponse> cardOverview = flashCardService.getCardsByOverviewId(id);
+            CardResponse cardOverview = flashCardService.getCardsByOverviewId(id);
             return ResponseEntity.ok(cardOverview);
         }catch(RuntimeException e){
             return ResponseEntity.notFound().build();
