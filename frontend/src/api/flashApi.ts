@@ -30,3 +30,17 @@ export const updateFlashCardOverviewTitle = async (cardId: number, title: string
 export const deleteFlashCardOverview = async (cardId: number): Promise<void> => {
   await credApi.delete(`/generate/flash-card/${cardId}`);
 };
+
+
+
+//sabins meyyythod naming sense
+export const getFlashCardCardsByOverviewId = async (cardId: number): Promise<ICardResponse[]> => {
+  const res: AxiosResponse<ICardResponse[]> = await credApi.get(`/generate/flash-card/${cardId}`);
+  return res.data;
+};
+
+export const getFlashCardOverviewsBySessionId = async (sessionId: number): Promise<ICardResponse[]> => {
+  const res: AxiosResponse<ICardResponse[]> = await credApi.get(`/generate/flash-card/session/${sessionId}`);
+  return res.data;
+};
+
