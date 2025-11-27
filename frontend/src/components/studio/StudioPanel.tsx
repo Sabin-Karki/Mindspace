@@ -23,6 +23,7 @@ const StudioPanel = ({closeRightSideBar, openRightSideBar} :{closeRightSideBar: 
     </div>
 
     {/* this section gets  */}
+    {/* inside this will be Get specific  */}
     <div>
       <FlashList />
       <QuizList /> 

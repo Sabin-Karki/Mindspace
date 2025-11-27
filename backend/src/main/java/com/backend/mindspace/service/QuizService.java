@@ -91,7 +91,7 @@ public class QuizService {
         //what the above statement did was,it tried to find the quiz by the quiz id passed as argument and jpa basically first checks quiz overview entity and if an primary key field exists and then it returns the quiz object as in doing the select * from quiz_overview where id = ?
         Long quizId = quizOverview.getId();
         String title = quizOverview.getTitle();
-        Long sourceId = quizOverview.getSource()!=null? quizOverview.getSource().getSourceId():null;
+//        Long sourceId = quizOverview.getSource()!=null? quizOverview.getSource().getSourceId():null;
         List<QuizOverviewResponse.QuestionResponse> questionResponses = quizOverview.getQuestions().stream()
                 .map(question->new QuizOverviewResponse.QuestionResponse(question.getId(), question.getQuestionText(),question.getOptions(),question.getCorrectAnswerIndex()))
                 .collect(Collectors.toList());

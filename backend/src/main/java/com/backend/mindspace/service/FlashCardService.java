@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,9 @@ public class FlashCardService {
         String combinedContent = selectedSources.stream()
                 .map(Source::getContent)
                 .collect(Collectors.joining("\n\n---\n\n"));
+        System.out.println("Generating Title: ");
         String flashCardTitle = geminiService.generateTitle(combinedContent);
+        System.out.println("Generating Cards: ");
         String cardJson = geminiService.generateFlashCard(combinedContent);
         try {
             List<FlashCard> flashCards = objectMapper.readValue(cardJson, new TypeReference<List<FlashCard>>() {});
@@ -72,13 +75,8 @@ public class FlashCardService {
             flashCardOverviewRepository.save(flashCard);
 
             // Return just the overview metadata (no cards in response)
-            return new CardResponse(
-                    flashCard.getId(),
-                    flashCardTitle,
-                    flashCard.getSource() != null ? flashCard.getSource().getSourceId() : null,
-                    null,
-                    null
-            );
+            return new CardResponse(flashCard.getId(),flashCard.getTitle(),flashCard.getSource()!=null?flashCard.getSource().getSourceId():null,null);
+
         } catch (IOException e) {
             e.printStackTrace();
             // Or handle it more gracefully
@@ -87,7 +85,7 @@ public class FlashCardService {
     }
 
     // Get all Q&A cards for a specific overview
-    public List<CardResponse> getCardsByOverviewId(Long id) {
+    public CardResponse getCardsByOverviewId(Long id) {
         FlashCardOverview overview = flashCardOverviewRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("FlashCardOverview not found with id " + id));
 
@@ -96,13 +94,17 @@ public class FlashCardService {
         String title = overview.getTitle();
         Long sourceId = overview.getSource() != null ? overview.getSource().getSourceId() : null;
 
-        // Map each card with the overview metadata
-        return overview.getFlashCards().stream()
-                .map(card -> new CardResponse(overviewId, title, sourceId, card.getQuestion(), card.getAnswer()))
+        // so ,i will need to first transform and then store the transformed stream object of CardDetailResponse in a List called CardResponse.CardDetailResponse,after that,since i can return the actual CardResponse now that i will have the CardDetailResponse too
+        List<CardResponse.CardDetailResponse> cardDetailResponseList = overview.getFlashCards().stream()
+                .map(cards->new CardResponse.CardDetailResponse(cards.getId(),cards.getQuestion(),cards.getAnswer()))
                 .collect(Collectors.toList());
+        //the final .collect and its argument i am doing - > the easiest way to understand it as a final packager,which collects the object and wraps them in a list
+        //now returning the actual CardResponse
+        return new CardResponse(overviewId,title,sourceId,cardDetailResponseList);
+
     }
 
-    // Get all Q&A cards for all overviews in a session
+//     Get all Q&A cards for all overviews in a session
     public List<CardResponse> getCardsBySessionId(Long sessionId) {
         Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
         System.out.println("Fetching for session " + sessionId + " user " + currentUserId);
@@ -110,17 +112,17 @@ public class FlashCardService {
         List<FlashCardOverview> overviews = flashCardOverviewRepository.findBySource_ChatSession_SessionIdAndSource_User_UserId(sessionId, currentUserId);
         System.out.println("Found " + overviews.size() + " results");
 
-        // Flatten all cards from all overviews
-        return overviews.stream()
-                .flatMap(overview -> {
-                    Long overviewId = overview.getId();
-                    String title = overview.getTitle();
-                    Long sourceId = overview.getSource() != null ? overview.getSource().getSourceId() : null;
+       //ts tuff..
+        return overviews.stream().map(cardOverview->{
+            List<CardResponse.CardDetailResponse> cardDetailResponseList = cardOverview.getFlashCards()
+                    .stream()
+                    .map(cards->new CardResponse.CardDetailResponse(cards.getId(),cards.getQuestion(),cards.getAnswer()))
+                    .collect(Collectors.toList());
 
-                    return overview.getFlashCards().stream()
-                            .map(card -> new CardResponse(overviewId, title, sourceId, card.getQuestion(), card.getAnswer()));
-                })
-                .collect(Collectors.toList());
+            return  new CardResponse(cardOverview.getId(), cardOverview.getTitle(),cardOverview.getSource()!=null? cardOverview.getSource().getSourceId():null,cardDetailResponseList);
+        })
+                        .collect(Collectors.toList());
+
     }
 
     //update title of the flashcard overview
@@ -133,7 +135,7 @@ public class FlashCardService {
         
         existingFLashCardOverview.setTitle(newTitle);
         flashCardOverviewRepository.save(existingFLashCardOverview);
-        return new CardResponse(existingFLashCardOverview.getId(),existingFLashCardOverview.getTitle(),existingFLashCardOverview.getSource()!=null?existingFLashCardOverview.getSource().getSourceId():null,null,null);
+        return new CardResponse(existingFLashCardOverview.getId(),existingFLashCardOverview.getTitle(),existingFLashCardOverview.getSource()!=null?existingFLashCardOverview.getSource().getSourceId():null,null);
     }
 
     public void deleteFlashCardOverview(Long cardId){
