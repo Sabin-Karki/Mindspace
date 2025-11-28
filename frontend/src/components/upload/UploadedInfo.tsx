@@ -9,12 +9,16 @@ const UploadedInfo = () => {
   const sources = useSessionStore((state) => state.sources);
   const setSources = useSessionStore((state) => state.setSources);
   
-  //this will be later stored in zustland 
-  //this is needed by audio quiz flash generator
-  const [selectedSourceIds, setSelectedSourceIds] = useState<number[]>([]);
+  const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
+  const setSelectedSourceIds = useSessionStore((state) => state.setSelectedSourceIds);
+  const addSelectedSourceId = useSessionStore((state) => state.addSelectedSourceId);
+  const removeSelectedSourceId = useSessionStore((state) => state.removeSelectedSourceId);
+  const clearSelectedSourceIds = useSessionStore((state) => state.clearSelectedSourceIds);
+
+
   const [expandedSourceId, setExpandedSourceId] = useState<number| null>(null);
 
-
+  //fetch all sources of specific sessionId
   useEffect( () =>{
     const fetchSources = async(sessionId: number) =>{   
       try {
@@ -31,31 +35,29 @@ const UploadedInfo = () => {
   fetchSources(sessionId)
   },[]);
 
+  //calculate if all selected is checked or not
+  const isSelectAllChecked = sources.length > 0 && selectedSourceIds.length === sources.length;
 
   //handle selectall checkbox
   const handleSelectAll = () =>{
+    //if all selected then remove all
+    //else add all
     if(isSelectAllChecked) {
-      //if all sources are selected then deselect all 
-      setSelectedSourceIds([]);
+      clearSelectedSourceIds();
     }else{
       setSelectedSourceIds(sources.map(source => source.sourceId));
     }
   };
 
-  //handle select courses from checkbox
+  //handle select specific sources using checkbox
   //add and remove sources
   const handleSelectSource = (sourceId: number) =>{  
-
-    setSelectedSourceIds( prevIds => {
-      if(prevIds.includes(sourceId)) {
-        return prevIds.filter( id => id !== sourceId)  
-      }
-      return [...prevIds, sourceId];
-    })
+    if(selectedSourceIds.includes(sourceId)){
+      removeSelectedSourceId(sourceId);
+    }else{
+      addSelectedSourceId(sourceId);
+    }
   } 
-
-  //check whether all sources are selected or not
-  const isSelectAllChecked = sources.length > 0 && selectedSourceIds.length === sources.length;
   
   //check whether the title is clicked or not
   //to toggle visibility for summary
@@ -72,8 +74,8 @@ const UploadedInfo = () => {
         </span>
         <input
           type="checkbox"
-          checked={isSelectAllChecked}
-          onChange={handleSelectAll}
+          checked={isSelectAllChecked}  //this shows checked or not
+          onChange={() => handleSelectAll()}
           className="form-checkbox h-5 w-5 text-blue-500 bg-gray-700 border-gray-600 rounded cursor-pointer"
         />
       </div>
@@ -107,7 +109,7 @@ const UploadedInfo = () => {
             <input
               type="checkbox"
               onChange={() => handleSelectSource(source.sourceId)}
-              checked={selectedSourceIds.includes(source.sourceId)}
+              checked={selectedSourceIds.includes(source.sourceId)}//checked or not
               className="form-checkbox h-5 w-5 text-blue-500 bg-gray-700 border-gray-600 rounded cursor-pointer"
             />
 

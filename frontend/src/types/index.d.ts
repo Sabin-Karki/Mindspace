@@ -31,6 +31,11 @@ export interface ICardResponse {
   cardOverViewId: number; //chat generates a flash card 
   title: string;
   sourceId: number;
+  CardDetailResponse: ICardDetailResponse[];
+}
+
+export interface ICardDetailResponse {
+  cardId: number;
   question: string;
   answer: string;
 }
@@ -134,13 +139,14 @@ export interface IFlashCard {
   flashCardOverviewId: number; // ID of the parent FlashCardOverview
 }
 
-export interface IFlashCardOverview {
-  id: number;
-  title: string;
-  createdAt: string; // LocalDate
-  sourceId?: number; // Optional in case Source is null
-  // flashCards (OneToMany) is typically omitted in the overview/summary model
-}
+//not needed
+// export interface IFlashCardOverview {
+//   id: number;
+//   title: string;
+//   createdAt: string; // LocalDate
+//   sourceId?: number; // Optional in case Source is null
+//   // flashCards (OneToMany) is typically omitted in the overview/summary model
+// }
 
 export interface IQuestion {
   id: number;
