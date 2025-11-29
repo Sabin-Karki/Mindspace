@@ -11,7 +11,7 @@ import { Toaster } from 'sonner';
 const App = () => {
   return (
     <div className="h-screen flex flex-col bg-gray-50"> 
-    <Toaster position="top-right" richColors={true} expand={false} theme='light' closeButton={true} />
+    <Toaster position="top-left" richColors={true} expand={false} theme='light' closeButton={true} />
      <Navbar /> 
       <main className="flex-1 overflow-y-auto "> 
         <Routes>

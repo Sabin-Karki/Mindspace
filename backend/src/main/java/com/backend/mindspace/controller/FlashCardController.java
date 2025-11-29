@@ -23,6 +23,7 @@ public class FlashCardController {
         this.flashCardService = flashCardService;
     }
 
+    //send card details too QnA
     @PostMapping("/flash-card/{sessionId}")
     private ResponseEntity<CardResponse> generateFlashCard(@PathVariable(name = "sessionId") Long sessionId, @RequestBody CardRequestDTO cardRequestDTO) {
         try {
