@@ -13,6 +13,7 @@ interface FlashCardState {
   removeFlashCard: (flashCardId: number) => void;
 
   setFlashCardName: (flashCardName: string) => void;
+  updateFlashCardName: (flashCardId: number, flashCardName: string) => void;
 }
 
 export const useFlashCardStore = create<FlashCardState>(
@@ -40,6 +41,17 @@ export const useFlashCardStore = create<FlashCardState>(
       })
     )),
     setFlashCardName: (flashCardName: string) => set({ flashCardName }),
+
+    //update list
+    updateFlashCardName: (flashCardId: number, flashCardName: string) => set((state) => ({
+      flashCards: state.flashCards.map((flashCard) => {
+
+        if (flashCard.cardOverViewId === flashCardId) {
+          return { ...flashCard, title: flashCardName };
+        }
+        return flashCard;
+      }),
+    })),
 
   })
 ) 

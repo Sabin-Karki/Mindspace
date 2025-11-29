@@ -1,19 +1,27 @@
 import { useState } from "react";
 import type { ICardDetailResponse, ICardResponse } from "../../../types";
 import { useFlashCardStore } from "../../../store/flashCardStore";
+import { useSessionStore } from "../../../store/sessionStore";
+import { toast } from "sonner";
+import { updateFlashCardOverviewTitle } from "../../../api/flashApi";
 
 interface FlashCardPopupProps {
-  flashCardDetail: ICardResponse;
+  flashCard: ICardResponse;
   closeModal: () => void;
 }
 
-const FlashCardPopup = ({flashCardDetail, closeModal}: FlashCardPopupProps) => {
-
-  const flashCardName = useFlashCardStore((state) => state.flashCardName || "FlashCard");
+const FlashCardPopup = ( {flashCard, closeModal}: FlashCardPopupProps) => {
+  
+  const sessionId = useSessionStore((state) => state.sessionId);
+  const setFlashCardName = useFlashCardStore((state) => state.setFlashCardName );
+  const flashCardName = useFlashCardStore((state) => state.flashCardName);//global state
+  const updateFlashCardName = useFlashCardStore((state) => state.updateFlashCardName);
+  const [localFlashCardName, setLocalFlashCardName] = useState(flashCardName || ""); //local state
   const [currentIndex, setCurrentIndex] = useState(0);//for index of card
+  const [isShowQuestion, setIsShowQuestion] = useState(true);//for question or answer
 
   //which card to be displayed
-  const cardDetails = flashCardDetail.cardDetails;
+  const cardDetails = flashCard.cardDetails;
   const currentCard = cardDetails[currentIndex];
 
 
@@ -29,20 +37,70 @@ const FlashCardPopup = ({flashCardDetail, closeModal}: FlashCardPopupProps) => {
     setCurrentIndex( (prevIndex) => prevIndex - 1);
   }
 
+  //rename flash card
+  const handleUpdateFlashCardName = async() =>{
+   try {
+     if(!sessionId ){
+      toast.error("Session ID is missing. Please log in.");
+      return;
+    }
+
+    const response = await updateFlashCardOverviewTitle( flashCard.cardOverViewId, localFlashCardName);
+    updateFlashCardName(flashCard.cardOverViewId, response.title);
+
+    toast.success("Flashcard name updated successfully.");
+   } catch (error) {
+    toast.error("Failed to update flashcard name. Please try again.");
+    return;
+   }
+  }
+
+  const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalFlashCardName(e.target.value);
+  }  
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if(e.key === "Enter"){
+      handleUpdateFlashCardName();
+    }
+  }
+  
+  const handleShowFlashCard = () => {
+    setIsShowQuestion(!isShowQuestion);
+
+  }
+
   return (
     <>
-      <div onClick={(e) => e.stopPropagation()} className="bg-gray-800 rounded-lg p-4 w-full max-w-md text-white" >
+      <div onClick={(e) => e.stopPropagation()} 
+        // flex flex-col: Stacks the Header, Content, and Footer vertically.
+        className="bg-gray-800 rounded-lg p-4 w-full h-96 flex flex-col text-white" >
         
         <div  className="flex justify-between items-center p-2">
-          <div>{flashCardName}</div>
+          <div>
+            <input type="text" 
+              value={localFlashCardName} 
+              onChange={handleChangeCardName} 
+              onKeyDown={handleKeyDown}/>
+          </div>
           <div> {currentIndex+1}/{cardDetails.length} </div>
           <button onClick={closeModal} className="text-xl">&times;</button>
         </div>
         
-        <div className="p-4">
+        {/* flex-1: Tells this div to expand and fill ALL available empty space.
+         overflow-y-auto: If text is too long, a scrollbar appears INSIDE here. */}
+        <div className="p-4 flex-1 overflow-y-auto" >
           {/* {currentCard.cardId} */}
-          {currentCard.question}
-          {currentCard.answer}
+         
+         {/* toggle to flip */}
+          {isShowQuestion ? (
+            <div onClick={handleShowFlashCard}> {currentCard.question} </div>
+            ):(
+            <div onClick={handleShowFlashCard}> {currentCard.answer} </div>
+            ) 
+          }
+          {/* <div onClick={handleShowFlashCard}> {currentCard.question} </div>
+          <div onClick={handleShowFlashCard}> {currentCard.answer} </div> */}
         </div>
 
 
