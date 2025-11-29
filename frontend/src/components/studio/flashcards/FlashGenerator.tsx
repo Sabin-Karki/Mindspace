@@ -8,12 +8,11 @@ import type { IUploadResponse } from "../../../types";
 const FlashGenerator = () => {
   
   const sessionId = useSessionStore((state) => state.sessionId);
+  const sources: IUploadResponse[] = useSessionStore((state) => state.sources);
+  const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
+  
   const addFlashCard = useFlashCardStore((state) => state.addFlashCard);
 
-  const sources: IUploadResponse[] = useSessionStore((state) => state.sources);
-  const sourceIds = sources.map(s => s.sourceId);//getting all sources ids of that sessionId
-  
-  
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -22,17 +21,19 @@ const FlashGenerator = () => {
     try {
       setError(null);
       setIsLoading(true);
-
       if(!sessionId) return;
 
-      //for betterness
+      let sId:number[] = [];
+      if(selectedSourceIds.length === 0){
+        //if nothing selected then get all source ids
+        const sourceIds = sources.map(s => s.sourceId);
+        sId = sourceIds;
+      }else{
+        //if there is selected source ids then use it 
+        sId = selectedSourceIds;
+      }
 
-      //if no source ids 
-      //then find and use all sources ids of that sessionId
-
-      //generate flash card using selecting source ids
-
-      const response = await generateFlashCard(sessionId, sourceIds);
+      const response = await generateFlashCard(sessionId, sId);
       console.log(response);
       
       addFlashCard(response);

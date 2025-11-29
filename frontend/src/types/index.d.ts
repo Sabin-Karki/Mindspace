@@ -31,7 +31,8 @@ export interface ICardResponse {
   cardOverViewId: number; //chat generates a flash card 
   title: string;
   sourceId: number;
-  CardDetailResponse: ICardDetailResponse[];
+  //cardDetails needs to match of java variable
+  cardDetails: ICardDetailResponse[];
 }
 
 export interface ICardDetailResponse {
