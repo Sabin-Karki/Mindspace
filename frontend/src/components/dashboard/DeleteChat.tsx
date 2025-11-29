@@ -1,4 +1,4 @@
-import { useChatsListStore } from "../../store/useChatsListStore";
+import { useChatListStore } from "../../store/chatListStore";
 
 interface DeleteChatModalProps {
   handleHideDeleteModal: () => void;
@@ -8,7 +8,7 @@ interface DeleteChatModalProps {
 
 const DeleteChatModal = ({handleHideDeleteModal, handleDeleteChatSession, localSessionId}: DeleteChatModalProps) => {
 
-  const deleteSession = useChatsListStore((state) => state.deleteSession);
+  const deleteSession = useChatListStore((state) => state.deleteSession);
   
   return(
     <>

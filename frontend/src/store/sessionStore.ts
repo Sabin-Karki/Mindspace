@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 //this is for specific chat session 
 //it has sessionId chattitle 
-//multiple sources
+//multiple sources 
 interface SessionState {
   sessionId : number | null;
   chatTitle : string | null;
@@ -19,6 +19,12 @@ interface SessionState {
   addSource: (source: IUploadResponse) => void; //add source to list of sources
   removeSource: (sourceId: number) => void;
   clearSources: () => void;
+
+  selectedSourceIds: number[];
+  setSelectedSourceIds: (sourceIds: number[]) => void;
+  addSelectedSourceId: (sourceId: number) => void;
+  removeSelectedSourceId: (sourceId: number) => void;
+  clearSelectedSourceIds: () => void;
 }
 
 //that particular chat session id upload sources info
@@ -28,23 +34,44 @@ export const useSessionStore = create<SessionState>()(
       sessionId: null, 
       chatTitle: null,
       sources: [],
-
+      selectedSourceIds: [],
+      
       setSessionId: (newSessionId: number) => set({ sessionId: newSessionId }),
-      clearSessionId: () => set({ sessionId: null }),
-
+      setSources: (sources: IUploadResponse[]) => set({ sources }),
+      setSelectedSourceIds: (sourceIds: number[]) => set({ selectedSourceIds: sourceIds }),
       changeChatTitle: (title: string) => set({ chatTitle: title }),
 
-      setSources: (sources: IUploadResponse[]) => set({ sources }),
+
       addSource : (source: IUploadResponse) => set ( 
-        (state) => ({
-          sources : state.sources? [...state.sources, source] : [source]
-        })
+        (state) => {
+          const alreadyExists = state.sources.some( (s) => source.sourceId === s.sourceId);
+          if(alreadyExists) return state; //do nothing
+          return {sources: [...state.sources, source]}; //add new source
+        }
+      ),
+      addSelectedSourceId: (sourceId: number) => set(
+        (state) => {
+          const alreadyExists = state.selectedSourceIds.includes(sourceId);
+          if(alreadyExists) return state;
+          return {selectedSourceIds: [...state.selectedSourceIds, sourceId]}; //add new source id to ids
+        }
       ),
       removeSource: (sourceId: number) => set(
-        (state) => ({ sources: state.sources.filter((source) => source.sourceId !== sourceId) })
+        (state) => (
+          {
+            sources: state.sources.filter((source) => source.sourceId !== sourceId),//remove source obj
+            selectedSourceIds: state.selectedSourceIds.filter((id) => id !== sourceId),//remove source id from selectedSourceIds
+          }
+        )
       ),
 
+      removeSelectedSourceId: (sourceId: number) => set(
+        (state) => ({ selectedSourceIds: state.selectedSourceIds.filter((id) => id !== sourceId) })
+      ),
+
+      clearSessionId: () => set({ sessionId: null }),
       clearSources: () => set({ sources: [] }),
+      clearSelectedSourceIds: () => set({ selectedSourceIds: [] }),
     }),
   {
     name: "session-storage",// A unique name for key in localStorage
