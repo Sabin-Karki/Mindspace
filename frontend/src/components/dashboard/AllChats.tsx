@@ -110,18 +110,18 @@ const AllChats = () =>{
     setMenuId(null);
   };
 
-  const handleShowDeleteModal = ( ) =>{
+  const handleShowDeleteModal = () =>{
     setIsDeleteModalOpen(true);
   }
 
-  const handleHideDeleteModal = ( ) =>{
+  const handleHideDeleteModal = () =>{
     setIsDeleteModalOpen(false);
   }
 
-  const handleShowRenameModal = ( ) =>{
+  const handleShowRenameModal = () =>{
     setIsRenameModalOpen(true);
   }
- const handleHideRenameModal = ( ) =>{
+ const handleHideRenameModal = () =>{
     setIsRenameModalOpen(false);
   }
 

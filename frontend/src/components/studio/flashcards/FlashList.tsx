@@ -9,9 +9,8 @@ import FlashGet from "./FlashGet";
 const FlashList = () => {
  
   const sessionId = useSessionStore((state) => state.sessionId);
-  const flashCards = useFlashCardStore((state) => state.flashCards);
   const setFlashCards = useFlashCardStore((state) => state.setFlashCards);
-
+  const flashCards = useFlashCardStore((state) => state.flashCards);
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,7 +48,8 @@ const FlashList = () => {
         //display all flash cards 
         <FlashGet
           key={flashCard.cardOverViewId}
-          flashCardDetail={flashCard} />
+          flashCard={flashCard} 
+        />
       ))
     }
     </>
@@ -57,19 +57,3 @@ const FlashList = () => {
 }
 
 export default FlashList;
-
-
-
-
-
-//notes
-// flashCards.map((flashCard) => {
-//    <FlashGet ... /> // This returns undefined!
-// })
-// You have a syntax error in your .map().
-//  When using curly braces {} inside a map, you must explicitly write return.
-//  Alternatively, use parentheses () for an implicit return.
-
-//what is emplicit return and implicit return
-
-

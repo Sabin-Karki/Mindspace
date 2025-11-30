@@ -3,18 +3,25 @@ import type { ICardResponse } from "../types";
 
 interface FlashCardState {
   flashCards: ICardResponse[];
-
+  flashCardName: string;
+  
   setFlashCards: (flashCards: ICardResponse[]) => void;
   clearFlashCards: () => void;
-
+  
+  
   addFlashCard: (flashCard: ICardResponse) => void;
   removeFlashCard: (flashCardId: number) => void;
+
+  setFlashCardName: (flashCardName: string) => void;
+  updateFlashCardName: (flashCardId: number, flashCardName: string) => void;
 }
 
 export const useFlashCardStore = create<FlashCardState>(
   (set) =>({
 
     flashCards: [],
+    flashCardName: "",
+
     setFlashCards: (flashCards: ICardResponse[]) =>set({ flashCards }),
     clearFlashCards: () => set({flashCards :[]}),
     addFlashCard:(flashCard : ICardResponse) =>set(
@@ -33,6 +40,18 @@ export const useFlashCardStore = create<FlashCardState>(
         ),
       })
     )),
+    setFlashCardName: (flashCardName: string) => set({ flashCardName }),
+
+    //update list
+    updateFlashCardName: (flashCardId: number, flashCardName: string) => set((state) => ({
+      flashCards: state.flashCards.map((flashCard) => {
+
+        if (flashCard.cardOverViewId === flashCardId) {
+          return { ...flashCard, title: flashCardName };
+        }
+        return flashCard;
+      }),
+    })),
 
   })
 ) 

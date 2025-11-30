@@ -51,7 +51,7 @@ const ChatWindow: React.FC = () => {
  
       const displayMessages: IDisplayMessage[] = history.map(
         (msg) =>({
-          id: `message-${msg.createdAt}`,
+          id: `message-${msg.createdAt}`,//id needs to be unique //error here// message-2025-11-29
           text: msg.message,
           role: msg.role === "user" ? "user" : msg.role,
           timestamp: new Date(msg.createdAt),
