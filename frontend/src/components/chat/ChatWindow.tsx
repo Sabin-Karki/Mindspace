@@ -24,9 +24,7 @@ const ChatWindow: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect( () =>{
-    getMessageHistory();
-  },[]);
+  
 
   //scroll animation
   useEffect(() => {
@@ -36,40 +34,47 @@ const ChatWindow: React.FC = () => {
     }
   }, [messages]);
 
+
+  useEffect( () =>{
   //chat history
-  const getMessageHistory = async() =>{
-    if(!sessionId){
-      setError("session not found");
-      return;
+    const getMessageHistory = async() =>{
+      if(!sessionId){
+        setError("session not found");
+        return;
+      }
+      setError(null);
+      setIsLoading(true);
+      try {
+        //we get response as IChatMessage
+        //but to display we have IDisplayMessage
+        const history: IChatMessage[] = await getChatHistory(sessionId);
+
+        const displayMessages: IDisplayMessage[] = history.map(
+          (msg) =>({
+            id: `message-${msg.createdAt}`,//id needs to be unique //error here// message-2025-11-29
+            text: msg.message,
+            role: msg.role === "user" ? "user" : msg.role,
+            timestamp: new Date(msg.createdAt),
+            })
+          );
+        
+        console.log(displayMessages);
+        setMessages(displayMessages);
+      } catch (error: any) {
+        console.log(error);
+        const serverMessage = error?.response?.data?.message; 
+        const axiosMessage = error?.message; 
+        const message = serverMessage || axiosMessage || "Failed to get Message History. Please try again.";
+        setError(message);
+        toast.error(message);
+      }finally{
+        setIsLoading(false);
+      }
     }
-    setError(null);
-    setIsLoading(true);
-    try {
-      //we get response as IChatMessage
-      //but to display we have IDisplayMessage
-      const history: IChatMessage[] = await getChatHistory(sessionId);
- 
-      const displayMessages: IDisplayMessage[] = history.map(
-        (msg) =>({
-          id: `message-${msg.createdAt}`,//id needs to be unique //error here// message-2025-11-29
-          text: msg.message,
-          role: msg.role === "user" ? "user" : msg.role,
-          timestamp: new Date(msg.createdAt),
-          })
-        );
-      
-      setMessages(displayMessages);
-    } catch (error: any) {
-      console.log(error);
-      const serverMessage = error?.response?.data?.message; 
-      const axiosMessage = error?.message; 
-      const message = serverMessage || axiosMessage || "Failed to get Message History. Please try again.";
-      setError(message);
-      toast.error(message);
-    }finally{
-      setIsLoading(false);
-    }
-  }
+    
+  getMessageHistory();
+
+  },[]);
 
   const handleSendMessage = async() =>{
     if(!sessionId || !input){

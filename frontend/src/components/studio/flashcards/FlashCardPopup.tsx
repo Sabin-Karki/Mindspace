@@ -1,28 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ICardDetailResponse, ICardResponse } from "../../../types";
 import { useFlashCardStore } from "../../../store/flashCardStore";
 import { useSessionStore } from "../../../store/sessionStore";
 import { toast } from "sonner";
-import { updateFlashCardOverviewTitle } from "../../../api/flashApi";
+import { getFlashCardByCardId, updateFlashCardOverviewTitle } from "../../../api/flashApi";
+import Modal from "react-modal";
 
 interface FlashCardPopupProps {
-  flashCard: ICardResponse;
+  cardId: number;
   closeModal: () => void;
+  flashCardName: string;
 }
 
-const FlashCardPopup = ( {flashCard, closeModal}: FlashCardPopupProps) => {
+Modal.setAppElement("#root");
+
+const FlashCardPopup = ( {cardId, closeModal, flashCardName}: FlashCardPopupProps) => {
   
   const sessionId = useSessionStore((state) => state.sessionId);
-  const setFlashCardName = useFlashCardStore((state) => state.setFlashCardName );
-  const flashCardName = useFlashCardStore((state) => state.flashCardName);//global state
+  const [cardDetails, setCardDetails] = useState<ICardDetailResponse[]>([]);
+  
   const updateFlashCardName = useFlashCardStore((state) => state.updateFlashCardName);
-  const [localFlashCardName, setLocalFlashCardName] = useState(flashCardName || ""); //local state
+  
+  const [localFlashCardName, setLocalFlashCardName] = useState(flashCardName || "");//local state name
+  
   const [currentIndex, setCurrentIndex] = useState(0);//for index of card
   const [isShowQuestion, setIsShowQuestion] = useState(true);//for question or answer
 
+
+  //fetching specific flash card using cardId 
+  useEffect(() =>{
+    const getFlashCard = async(cardId: number) =>{
+      try {
+        const response: ICardResponse = await getFlashCardByCardId(cardId);
+        console.log(response);
+        setCardDetails(response.cardDetails);
+    
+      } catch (error: any) {
+        const serverMessage = error?.response?.data?.message;
+        const axiosMessage = error?.message;
+        const message = serverMessage || axiosMessage || "Failed to get flashcard details. Please try again.";
+        toast.error(message);
+      }
+    }
+    getFlashCard(cardId);
+  },[]);
+  
+
   //which card to be displayed
-  const cardDetails = flashCard.cardDetails;
-  const currentCard = cardDetails[currentIndex];
+  // const cardDetails = flashCard.cardDetails;
+  const currentCard: ICardDetailResponse = cardDetails[currentIndex];
 
 
   //handle next btn
@@ -44,9 +70,8 @@ const FlashCardPopup = ( {flashCard, closeModal}: FlashCardPopupProps) => {
       toast.error("Session ID is missing. Please log in.");
       return;
     }
-
-    const response = await updateFlashCardOverviewTitle( flashCard.cardOverViewId, localFlashCardName);
-    updateFlashCardName(flashCard.cardOverViewId, response.title);
+    const response = await updateFlashCardOverviewTitle( cardId, localFlashCardName);
+    updateFlashCardName(cardId, response.title);
 
     toast.success("Flashcard name updated successfully.");
    } catch (error) {
@@ -69,6 +94,8 @@ const FlashCardPopup = ( {flashCard, closeModal}: FlashCardPopupProps) => {
     setIsShowQuestion(!isShowQuestion);
 
   }
+
+  if (!currentCard) return <div>Loading...</div>;
 
   return (
     <>

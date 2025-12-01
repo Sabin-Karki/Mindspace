@@ -1,11 +1,13 @@
 import type { AxiosResponse } from "axios";
 import { credApi } from "../config/axios";
-import type { ICardRequestDTO, ICardResponse, ICardUpdate } from "../types";
+import type { ICardOverview, ICardRequestDTO, ICardResponse, ICardUpdate } from "../types";
 
 
-export const generateFlashCard = async (sessionId: number, sourceIds: number[]): Promise<ICardResponse> => {
+export const generateFlashCard = async (sessionId: number, sourceIds: number[]): Promise<ICardOverview> => {
   const cardRequestDTO: ICardRequestDTO = { sourceIds };
-  const res: AxiosResponse<ICardResponse> = await credApi.post(`/generate/flash-card/${sessionId}`, cardRequestDTO);
+  
+  //using light weight ICardOverview
+  const res: AxiosResponse<ICardOverview> = await credApi.post(`/generate/flash-card/${sessionId}`, cardRequestDTO);
   return res.data;
 };
 
@@ -16,10 +18,13 @@ export const getFlashCardByCardId = async (cardId: number): Promise<ICardRespons
 };
 
 //get list of flash cards
-export const getFlashCardsBySessionId = async (sessionId: number): Promise<ICardResponse[]> => {
-  const res: AxiosResponse<ICardResponse[]> = await credApi.get(`/generate/flash-card/session/${sessionId}`);
+export const getFlashCardsBySessionId = async (sessionId: number): Promise<ICardOverview[]> => {
+  //using light weight ICardOverview
+  //not taking full ICardResponse as it is too heavy
+  const res: AxiosResponse<ICardOverview[]> = await credApi.get(`/generate/flash-card/session/${sessionId}`);
   return res.data;
 };
+
 
 export const updateFlashCardOverviewTitle = async (cardId: number, title: string): Promise<ICardResponse> => {
   const cardUpdate: ICardUpdate = { title };

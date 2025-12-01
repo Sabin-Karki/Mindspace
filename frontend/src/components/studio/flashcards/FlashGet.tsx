@@ -1,22 +1,20 @@
 import { useState } from "react";
-import type { ICardResponse } from "../../../types";
+import type { ICardOverview } from "../../../types";
 import FlashCardPopup from "./FlashCardPopup";
 import Modal from "react-modal";
 import { useFlashCardStore } from "../../../store/flashCardStore";
 import { toast } from "sonner";
-import { deleteFlashCardOverview, updateFlashCardOverviewTitle } from "../../../api/flashApi";
-import { useSessionStore } from "../../../store/sessionStore";
+import { deleteFlashCardOverview, getFlashCardByCardId, updateFlashCardOverviewTitle } from "../../../api/flashApi";
+import DeleteFlashCard from "./DeleteFlashCard";
 
 interface FlashCardProps {
-  flashCard: ICardResponse;
+  flashCard: ICardOverview;
 }
 
 //getting a specific flash card
 const FlashGet = ( {flashCard}: FlashCardProps ) => {
-
-  const setFlashCardName = useFlashCardStore((state) => state.setFlashCardName);
-  const flashCardName = useFlashCardStore((state) => state.flashCardName || "FlashCard");//global state
-  const [localFlashCardName, setLocalFlashCardName] = useState(flashCardName || ""); //local state
+  
+  const [localFlashCardName, setLocalFlashCardName] = useState(flashCard.title || ""); //local state
   const updateFlashCardName = useFlashCardStore((state) => state.updateFlashCardName);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,16 +26,11 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
   const [isLoading, setIsLoading] = useState(false);
 
 
-  //clculate 
-  //no of questions 
-  //which number are we on 
-  //show:: 1/12
-
   //rename flash card
   const handleUpdateFlashCardName = async() =>{
     try {
       const response = await updateFlashCardOverviewTitle(flashCard.cardOverViewId, localFlashCardName);
-      updateFlashCardName(flashCard.cardOverViewId, response.title);
+      updateFlashCardName(flashCard.cardOverViewId, response.title);  //update global state after flashcard name change
 
       toast.success("Flashcard name updated successfully.");
     } catch (error) {
@@ -46,20 +39,6 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
     }
   }
   
-  //delete flash card
-  const handleDeleteChatSession = async() =>{
-    try {
-      await deleteFlashCardOverview(flashCard.cardOverViewId);
-      toast.success("Chat deleted successfully.");
-
-      //update state
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to delete chat. Please try again.");
-    }
-  }
-
-
 
   //change local state of flash card
   const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,6 +48,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if(e.key === "Enter"){
       handleUpdateFlashCardName();
+      closeRenameModal();
     }
   }
 
@@ -85,62 +65,105 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
   const handleShowMenu = (id: number) => {
     setMenuId( id === openMenuId ? null :id);
   };
+  
   const handleHideMenu = () => {
     setMenuId(null);
   };
 
-  const handleShowDeleteModal = () =>{
+  const openDeleteModal = () =>{
     setIsDeleteModalOpen(true);
   }
 
-  const handleHideDeleteModal = () =>{
+  const closeDeleteModal = () =>{
     setIsDeleteModalOpen(false);
   }
 
-  const handleShowRenameModal = () =>{
+  const openRenameModal = () => {
     setIsRenameModalOpen(true);
   }
- const handleHideRenameModal = () =>{
-    setIsRenameModalOpen(false);
-  }
 
-  //when clicked it changes global state of flashcard title
-  const handleSetFlashCardName = () => {
-    setFlashCardName(flashCard.title);
+  const closeRenameModal = () => {
+    setIsRenameModalOpen(false);
   }
 
   return(
     <>
-      <div onClick={ () => {openModal(); handleSetFlashCardName(); }} className="flex justify-between border-4">
-        {flashCard.title}
+    <div className="relative">
+      <div onClick={ openModal } className="flex justify-between border-4">
+        
+        <div className="relative flex items-center" >
+          {/* flash card name */}
+        {isRenameModalOpen ?(
+          <input type="text"
+          onClick={(e) => e.stopPropagation()}
+          value={localFlashCardName} 
+          onChange={handleChangeCardName}
+          onKeyDown={handleKeyDown} 
+          className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 "
+          autoFocus
+          />
+        ):(
+          <p>
+            {flashCard.title}
+          </p>
+        )}
+        </div>
+
         {/* we only have 1 sources so not checking no. of sources*/}
         <p>1 sources</p>
-        <button 
-          // this shows a drop menu with rename and delete option
-            onClick={ () => handleShowMenu(flashCard.cardOverViewId) } 
-            className="text-2xl text-gray-700 hover:text-amber-600 px-2 " >
-            &#x22EE;
-          </button>
-
-          {openMenuId === flashCard.cardOverViewId && (
-            <div className="absolute bg-white border border-gray-300 rounded-md shadow-md z-50" >
-              <div>rename</div>
-              <div>delete</div>
-            </div>
-          )}
+        {/* menu options ||| rename and delete option */}
+        <button         
+          onClick={ (e) => { e.stopPropagation(); handleShowMenu(flashCard.cardOverViewId); } } 
+          className="text-2xl text-gray-700 hover:text-amber-600 px-2 " >
+          &#x22EE;
+        </button>
       </div>
 
+      {openMenuId === flashCard.cardOverViewId && (
+        <>
+
+        {/* invisible backdrop for menu // covers whole screen //closes menu on click */}
+        <div className="fixed inset-0 z-10" onClick={(e) =>{ e.stopPropagation(); handleHideMenu(); }}></div>
+
+        {/* menu options on top of invisible backdrop */}
+        <div className=" absolute top-10 right-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100 " >
+          <button onClick={(e) =>{ e.stopPropagation(); openDeleteModal(); handleHideMenu(); }} 
+            className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
+            Delete
+          </button>
+          <button onClick={(e) =>{ e.stopPropagation(); openRenameModal(); handleHideMenu(); }} 
+            className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100">
+            Rename
+          </button>
+        </div>
+        </>
+      )}
+    </div>
+    
+    {/* Delete Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onRequestClose={closeDeleteModal} //press esc to close
+        overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
+        className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" 
+      >
+        <DeleteFlashCard
+          closeDeleteModal={closeDeleteModal}
+          cardOverViewId={flashCard.cardOverViewId}
+        />
+      </Modal>
+    
+      {/* popup modal for showing flashcard details like QnA */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal} //press esc to close
         overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
         className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" 
-        >
-
+      >
         <FlashCardPopup 
-          flashCard={flashCard}
-          closeModal={closeModal}     
-            
+          cardId={flashCard.cardOverViewId}
+          flashCardName={localFlashCardName}
+          closeModal={closeModal}   
         />
       </Modal>
 

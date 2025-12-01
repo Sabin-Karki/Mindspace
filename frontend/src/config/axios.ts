@@ -39,3 +39,20 @@ credApi.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+// AXIOS RESPONSE INTERCEPTOR
+// This runs after every request made with 'credApi'
+credApi.interceptors.response.use(
+  //simply send response
+  (response) =>{
+    return response;
+  },
+
+  //but in case of error, if status code is 401, logout 
+  (error) =>{
+    if(error.response && error.response.status === 401){
+      useAuthStore.getState().logout();
+    }
+    return Promise.reject(error);
+  }
+)

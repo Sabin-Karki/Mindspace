@@ -6,7 +6,9 @@ import ChatTitle from "../chat/ChatTitle";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const token = useAuthStore((state) => state.token);
+  const isAuthenticated = !!token; //check if there is token or not 
+
   const logout = useAuthStore((state) => state.logout);
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
 
@@ -16,7 +18,7 @@ const Navbar = () => {
     navigate("/"); // Redirect to home page after logout
   };
 
-  const isChatPage =window.location.pathname === "/chat";
+  const isChatPage = window.location.pathname === "/chat";
 
   // If the store hasn't finished loading from local storage,
   // render a minimal/loading UI (to prevent flickering)
@@ -47,6 +49,7 @@ const Navbar = () => {
             <span className="text-blue-600 mr-1">📝</span> Mindspace
           </Link>
 
+          {/* if it is chat page then show chat title in navbar */}
           { isChatPage && (
             <div className="flex items-center p-4">
               <ChatTitle />
