@@ -12,7 +12,7 @@ import java.util.List;
 public class CardResponse {
  private Long cardOverViewId;
  private String title;
- private Long sourceId;
+ private List<Long> sourceId;
  private List<CardDetailResponse> cardDetails;
 
 
