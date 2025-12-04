@@ -12,7 +12,7 @@ import java.util.List;
 public class QuizOverviewResponse {
   private Long quizId;
   private String title;
-  private Long sourceId;
+  private List<Long> sourceId;
   private List<QuestionResponse> questions;  // ← MUST HAVE THIS
 
   @Data
