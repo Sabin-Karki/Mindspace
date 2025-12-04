@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import UploadPanel from "../upload/UploadPanel";
 import ChatWindow from "../chat/ChatWindow";
 import StudioPanel from "../studio/StudioPanel";
+import { useLayoutStore } from "../../store/layoutStore";
 
-const InitialWidth = {
-  dragpos1: 20,
-  dragpos2: 80
-};
+
+// const InitialWidth = {
+//   dragpos1: 20,
+//   dragpos2: 80
+// };
 
 const MIN_WIDTH = 20;
 const MAX_CONTAINER_WIDTH = 100;
@@ -17,11 +19,18 @@ type DragPosition = 'dragpos1' | 'dragpos2' | null;
 
 const WorkspaceContainer = () =>{
 
-  const [dividerPos, setDividerPos] = useState(InitialWidth);
   const isDragging = useRef<DragPosition>(null); 
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isLeftPanelClose, setIsLeftPanelClose] = useState(false);
-  const [isRightPanelClose, setIsRightPanelClose] = useState(false);
+
+  const isLeftPanelClose = useLayoutStore((state) => state.isLeftPanelClose);
+  const setIsLeftPanelClose = useLayoutStore((state) => state.setIsLeftPanelClose);
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
+  const setIsRightPanelClose = useLayoutStore((state) => state.setIsRightPanelClose);
+
+  // const [dividerPos, setDividerPos] = useState(InitialWidth);
+  const dividerPos = useLayoutStore((state) => state.dividerPos);
+  const setDividerPos = useLayoutStore((state) => state.setDividerPos); 
+
 
   //start drag
   //this is horizontal small div that acts as a drag handle
@@ -119,31 +128,33 @@ const WorkspaceContainer = () =>{
   },[ handleMouseMove, handleMouseUp]);
 
  
+
+
   const closeLeftSideBar = useCallback(() => {
     console.log("close left sidebar");
     setIsLeftPanelClose(true);
 
-     setDividerPos( (prev) =>{
-       return {...prev, dragpos1: 5};
-     });
-  },[]);
+    setDividerPos( (prev) =>{
+      return {...prev, dragpos1: 5};
+    });
+  },[]); 
 
   const closeRightSideBar = useCallback(() => {
     console.log("close right sidebar");
     setIsRightPanelClose(true);
 
     setDividerPos( (prev) =>{
-       return {...prev, dragpos2: 95};
-     });
+      return {...prev, dragpos2: 95};
+    });
   },[]);
 
   const openLeftSideBar = useCallback(() => {
     console.log("open left sidebar");
     setIsLeftPanelClose(false);
 
-     setDividerPos( (prev) =>{
-       return {...prev, dragpos1: MIN_WIDTH};
-     });
+    setDividerPos( (prev) =>{
+      return {...prev, dragpos1: MIN_WIDTH};
+    });
   },[]);
 
   const openRightSideBar = useCallback(() => {
@@ -151,7 +162,7 @@ const WorkspaceContainer = () =>{
     setIsRightPanelClose(false);
 
     setDividerPos( (prev) =>{
-       return {...prev, dragpos2: MAX_CONTAINER_WIDTH - MIN_WIDTH};
+      return {...prev, dragpos2: MAX_CONTAINER_WIDTH - MIN_WIDTH};
      });
   },[]);
 
@@ -171,7 +182,8 @@ const WorkspaceContainer = () =>{
         style={{ width: `${panel1}%` }}>
           <UploadPanel 
           closeLeftSideBar={closeLeftSideBar}
-          openLeftSideBar={openLeftSideBar} />
+          openLeftSideBar={openLeftSideBar} 
+          isLeftPanelClose={isLeftPanelClose}/>
 
          {/* if isLeftPanelClose then show buttons */}
          {/* if isLeftPanelClose false then show UploadPanel */}
@@ -204,7 +216,8 @@ const WorkspaceContainer = () =>{
         style={{ width: `${panel3}%` }}>
           <StudioPanel 
           closeRightSideBar={closeRightSideBar}
-          openRightSideBar={openRightSideBar} />
+          openRightSideBar={openRightSideBar} 
+          isRightPanelClose={isRightPanelClose}/>
       </div>
     </div>
     </>
