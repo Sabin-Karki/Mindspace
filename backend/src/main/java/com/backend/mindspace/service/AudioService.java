@@ -39,73 +39,83 @@ public class AudioService {
         }
     }
 
-    
 
-        @Transactional
-        public AudioOverview generateAudioOverview(Long sourceId) throws IOException {
-            User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Source source = sourceRepository.findBySourceIdAndUser_UserId(sourceId, currentUser.getUserId())
-                    .orElseThrow(() -> new AccessDeniedException("Source not found with id: " + sourceId + " or access denied."));
+    @Transactional
+    public AudioOverview generateAudioOverview(Long sourceId) throws IOException {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Source source = sourceRepository.findBySourceIdAndUser_UserId(sourceId, currentUser.getUserId())
+                .orElseThrow(() -> new AccessDeniedException("Source not found with id: " + sourceId + " or access denied."));
 
-            //generate the title
-            String audioTitle = geminiService.generateTitle(source.getContent());
-            // 1. Generate podcast script
-            String script = geminiService.generatePodcastScript(source.getContent());
+        System.out.println("Starting audio generation for source id: " + sourceId);
 
-            // 2. Generate audio from script
-            byte[] audioData = geminiService.generateSpeech(script);
+        // Generate title
+        String audioTitle = geminiService.generateTitle(source.getContent());
+        System.out.println("generated audio title: " + audioTitle);
 
-            // 3. Save audio to a file
-            String fileName = "overview_" + sourceId + "_" + UUID.randomUUID() + ".wav";
-            Path filePath = audioStoragePath.resolve(fileName);
-            try (OutputStream os = new FileOutputStream(filePath.toFile())) {
-                os.write(audioData);
-            }
+        // 1. Script
+        System.out.println("Generating podcast script ......");
+        String script = geminiService.generatePodcastScript(source.getContent());
+        System.out.println("generated script : " + script.length() );
+        //generate script from summary instead
 
-            // 4. Create and save AudioOverview entity
-            AudioOverview audioOverview = new AudioOverview();
-            audioOverview.setSource(source);
-            audioOverview.setTitle(audioTitle);
-            audioOverview.setScript(script);
-            audioOverview.setAudioUrl("/audio/" + fileName); // URL path for access
-            audioOverview.setCreatedAt(LocalDate.now());
+        // 2. MP3 bytes from Gemini
+        System.out.println("generating speech audio : ....");
+        byte[] audioData = geminiService.generateSpeech(script);
+        System.out.println("Generated audio data length: " + audioData.length);
 
-            return audioRepository.save(audioOverview);
+        // 3. Save MP3 file
+        String fileName = "overview_" + sourceId + "_" + UUID.randomUUID() + ".wav";
+        Path filePath = audioStoragePath.resolve(fileName);
+
+        try (OutputStream os = new FileOutputStream(filePath.toFile())) {
+            os.write(audioData);
         }
 
-        public List<AudioOverview> getAudioOverviewsBySessionId(Long sessionId) {
-            Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
-            return audioRepository.findBySource_ChatSession_SessionIdAndSource_User_UserId(sessionId, currentUserId);
-        }
+        // 4. Store in DB
+        AudioOverview audioOverview = new AudioOverview();
+        audioOverview.setSource(source);
+        audioOverview.setTitle(audioTitle);
+        audioOverview.setScript(script);
+        audioOverview.setAudioUrl("/audio/" + fileName);
+        audioOverview.setCreatedAt(LocalDate.now());
 
-        public AudioOverview getAudioOverviewById(Long audioId) {
-            Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
-            AudioOverview audioOverview = audioRepository.findById(audioId)
-                    .orElseThrow(() -> new RuntimeException("Audio not found"));
-            if (!audioOverview.getSource().getUser().getUserId().equals(currentUserId)) {
-                throw new AccessDeniedException("You do not have permission to view this audio.");
-            }
-            return audioOverview;
-        }
-
-        public AudioOverview updateAudioTitle(Long audioId, String newTitle) {
-            Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
-            AudioOverview audioOverview = audioRepository.findById(audioId)
-                    .orElseThrow(() -> new RuntimeException("Audio not found"));
-            if (!audioOverview.getSource().getUser().getUserId().equals(currentUserId)) {
-                throw new AccessDeniedException("You do not have permission to update this audio.");
-            }
-            audioOverview.setTitle(newTitle);
-            return audioRepository.save(audioOverview);
-        }
-
-        public void deleteAudioOverview(Long audioId){
-        if(!audioRepository.existsById(audioId)){
-            throw new RuntimeException("Audio not found with id : " + audioId );
-        }
-        audioRepository.deleteById(audioId);
-        }
-
+        return audioRepository.save(audioOverview);
     }
 
-    
+    public List<AudioOverview> getAudioOverviewsBySessionId(Long sessionId) {
+        Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        return audioRepository.findBySource_ChatSession_SessionIdAndSource_User_UserId(sessionId, currentUserId);
+    }
+
+    public AudioOverview getAudioOverviewById(Long audioId) {
+        Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        AudioOverview audioOverview = audioRepository.findById(audioId)
+                .orElseThrow(() -> new RuntimeException("Audio not found"));
+
+        if (!audioOverview.getSource().getUser().getUserId().equals(currentUserId)) {
+            throw new AccessDeniedException("You do not have permission to view this audio.");
+        }
+
+        return audioOverview;
+    }
+
+    public AudioOverview updateAudioTitle(Long audioId, String newTitle) {
+        Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        AudioOverview audioOverview = audioRepository.findById(audioId)
+                .orElseThrow(() -> new RuntimeException("Audio not found"));
+
+        if (!audioOverview.getSource().getUser().getUserId().equals(currentUserId)) {
+            throw new AccessDeniedException("You do not have permission to update this audio.");
+        }
+
+        audioOverview.setTitle(newTitle);
+        return audioRepository.save(audioOverview);
+    }
+
+    public void deleteAudioOverview(Long audioId) {
+        if (!audioRepository.existsById(audioId)) {
+            throw new RuntimeException("Audio not found with id: " + audioId);
+        }
+        audioRepository.deleteById(audioId);
+    }
+}
