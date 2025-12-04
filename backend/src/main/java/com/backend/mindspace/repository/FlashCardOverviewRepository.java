@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FlashCardOverviewRepository extends JpaRepository<FlashCardOverview,Long> {
 
-     List<FlashCardOverview> findBySource_ChatSession_SessionIdAndSource_User_UserId(Long sessionId, Long currentUserId);
+     List<FlashCardOverview> findBySources_ChatSession_SessionIdAndSources_User_UserId(Long sessionId, Long currentUserId);
 }

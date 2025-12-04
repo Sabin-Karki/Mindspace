@@ -9,7 +9,6 @@ import com.backend.mindspace.repository.SourceRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +34,7 @@ public class ReportService {
 
         //you are taking list of sources and 
         //then adding only one source to report??
+    //->see the parameter , its type for source ids is list of long ,implicating that multiple sources or 1 source can be selected/sent to generate report
 
     public ReportResponseDTO generateAndSaveReport(Long userId, Long sessionId, List<Long> sourceIds){
       List<Source> selectedSource = sourceRepository.findByChatSession_SessionIdAndUser_UserIdAndSourceIdIn(sessionId,userId,sourceIds)
@@ -55,16 +55,17 @@ public class ReportService {
         rg.setReportContent(reportJson);
         rg.setCreatedAt(LocalDate.now());
 
-        Source sourceToSet = null;
-        if(selectedSource.size()==1){
-            sourceToSet=selectedSource.getFirst();
-        }
+
         //if multiple sources are selected the fk of the source will be set to null
-        rg.setSource(sourceToSet);
+        rg.setSources(selectedSource);
         reportRepository.save(rg);
 
+        List<Long>  selectedSourceIds =  selectedSource.stream()
+                .map(Source::getSourceId)
+                .toList();
 
-        return new ReportResponseDTO(rg.getReportId(),rg.getReportContent(),rg.getReportTitle(),rg.getSource()!=null?rg.getSource().getSourceId():null);
+        return new ReportResponseDTO(rg.getReportId(),rg.getReportContent(),rg.getReportTitle(),selectedSourceIds);
+
         //this is list ?? //
 //        rg.setSource(selectedSource);
         
@@ -80,20 +81,26 @@ public class ReportService {
      Long getReportId= existingReport.getReportId();
      String getReportContent= existingReport.getReportContent();
      String getReportTitle= existingReport.getReportTitle();
-     Long getReportSourceId=existingReport.getSource()!=null?existingReport.getSource().getSourceId():null;
 
-     return new ReportResponseDTO(getReportId,getReportContent,getReportTitle,getReportSourceId);
+     List<Long> getReportSourceIds = existingReport.getSources().stream()
+             .map(Source::getSourceId)
+             .toList();
+     return new ReportResponseDTO(getReportId,getReportContent,getReportTitle,getReportSourceIds);
   }
 
   //get reports by session
     public List<ReportResponseDTO> getReportBySessionId(Long sessionId)
     {
         Long currentUserId= ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
-        List<ReportGeneration> existingReportForSession = reportRepository.findBySource_ChatSession_SessionIdAndSource_User_UserId(sessionId,currentUserId);
-        return existingReportForSession.stream()
-                .map(getReport->new ReportResponseDTO(getReport.getReportId(), getReport.getReportContent(), getReport.getReportTitle(), getReport.getSource()!=null?getReport.getSource().getSourceId():null))
-                .collect(Collectors.toList());
+        List<ReportGeneration> existingReportForSession = reportRepository.findBySources_ChatSession_SessionIdAndSources_User_UserId(sessionId,currentUserId);
 
+        return existingReportForSession.stream()
+                .map(report-> {
+                    List<Long> reportSourceIds = report.getSources().stream()
+                            .map(Source::getSourceId)
+                            .toList();
+                    return new ReportResponseDTO(report.getReportId(), report.getReportContent(), report.getReportTitle(), reportSourceIds);
+                }).toList();
     }
   @Transactional
     public ReportResponseDTO updateAndSaveReportTitle(Long reportId,String newTitle){
@@ -105,7 +112,10 @@ public class ReportService {
               .orElseThrow(()->new EntityNotFoundException("Report Not found with id " + reportId));
       existingReport.setReportTitle(newTitle);
       reportRepository.save(existingReport);
-      return new ReportResponseDTO(existingReport.getReportId(), existingReport.getReportContent(), existingReport.getReportTitle(), existingReport.getSource()!=null?existingReport.getSource().getSourceId():null);
+      List<Long> getReportSourceIds = existingReport.getSources().stream()
+              .map(Source::getSourceId)
+              .toList();
+      return new ReportResponseDTO(existingReport.getReportId(), existingReport.getReportContent(), existingReport.getReportTitle(), getReportSourceIds);
     }
 
     public void deleteReport(Long reportId){

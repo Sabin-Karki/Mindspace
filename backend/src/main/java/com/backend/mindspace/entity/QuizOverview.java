@@ -19,10 +19,15 @@ public class QuizOverview {
     private String title;
     private LocalDate createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "source_id", nullable = true)
-    private Source source;
+    //need to make the source into ArrayList so multiple sources selected is associated with one quiz<overview generated>
+    @ManyToMany
+    @JoinTable(
+            name="quizoverview_source",
+            joinColumns=@JoinColumn(name="quizoverview_id"),
+            inverseJoinColumns = @JoinColumn(name="source_id")
+    )
+    private List<Source> sources = new ArrayList<>(); // this now holds multiple sources
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+      @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 }

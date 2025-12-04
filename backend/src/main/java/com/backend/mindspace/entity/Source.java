@@ -41,14 +41,15 @@ public class Source {
     @OneToMany(mappedBy = "source")
     private List<AudioOverview> audioOverviews;
 
-    @OneToMany(mappedBy = "source")
+
+    @ManyToMany(mappedBy="sources")
     private List<QuizOverview> quizOverviews;
 
-    @OneToMany(mappedBy = "source")
-    private List<FlashCardOverview> flashCardOverviews;
+   @ManyToMany(mappedBy = "sources")
+   private List<FlashCardOverview> flashCardOverviews;
 
-    @OneToMany(mappedBy = "source")
-    private List<ReportGeneration> reportGenerations;
+   @ManyToMany(mappedBy = "sources")
+   private List<ReportGeneration> reportGenerations;
 
 
 }

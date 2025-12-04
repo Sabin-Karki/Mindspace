@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,12 +60,14 @@ public class QuizService {
             QuizOverview quiz = new QuizOverview();
             quiz.setTitle(quizTitle);
 
-            Source sourceToSet = null;
-            if(selectedSources.size()==1){
-                sourceToSet = selectedSources.getFirst();
-            }
-            // If multiple sources were selected, sourceToSet remains null to indicate aggregation
-            quiz.setSource(sourceToSet);
+//            Source sourceToSet = null;
+//            if(selectedSources.size()==1){
+//                sourceToSet = selectedSources.getFirst();
+//            }
+//            // If multiple sources were selected, sourceToSet remains null to indicate aggregation
+//            quiz.setSource(sourceToSet);
+              //the foreign key is to be set list of selected sources
+             quiz.setSources(selectedSources);
             quiz.setCreatedAt(LocalDate.now());
 
             // 4. Associate questions with the quiz
@@ -73,8 +76,12 @@ public class QuizService {
             }
             quiz.setQuestions(questions);
             // 5. Save the QuizOverview (and cascade to Questions)
+            List<Long> selectedSourceIds = selectedSources.stream()
+                            .map(Source::getSourceId)
+                                    .toList();
+
             quizOverviewRepository.save(quiz);
-            return new QuizOverviewResponse(quiz.getId(),quizTitle,quiz.getSource()!=null?quiz.getSource().getSourceId():null,null);
+            return new QuizOverviewResponse(quiz.getId(),quizTitle,selectedSourceIds,null);
 
 
         } catch (Exception e) {
@@ -95,13 +102,17 @@ public class QuizService {
         List<QuizOverviewResponse.QuestionResponse> questionResponses = quizOverview.getQuestions().stream()
                 .map(question->new QuizOverviewResponse.QuestionResponse(question.getId(), question.getQuestionText(),question.getOptions(),question.getCorrectAnswerIndex()))
                 .collect(Collectors.toList());
-        return new QuizOverviewResponse(quizId,title,quizOverview.getSource()!=null? quizOverview.getSource().getSourceId():null,questionResponses);
+        List<Long> sourceIds = quizOverview.getSources().stream()
+                .map(Source::getSourceId)
+                .toList();
+
+        return new QuizOverviewResponse(quizId,title,sourceIds,questionResponses);
     }
 
     //get mapping for quiz by session id
     public List<QuizOverviewResponse> getQuizzesBySessionId(Long sessionId) {
         Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
-        List<QuizOverview> quizzes = quizOverviewRepository.findBySource_ChatSession_SessionIdAndSource_User_UserId(sessionId, currentUserId);
+        List<QuizOverview> quizzes = quizOverviewRepository.findBySources_ChatSession_SessionIdAndSources_User_UserId(sessionId, currentUserId);
 
         return quizzes.stream()
                 .map(quiz -> {
@@ -110,9 +121,13 @@ public class QuizService {
                                     q.getId(), q.getQuestionText(), q.getOptions(), q.getCorrectAnswerIndex()))
                             .collect(Collectors.toList());
 
+                    List<Long> sourceIds = quiz.getSources().stream()
+                            .map(Source::getSourceId)
+                            .toList();
+
                     return new QuizOverviewResponse(
                             quiz.getId(), quiz.getTitle(),
-                            quiz.getSource() != null ? quiz.getSource().getSourceId() : null,
+                            sourceIds ,
                             questionResponses
                     );
                 })
@@ -127,7 +142,13 @@ public class QuizService {
               existingQuiz.setTitle(newTitle);
         //i only want the title to be updated just like notebook llm
         quizOverviewRepository.save(existingQuiz);
-        return new QuizOverviewResponse(existingQuiz.getId(), existingQuiz.getTitle(), existingQuiz.getSource()!=null? existingQuiz.getSource().getSourceId():null,null);
+
+        List<Long> sourceIds = existingQuiz.getSources().stream()
+                .map(Source::getSourceId)
+                .toList();
+
+
+        return new QuizOverviewResponse(existingQuiz.getId(), existingQuiz.getTitle(),sourceIds,null);
 
     }
 

@@ -9,14 +9,12 @@ import com.backend.mindspace.repository.FlashCardOverviewRepository;
 import com.backend.mindspace.repository.SourceRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,12 +58,7 @@ public class FlashCardService {
             //parent overview
             FlashCardOverview flashCard = new FlashCardOverview();
             flashCard.setTitle(flashCardTitle);
-            //i have to link the source to the flashcard overview ,if the size of source is 1 i will set it ,the aggregated source will be null
-            if (selectedSources.size() == 1) {
-                flashCard.setSource(selectedSources.getFirst());
-            } else {
-                flashCard.setSource(null);
-            }
+            flashCard.setSources(selectedSources);
             flashCard.setCreatedAt(LocalDate.now());
             //now i need to associate each flashcard with my flashcard overview
             for (FlashCard card : flashCards) {
@@ -74,8 +67,11 @@ public class FlashCardService {
             flashCard.setFlashCards(flashCards);
             flashCardOverviewRepository.save(flashCard);
 
+            List<Long> selectedSourceIds = selectedSources.stream()
+                    .map(Source::getSourceId)
+                    .toList();
             // Return just the overview metadata (no cards in response)
-            return new CardResponse(flashCard.getId(),flashCard.getTitle(),flashCard.getSource()!=null?flashCard.getSource().getSourceId():null,null);
+            return new CardResponse(flashCard.getId(),flashCard.getTitle(),selectedSourceIds,null);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,7 +88,6 @@ public class FlashCardService {
         // Extract overview data once
         Long overviewId = overview.getId();
         String title = overview.getTitle();
-        Long sourceId = overview.getSource() != null ? overview.getSource().getSourceId() : null;
 
         // so ,i will need to first transform and then store the transformed stream object of CardDetailResponse in a List called CardResponse.CardDetailResponse,after that,since i can return the actual CardResponse now that i will have the CardDetailResponse too
         List<CardResponse.CardDetailResponse> cardDetailResponseList = overview.getFlashCards().stream()
@@ -100,7 +95,11 @@ public class FlashCardService {
                 .collect(Collectors.toList());
         //the final .collect and its argument i am doing - > the easiest way to understand it as a final packager,which collects the object and wraps them in a list
         //now returning the actual CardResponse
-        return new CardResponse(overviewId,title,sourceId,cardDetailResponseList);
+
+        List<Long> sourceIds = overview.getSources().stream()
+                .map(Source::getSourceId)
+                .toList();
+        return new CardResponse(overviewId,title,sourceIds,cardDetailResponseList);
 
     }
 
@@ -109,9 +108,8 @@ public class FlashCardService {
         Long currentUserId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
         System.out.println("Fetching for session " + sessionId + " user " + currentUserId);
 
-        List<FlashCardOverview> overviews = flashCardOverviewRepository.findBySource_ChatSession_SessionIdAndSource_User_UserId(sessionId, currentUserId);
+        List<FlashCardOverview> overviews = flashCardOverviewRepository.findBySources_ChatSession_SessionIdAndSources_User_UserId(sessionId, currentUserId);
         System.out.println("Found " + overviews.size() + " results");
-
        //ts tuff..
         return overviews.stream().map(cardOverview->{
             List<CardResponse.CardDetailResponse> cardDetailResponseList = cardOverview.getFlashCards()
@@ -119,7 +117,11 @@ public class FlashCardService {
                     .map(cards->new CardResponse.CardDetailResponse(cards.getId(),cards.getQuestion(),cards.getAnswer()))
                     .collect(Collectors.toList());
 
-            return  new CardResponse(cardOverview.getId(), cardOverview.getTitle(),cardOverview.getSource()!=null? cardOverview.getSource().getSourceId():null,cardDetailResponseList);
+            List<Long> sourceIds = cardOverview.getSources().stream()
+                    .map(Source::getSourceId)
+                    .toList();
+
+            return  new CardResponse(cardOverview.getId(), cardOverview.getTitle(),sourceIds,cardDetailResponseList);
         })
                         .collect(Collectors.toList());
 
@@ -135,7 +137,10 @@ public class FlashCardService {
         
         existingFLashCardOverview.setTitle(newTitle);
         flashCardOverviewRepository.save(existingFLashCardOverview);
-        return new CardResponse(existingFLashCardOverview.getId(),existingFLashCardOverview.getTitle(),existingFLashCardOverview.getSource()!=null?existingFLashCardOverview.getSource().getSourceId():null,null);
+        List<Long> sourceIds = existingFLashCardOverview.getSources().stream()
+                .map(Source::getSourceId)
+                .toList();
+        return new CardResponse(existingFLashCardOverview.getId(),existingFLashCardOverview.getTitle(),sourceIds,null);
     }
 
     public void deleteFlashCardOverview(Long cardId){

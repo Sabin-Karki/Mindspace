@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 
 @Service
 public class GeminiService implements AIService {
@@ -44,53 +47,54 @@ public class GeminiService implements AIService {
     }
 
     @Override
-    public String generateQuiz(String content){
+    public String generateQuiz(String content) {
         String prompt = """
-Generate a quiz with 12 to 16 multiple-choice questions based on the following content.
-Return ONLY valid JSON — no explanations, no markdown, and no text outside the JSON array.
-
-Each object in the JSON array must contain EXACTLY these three fields:
-- "questionText" (a string)
-- "options" (an array of exactly 4 strings)
-- "correctAnswerIndex" (an integer from 0 to 3 indicating the correct option)
-
-Example format:
-[
-  {
-    "questionText": "What is the capital of France?",
-    "options": ["Paris", "Rome", "Madrid", "Berlin"],
-    "correctAnswerIndex": 0
-  },
-  {
-    "questionText": "Which planet is known as the Red Planet?",
-    "options": ["Venus", "Mars", "Jupiter", "Mercury"],
-    "correctAnswerIndex": 1
-  }
-]
-
-Content:
-
-""" + content;
+                Generate a quiz with 12 to 16 multiple-choice questions based on the following content.
+                Return ONLY valid JSON — no explanations, no markdown, and no text outside the JSON array.
+                
+                Each object in the JSON array must contain EXACTLY these three fields:
+                - "questionText" (a string)
+                - "options" (an array of exactly 4 strings)
+                - "correctAnswerIndex" (an integer from 0 to 3 indicating the correct option)
+                
+                Example format:
+                [
+                  {
+                    "questionText": "What is the capital of France?",
+                    "options": ["Paris", "Rome", "Madrid", "Berlin"],
+                    "correctAnswerIndex": 0
+                  },
+                  {
+                    "questionText": "Which planet is known as the Red Planet?",
+                    "options": ["Venus", "Mars", "Jupiter", "Mercury"],
+                    "correctAnswerIndex": 1
+                  }
+                ]
+                
+                Content:
+                
+                """ + content;
         return callGeminiTextApi(prompt);
     }
-    @Override
-    public String generateFlashCard(String content){
-        String prompt = """
-Generate 10–12 flashcards based on the following content.Each flashcard must have a 'question' and an 'answer' field.Return ONLY valid JSON, no explanations, no markdown.
-Example format:
-[
-  {"question": "...", "answer": "..."},
-  {"question": "...", "answer": "..."}
-]
-Content:
 
-""" + content;
+    @Override
+    public String generateFlashCard(String content) {
+        String prompt = """
+                Generate 10–12 flashcards based on the following content.Each flashcard must have a 'question' and an 'answer' field.Return ONLY valid JSON, no explanations, no markdown.
+                Example format:
+                [
+                  {"question": "...", "answer": "..."},
+                  {"question": "...", "answer": "..."}
+                ]
+                Content:
+                
+                """ + content;
         return callGeminiTextApi(prompt);
     }
 
     //adding report generation
     @Override
-    public String generateReport(String content){
+    public String generateReport(String content) {
         String prompt = """
                 Create a comprehensive briefing document that synthesizes the main themes and ideas from the sources. Start with a concise Executive Summary that presents the most critical takeaways upfront. The body of the document must provide a detailed and thorough examination of the main themes, evidence, and conclusions found in the sources. This analysis should be structured logically with headings and bullet points to ensure clarity. The tone must be objective and incisive.
                 
@@ -106,7 +110,7 @@ Content:
                 
                       Content:
                 
-                """ + content ;
+                """ + content;
         return callGeminiTextApi(prompt);
     }
 
@@ -149,6 +153,7 @@ Content:
             return new float[0];
         }
     }
+
     public String callGeminiTextApi(String prompt) {
         try {
             String payload = """
@@ -195,7 +200,18 @@ Content:
 
     @Override
     public String generatePodcastScript(String content) {
-        String prompt = "Generate a 3-to-4-minute podcast script based on the following content. The script should be engaging, conversational, and structured like a podcast episode with an intro, main body discussing the key points, and an outro. The content is:\n\n" + content;
+        String prompt = """
+            Generate a concise podcast script based on the following content.
+            
+            STRICT CONSTRAINTS:
+            - Maximum length: 1300 characters (approx 1-3 minutes).
+            - Tone: Engaging, conversational, and energetic.
+            - Structure: Intro, Main Body (Key Takeaways), and Outro.
+            - Do not include scene directions like [Music Fades], just the spoken text.
+            
+            Content:
+            """ + content;
+
         return callGeminiTextApi(prompt);
     }
 
@@ -204,17 +220,20 @@ Content:
         Path pcmFile = null;
         Path wavFile = null;
         try {
-            // 1. Get audio data from API
+            System.out.println("📞 Calling Gemini TTS API - script length: " + text.length() + " chars");
+            long apiStart = System.currentTimeMillis();
+
+
             String payload = """
-                    {
-                        "model": "gemini-2.5-flash-preview-tts",
-                        "contents": [{"parts":[{"text": "%s"}]}],
-                        "generationConfig": {
-                            "responseModalities": ["AUDIO"],
-                            "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Kore"}}}
-                        }
-                    }
-                    """.formatted(text.replace("\"", "\\\""));
+            {
+                "contents": [{"parts":[{"text": "%s"}]}],
+                "generationConfig": {
+                    "responseModalities": ["AUDIO"],
+                    "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Kore"}}}
+                },
+                "model": "gemini-2.5-flash-preview-tts"
+            }
+            """.formatted(text.replace("\"","\\\""));
 
             String responseJson = webClient.post()
                     .uri("/models/gemini-2.5-flash-preview-tts:generateContent?key=" + apiKey)
@@ -224,26 +243,30 @@ Content:
                     .bodyToMono(String.class)
                     .block();
 
+            System.out.println("✅ Gemini API responded in " + (System.currentTimeMillis() - apiStart) + "ms");
+
             JsonNode root = objectMapper.readTree(responseJson);
             JsonNode candidates = root.path("candidates");
             if (candidates == null || !candidates.isArray() || candidates.isEmpty()) {
-                // Log the full response for debugging if possible
                 System.err.println("Error from Gemini API: No candidates returned. Response: " + responseJson);
                 throw new RuntimeException("Failed to generate speech. The API returned no content, possibly due to safety filters.");
             }
+
+            System.out.println("🔀 Decoding base64 audio data...");
             String audioContent = candidates.get(0).path("content").path("parts").get(0).path("inlineData").path("data").asText();
             byte[] pcmData = java.util.Base64.getDecoder().decode(audioContent);
+            System.out.println("✅ Decoded " + pcmData.length + " bytes of PCM data");
 
-            // 2. Save PCM data to a temporary file
+            System.out.println("💾 Writing PCM to temp file...");
             pcmFile = Files.createTempFile("mindspace-audio", ".pcm");
             Files.write(pcmFile, pcmData);
 
-            // 3. Define path for the output WAV file
             wavFile = pcmFile.resolveSibling(pcmFile.getFileName().toString().replace(".pcm", ".wav"));
 
-            // 4. Run ffmpeg to convert PCM to WAV
+            System.out.println("🎵 Running ffmpeg conversion...");
+            long ffmpegStart = System.currentTimeMillis();
             ProcessBuilder processBuilder = new ProcessBuilder(
-                    "ffmpeg", "-y", // -y to overwrite output file if it exists
+                    "ffmpeg", "-y",
                     "-f", "s16le",
                     "-ar", "24000",
                     "-ac", "1",
@@ -252,6 +275,7 @@ Content:
             );
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
+            System.out.println("✅ ffmpeg completed in " + (System.currentTimeMillis() - ffmpegStart) + "ms");
 
             if (exitCode != 0) {
                 String errorOutput = new String(process.getErrorStream().readAllBytes());
@@ -259,14 +283,16 @@ Content:
                 throw new RuntimeException("ffmpeg process failed with exit code " + exitCode + ": " + errorOutput);
             }
 
-            // 5. Read the generated WAV file into a byte array
-            return Files.readAllBytes(wavFile);
+            System.out.println("📖 Reading WAV file...");
+            byte[] wavData = Files.readAllBytes(wavFile);
+            System.out.println("✅ Final WAV size: " + wavData.length + " bytes");
+
+            return wavData;
 
         } catch (Exception e) {
-            e.printStackTrace(); // Proper logging should be used here
+            e.printStackTrace();
             return new byte[0];
         } finally {
-            // 6. Clean up temporary files
             try {
                 if (pcmFile != null) Files.deleteIfExists(pcmFile);
                 if (wavFile != null) Files.deleteIfExists(wavFile);
@@ -276,3 +302,5 @@ Content:
         }
     }
 }
+
+
