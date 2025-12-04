@@ -1,10 +1,10 @@
 import { useState } from "react";
-import type { ICardOverview } from "../../../types";
+import type { ICardOverview, ICardResponse } from "../../../types";
 import FlashCardPopup from "./FlashCardPopup";
 import Modal from "react-modal";
 import { useFlashCardStore } from "../../../store/flashCardStore";
 import { toast } from "sonner";
-import { deleteFlashCardOverview, getFlashCardByCardId, updateFlashCardOverviewTitle } from "../../../api/flashApi";
+import { updateFlashCardOverviewTitle } from "../../../api/flashApi";
 import DeleteFlashCard from "./DeleteFlashCard";
 
 interface FlashCardProps {
@@ -29,8 +29,8 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
   //rename flash card
   const handleUpdateFlashCardName = async() =>{
     try {
-      const response = await updateFlashCardOverviewTitle(flashCard.cardOverViewId, localFlashCardName);
-      updateFlashCardName(flashCard.cardOverViewId, response.title);  //update global state after flashcard name change
+      const response: ICardResponse = await updateFlashCardOverviewTitle(flashCard.cardOverViewId, localFlashCardName);
+      updateFlashCardName(response.cardOverViewId, response.title);  //update global state after flashcard name change
 
       toast.success("Flashcard name updated successfully.");
     } catch (error) {
@@ -131,6 +131,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
             className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
             Delete
           </button>
+          {/* when rename is clicked i get old value after i renamed */}
           <button onClick={(e) =>{ e.stopPropagation(); openRenameModal(); handleHideMenu(); }} 
             className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100">
             Rename
@@ -163,6 +164,8 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
         <FlashCardPopup 
           cardId={flashCard.cardOverViewId}
           flashCardName={localFlashCardName}
+          handleUpdateFlashCardName={handleUpdateFlashCardName}
+          setLocalFlashCardName={setLocalFlashCardName}
           closeModal={closeModal}   
         />
       </Modal>

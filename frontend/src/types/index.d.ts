@@ -85,6 +85,7 @@ export interface IAudioResponseDTO {
 export type MessageRole = 'user' | 'assistant' | 'system';
 
 export interface IChatMessage {
+  messageId: number;
   message: string;
   role: MessageRole; // Enforcing roles based on common chat structure
   createdAt: string; // LocalDate
