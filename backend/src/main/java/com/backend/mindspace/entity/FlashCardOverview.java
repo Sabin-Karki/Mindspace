@@ -19,9 +19,14 @@ public class FlashCardOverview {
     private  Long id;
     private String title;
     private LocalDate createdAt;
-    @ManyToOne
-    @JoinColumn(name = "source_id",nullable = true)
-    private Source source;
+
+    @ManyToMany
+    @JoinTable(
+            name="flashcardoverview_source",
+            joinColumns = @JoinColumn(name="flashcardoverview_id"),
+            inverseJoinColumns = @JoinColumn(name="source_id")
+    )
+    private List<Source> sources = new ArrayList<>();
     @OneToMany(mappedBy = "flashCard",cascade = CascadeType.ALL,orphanRemoval = true)
     List<FlashCard> flashCards = new ArrayList<>();
 }
