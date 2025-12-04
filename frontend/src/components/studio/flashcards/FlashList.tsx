@@ -3,7 +3,7 @@ import {  useEffect, useState } from "react";
 import { getFlashCardsBySessionId } from "../../../api/flashApi";
 import { useSessionStore } from "../../../store/sessionStore";
 import { useFlashCardStore } from "../../../store/flashCardStore";
-import type { ICardResponse } from "../../../types";
+import type { ICardOverview } from "../../../types";
 import FlashGet from "./FlashGet";
 
 const FlashList = () => {
@@ -20,7 +20,7 @@ const FlashList = () => {
         if(!sessionId) return;
         setError(null);
         setIsLoading(true);
-        const response: ICardResponse[] = await getFlashCardsBySessionId(sessionId);
+        const response: ICardOverview[] = await getFlashCardsBySessionId(sessionId);
         console.log(response);
         
         setFlashCards(response);

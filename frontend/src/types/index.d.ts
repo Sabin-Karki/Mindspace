@@ -27,12 +27,13 @@ export interface IChatRenameRequest {
   title:  string;   ///we should get title too
 }
 
-export interface ICardResponse {
-  cardOverViewId: number; //chat generates a flash card 
+
+//light weight 
+export interface ICardOverview {
+  cardOverViewId: number;
   title: string;
   sourceId: number;
-  //cardDetails needs to match of java variable
-  cardDetails: ICardDetailResponse[];
+  // NO cardDetails array here!
 }
 
 export interface ICardDetailResponse {
@@ -40,6 +41,13 @@ export interface ICardDetailResponse {
   question: string;
   answer: string;
 }
+
+// The Full Object (Heavy) - Used when studying a specific deck
+// It extends the overview but adds the details
+export interface ICardResponse extends ICardOverview {
+  cardDetails: ICardDetailResponse[];
+}
+
 
 export interface IChatResponse {
   question: string;

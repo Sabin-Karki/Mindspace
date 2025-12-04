@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
 const Home = () => {
-  const { isAuthenticated } = useAuthStore();
+  // const { isAuthenticated } = useAuthStore();
+  const token = useAuthStore.getState().token;
+  const isAuthenticated = !!token;
 
   // Simple welcome for logged-in users
   if (isAuthenticated) {

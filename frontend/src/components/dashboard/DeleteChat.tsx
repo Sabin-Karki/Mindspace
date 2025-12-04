@@ -18,13 +18,15 @@ const DeleteChatModal = ({handleHideDeleteModal, handleDeleteChatSession, localS
       <h2 className="text-lg font-semibold mb-4">Delete Chat</h2>
 
       <p className="mb-4">Are you sure you want to delete this chat?</p>
-      <button onClick={() => 
-          { handleDeleteChatSession(localSessionId);
-            handleHideDeleteModal();
-            deleteSession(localSessionId);  //update list
-          }
-        }>ok</button>
-      <button onClick={ handleHideDeleteModal }>cancel</button>
+      <div className="flex justify-between">
+        <button onClick={() => 
+            { handleDeleteChatSession(localSessionId);
+              handleHideDeleteModal();
+              deleteSession(localSessionId);  //update list
+            }
+          }>ok</button>
+        <button onClick={ handleHideDeleteModal }>cancel</button>
+      </div>
 
     </div>
     </div>

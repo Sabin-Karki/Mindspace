@@ -1,9 +1,9 @@
 import { toast } from "sonner";
 import { generateFlashCard } from "../../../api/flashApi";
 import { useSessionStore } from "../../../store/sessionStore";
-import { useState } from "react";
+import {  useState } from "react";
 import { useFlashCardStore } from "../../../store/flashCardStore";
-import type { IUploadResponse } from "../../../types";
+import type { ICardOverview, IUploadResponse } from "../../../types";
 
 const FlashGenerator = () => {
   
@@ -33,10 +33,10 @@ const FlashGenerator = () => {
         sId = selectedSourceIds;
       }
 
-      const response = await generateFlashCard(sessionId, sId);
+      const response: ICardOverview = await generateFlashCard(sessionId, sId);
       console.log(response);
-      
       addFlashCard(response);
+
     } catch (error: any) {
       const serverMessage = error?.response?.data?.message;
       const axiosMessage = error?.message;

@@ -2,7 +2,13 @@ import { useState } from "react";
 import UploadedInfo from "./UploadedInfo";
 import UploadContent from "./UploadContent";
 
-const UploadPanel = ({closeLeftSideBar, openLeftSideBar }:{closeLeftSideBar: () => void; openLeftSideBar: () => void;}) =>{
+interface IUploadPanelProps {
+  closeLeftSideBar: () => void;
+  openLeftSideBar: () => void;
+  isLeftPanelClose: boolean;
+}
+
+const UploadPanel = ({closeLeftSideBar, openLeftSideBar, isLeftPanelClose }: IUploadPanelProps) =>{
   
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -19,18 +25,40 @@ const UploadPanel = ({closeLeftSideBar, openLeftSideBar }:{closeLeftSideBar: () 
     <div>
       <div>
         <div>Sources</div>
-        <button onClick={closeLeftSideBar}>close</button>
-        <button onClick={openLeftSideBar}>open</button>
+
+        { isLeftPanelClose ? (
+          <>
+          {/* if isLeftPanelClose true show open button  */}
+          {/* if add button is clicked then show popup modal toupload content */}
+          <div className="flex flex-col">
+
+          <button onClick={openLeftSideBar}>open</button>
+          <button onClick={handleShowModal} className="bg-green-400"> +</button>
+          </div>
+          </>
+        ):(
+          <>
+          {/* if isLeftPanelClose is not true then show close button  */}
+          {/* if add button is clicked then show popup modal toupload content */}
+          <div className="flex flex-col">
+            <button onClick={closeLeftSideBar}>close</button>
+            <button onClick={handleShowModal} className="bg-green-400"> + Add </button>  
+          </div>
+
+          {/* if left panel is open then show upload info  */}
+          <UploadedInfo />  
+          </>
+        )}
       </div>
 
-      <button onClick={handleShowModal}> + Add</button>
+
       {
         isModalOpen && (
           <UploadContent
           onClose = {handleCLoseModal}/>
         )
       }
-      <UploadedInfo />  
+
     </div>
     </>
   )
