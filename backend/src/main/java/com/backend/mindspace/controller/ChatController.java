@@ -60,10 +60,7 @@ public class ChatController {
         }
     }
 
-    //fix this 
-	//org.postgresql.util.PSQLException: No results were returned by the query.
-	//	at org.postgresql.jdbc.TypeInfoCache.getArrayDelimiter(TypeInfoCache.java:648) ~[postgresql-42.7.1.jar:42.7.1]
-
+    
     @PostMapping("/{sessionId}/ask")
     public  ResponseEntity<ChatResponse> askQuestion(@AuthenticationPrincipal User user, @PathVariable Long sessionId, @RequestBody ChatRequest chatRequest){
         ChatResponse response = chatService.askQuestion(user, chatRequest.getQuestion(), sessionId);
