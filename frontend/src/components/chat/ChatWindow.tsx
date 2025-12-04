@@ -4,19 +4,19 @@ import { askQuestion, getChatHistory } from "../../api/chatApi";
 import { useSessionStore } from "../../store/sessionStore";
 import { toast } from "sonner";
 
-interface IDisplayMessage {
-  id: string; // Unique identifier for React key
-  text: string;
-  role: 'user' | 'assistant' | 'system';
-  timestamp: Date;
-}
+// interface IDisplayMessage {
+//   messageId: string; 
+//   message: string;
+//   role: 'user' | 'assistant' | 'system';
+//   timestamp: Date;
+// }
 
   
 const ChatWindow: React.FC = () => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
 
-  const [messages, setMessages] = useState<IDisplayMessage[]>([]);
+  const [messages, setMessages] = useState<IChatMessage[]>([]);
   const [input, setInput] = useState<string>('');
   const messageInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -49,17 +49,17 @@ const ChatWindow: React.FC = () => {
         //but to display we have IDisplayMessage
         const history: IChatMessage[] = await getChatHistory(sessionId);
 
-        const displayMessages: IDisplayMessage[] = history.map(
-          (msg) =>({
-            id: `message-${msg.createdAt}`,//id needs to be unique //error here// message-2025-11-29
-            text: msg.message,
-            role: msg.role === "user" ? "user" : msg.role,
-            timestamp: new Date(msg.createdAt),
-            })
-          );
+        // const displayMessages: IDisplayMessage[] = history.map(
+        //   (msg) =>({
+        //     messageId: msg.messageId.toString(),//id needs to be unique //error here// message-2025-11-29
+        //     message: msg.message,
+        //     role: msg.role === "user" ? "user" : msg.role,
+        //     timestamp: new Date(msg.createdAt),
+        //     })
+        //   );
         
-        console.log(displayMessages);
-        setMessages(displayMessages);
+        console.log(history);
+        setMessages(history);
       } catch (error: any) {
         console.log(error);
         const serverMessage = error?.response?.data?.message; 
@@ -86,24 +86,36 @@ const ChatWindow: React.FC = () => {
 
     try {
       const chatResponse: IChatResponse = await askQuestion(sessionId, input);
-      const timestamp = Date.now();
 
-      setMessages( (prev) =>[
-        ...prev , 
-          {
-            id: `message-${timestamp}`,
-            text: chatResponse.question,
-            role: "user",
-            timestamp: new Date(timestamp),
-          },
-          {
-            id: `message-${timestamp + 1 }`,
-            text: chatResponse.answer,
-            role: "assistant",
-            timestamp: new Date(timestamp), 
-          },
-        ] 
-      );
+      //we get response 
+      //but only question, answer
+
+      //lets fetch chat history again
+      const history = await getChatHistory(sessionId);
+      setMessages(history);
+      
+      console.log("after asking question response and history")
+      console.log(chatResponse);
+      console.log(chatResponse);
+
+      // const timestamp = Date.now();
+
+      // setMessages( (prev) =>[
+      //   ...prev , 
+      //     {
+      //       id: `message-${timestamp}`,
+      //       text: chatResponse.question,
+      //       role: "user",
+      //       timestamp: new Date(timestamp),
+      //     },
+      //     {
+      //       id: `message-${timestamp + 1 }`,
+      //       text: chatResponse.answer,
+      //       role: "assistant",
+      //       timestamp: new Date(timestamp), 
+      //     },
+      //   ] 
+      // );
 
     } catch (error) {
       console.log(error);
@@ -118,6 +130,10 @@ const ChatWindow: React.FC = () => {
     }
   }
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
   //for diplaying messages based on
   const getMessageStyle = (role: MessageRole) => {
     if (role === 'user') {
@@ -129,13 +145,6 @@ const ChatWindow: React.FC = () => {
     }
   };
 
-// Format timestamp
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
 
 return (
   <>
@@ -162,10 +171,10 @@ return (
           <p>No messages yet. Start a conversation!</p>
         ) : (
           messages.map((message) => (
-            <div key={message.id}>
+            <div key={message.messageId}>
               <strong>{message.role}:</strong>
-              <p>{message.text}</p>
-              <small>{formatTime(message.timestamp)}</small>
+              <p>{message.message}</p>
+              <small>{message.createdAt}</small>
             </div>
           ))
         )}
@@ -177,7 +186,7 @@ return (
           ref={messageInputRef}
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
         />

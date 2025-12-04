@@ -10,10 +10,10 @@ interface FlashCardState {
   
   
   addFlashCard: (flashCard: ICardOverview) => void;//adding flash card used in generator
-  setFlashCardName: (flashCardName: string) => void;//for chaning global state //may be removed
-  
-  //update and remove flash card from list
   removeFlashCard: (flashCardId: number) => void;
+  
+
+  //update and remove flash card from list
   updateFlashCardName: (flashCardId: number, flashCardName: string) => void;
 }
 
@@ -41,8 +41,6 @@ export const useFlashCardStore = create<FlashCardState>(
         ),
       })
     )),
-    setFlashCardName: (flashCardName: string) => set({ flashCardName }),
-
     //update list
     updateFlashCardName: (flashCardId: number, flashCardName: string) => set((state) => ({
       flashCards: state.flashCards.map((flashCard) => {

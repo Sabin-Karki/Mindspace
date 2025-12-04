@@ -1,28 +1,23 @@
+import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import type { ICardDetailResponse, ICardResponse } from "../../../types";
-import { useFlashCardStore } from "../../../store/flashCardStore";
-import { useSessionStore } from "../../../store/sessionStore";
-import { toast } from "sonner";
-import { getFlashCardByCardId, updateFlashCardOverviewTitle } from "../../../api/flashApi";
+import { getFlashCardByCardId } from "../../../api/flashApi";
 import Modal from "react-modal";
 
 interface FlashCardPopupProps {
   cardId: number;
   closeModal: () => void;
   flashCardName: string;
+  handleUpdateFlashCardName: () => void;
+  setLocalFlashCardName: (flashCardName: string) => void
 }
 
 Modal.setAppElement("#root");
 
-const FlashCardPopup = ( {cardId, closeModal, flashCardName}: FlashCardPopupProps) => {
+const FlashCardPopup = ( {cardId, closeModal, flashCardName, handleUpdateFlashCardName, setLocalFlashCardName}: FlashCardPopupProps) => {
   
-  const sessionId = useSessionStore((state) => state.sessionId);
   const [cardDetails, setCardDetails] = useState<ICardDetailResponse[]>([]);
-  
-  const updateFlashCardName = useFlashCardStore((state) => state.updateFlashCardName);
-  
-  const [localFlashCardName, setLocalFlashCardName] = useState(flashCardName || "");//local state name
-  
+
   const [currentIndex, setCurrentIndex] = useState(0);//for index of card
   const [isShowQuestion, setIsShowQuestion] = useState(true);//for question or answer
 
@@ -63,22 +58,6 @@ const FlashCardPopup = ( {cardId, closeModal, flashCardName}: FlashCardPopupProp
     setCurrentIndex( (prevIndex) => prevIndex - 1);
   }
 
-  //rename flash card
-  const handleUpdateFlashCardName = async() =>{
-   try {
-     if(!sessionId ){
-      toast.error("Session ID is missing. Please log in.");
-      return;
-    }
-    const response = await updateFlashCardOverviewTitle( cardId, localFlashCardName);
-    updateFlashCardName(cardId, response.title);
-
-    toast.success("Flashcard name updated successfully.");
-   } catch (error) {
-    toast.error("Failed to update flashcard name. Please try again.");
-    return;
-   }
-  }
 
   const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalFlashCardName(e.target.value);
@@ -106,7 +85,7 @@ const FlashCardPopup = ( {cardId, closeModal, flashCardName}: FlashCardPopupProp
         <div  className="flex justify-between items-center p-2">
           <div>
             <input type="text" 
-              value={localFlashCardName} 
+              value={flashCardName} 
               onChange={handleChangeCardName} 
               onKeyDown={handleKeyDown}/>
           </div>

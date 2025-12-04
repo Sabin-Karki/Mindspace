@@ -136,7 +136,12 @@ public class ChatService {
         List<ChatMessage> messages = chatMessageRepository.findByChatSession_SessionIdAndChatSession_User_UserId(sessionId, userId);
 
         return messages.stream()
-                .map(msg -> new ChatMessageDTO(msg.getMessage(), msg.getRole(), msg.getCreatedAt()))
+                .map(msg -> new ChatMessageDTO(
+                		msg.getMessageId(),
+                		msg.getMessage(),
+                		msg.getRole(),
+                		msg.getCreatedAt()
+                		))
                 .toList();
     }
 
