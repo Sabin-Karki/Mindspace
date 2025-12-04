@@ -3,16 +3,27 @@ import { FlashGenerator, FlashList } from "./flashcards";
 import { QuizGenerator, QuizList } from "./quiz";
 import { ReportGenerator, ReportList } from "./report";
 
-const StudioPanel = ({closeRightSideBar, openRightSideBar} :{closeRightSideBar: () => void; openRightSideBar: () => void;}) =>{
+interface StudioPanelProps {
+  closeRightSideBar: () => void;
+  openRightSideBar: () => void;
+  isRightPanelClose: boolean;
+}
+
+const StudioPanel = ({closeRightSideBar, openRightSideBar, isRightPanelClose} : StudioPanelProps) =>{
 
   return(
     <>
     <div>
       <div>
         <div>Studio</div>
-        <button onClick={closeRightSideBar}>close</button>
-        <button onClick={openRightSideBar}>open</button>
       </div>
+      
+      {/* when right panel is closed then show open button */}
+      { isRightPanelClose ? (
+        <button onClick={openRightSideBar}>open</button>
+      ):(
+        <button onClick={closeRightSideBar}>close</button>
+      )}
 
     {/* this section generates  */}
     <div>

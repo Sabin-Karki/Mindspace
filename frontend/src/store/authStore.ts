@@ -12,6 +12,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
+
     (set) => ({
       token: null,
       isAuthenticated: false,
@@ -24,28 +25,35 @@ export const useAuthStore = create<AuthState>()(
 
       //logout fn
       logout : ()=>{
-        set({token: null, isAuthenticated: false, hasHydrated: true });
+        set({token: null, isAuthenticated: false });
       }
     }),
+
     {
       name: "auth-token-storage",
-      storage: createJSONStorage( ()=> localStorage),
+      storage: createJSONStorage( () => localStorage),
 
+      //only save token to local storage//
       partialize: (state) =>({token: state.token}),
 
       // onRehydrateStorage It gives a place to run code after the localStorage data has successfully loaded.
       onRehydrateStorage:() =>{
         return (state, error) =>{
+          // This callback runs after data is pulled from LocalStorage
 
-          if(state && !error){
-            state.isAuthenticated = !!state.token; 
-            //I have now loaded the token from localStorage and calculated the final isAuthenticated state. 
-            useAuthStore.setState({hasHydrated: true});
-          }
+          //check if we have a token in the restored state
+          const hasToken  = state?.token;
+          
+          //say "Search is over" (hydrated: true) regardless of result
+          //and if there is token then we are authenticated
+          useAuthStore.setState({
+            isAuthenticated: !!hasToken,
+            hasHydrated: true,
+          });
         }
       },
-
     }
+
   ),
 );
 
@@ -108,3 +116,15 @@ export const useAuthStore = create<AuthState>()(
 //after using hydration and onRehydrateStorage
 // The Navbar now says: "If hasHydrated is false, I'll wait.
 //  If hasHydrated is true, I'll trust the isAuthenticated value and render the final links."
+
+
+
+// hasHydrated: false (Start)
+// Meaning: "I just woke up. I haven't looked in the backpack (LocalStorage) yet.
+//  I don't know if I have a token or not."
+// Effect: If you use this flag in UI, you usually show a spinner.
+
+// hasHydrated: true (End)
+// Meaning: "I have finished looking in the backpack."
+// Scenario A: I found a token. Great, log the user in.
+// Scenario B: The backpack was empty. Okay, that's fine. The search is still finished. The user is definitely logged out.

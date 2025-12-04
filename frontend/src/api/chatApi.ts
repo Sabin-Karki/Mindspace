@@ -1,5 +1,4 @@
 import { credApi } from '../config/axios'; 
-import { useAuthStore } from '../store/authStore';
 import type{ ChatSessionGetDTO, IChatMessage, IChatRenameRequest, IChatRequest, IChatResponse, IChatSession } from '../types/index';
 import type{ AxiosResponse } from 'axios';
 
@@ -22,12 +21,7 @@ export const deleteChat = async (sessionId: number): Promise<void> => {
 };
 
 export const fetchAllChatSessions = async (): Promise<ChatSessionGetDTO[]> => {
-  const token = useAuthStore.getState().token;
-  console.log('Token before request:', token); // Debug log
-  
-  if (!token) {
-    throw new Error('No authentication token found');
-  }
+
   const res: AxiosResponse<ChatSessionGetDTO[]> = await credApi.get('/chat/getAll');
   return res.data;
 };

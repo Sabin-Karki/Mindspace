@@ -12,7 +12,7 @@ import { toast } from "sonner";
 const AllChats = () =>{
 
   const navigate = useNavigate();
-  const loggedInUserId = useAuthStore((state) => state.token);
+  const token = useAuthStore((state) => state.token);
 
   const setSessionId = useSessionStore((state) => state.setSessionId);
   const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
@@ -53,7 +53,7 @@ const AllChats = () =>{
     }
     
     handleUserChats();
-  },[loggedInUserId])
+  },[token])
   
 
   
@@ -153,7 +153,12 @@ const AllChats = () =>{
           
           {/* Dropdown Menu has delete rename options*/}
           {session.sessionId !== null && openMenuId === session.sessionId && (
-            <div className="absolute top-18 right-0 z-10 w-32 bg-white rounded shadow-lg border border-gray-100">
+            <>
+            
+            {/* invisible backdrop for menu // covers whole screen //closes menu on click */}
+            <div onClick={ (e) =>{ e.stopPropagation(); handleHideMenu(); }} className="fixed inset-0  z-10" ></div>
+
+            <div className="absolute top-16 left-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100">
               
               {/* click to see delete modal */}
               <button onClick={() => {
@@ -176,6 +181,7 @@ const AllChats = () =>{
                 Rename
               </button>
             </div>
+            </>
           )}
           </div>
         </div>

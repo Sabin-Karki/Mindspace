@@ -1,18 +1,19 @@
 import { create } from "zustand";
-import type { ICardResponse } from "../types";
+import type { ICardOverview } from "../types";
 
 interface FlashCardState {
-  flashCards: ICardResponse[];
+  flashCards: ICardOverview[];
   flashCardName: string;
   
-  setFlashCards: (flashCards: ICardResponse[]) => void;
+  setFlashCards: (flashCards: ICardOverview[]) => void;
   clearFlashCards: () => void;
   
   
-  addFlashCard: (flashCard: ICardResponse) => void;
+  addFlashCard: (flashCard: ICardOverview) => void;//adding flash card used in generator
+  setFlashCardName: (flashCardName: string) => void;//for chaning global state //may be removed
+  
+  //update and remove flash card from list
   removeFlashCard: (flashCardId: number) => void;
-
-  setFlashCardName: (flashCardName: string) => void;
   updateFlashCardName: (flashCardId: number, flashCardName: string) => void;
 }
 
@@ -22,9 +23,9 @@ export const useFlashCardStore = create<FlashCardState>(
     flashCards: [],
     flashCardName: "",
 
-    setFlashCards: (flashCards: ICardResponse[]) =>set({ flashCards }),
+    setFlashCards: (flashCards: ICardOverview[]) =>set({ flashCards }),
     clearFlashCards: () => set({flashCards :[]}),
-    addFlashCard:(flashCard : ICardResponse) =>set(
+    addFlashCard:(flashCard : ICardOverview) =>set(
       (state) => {
         const alreadyExists = state.flashCards.some(
           (c) => c.cardOverViewId === flashCard.cardOverViewId); //prevent duplicate
