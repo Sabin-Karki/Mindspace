@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +22,11 @@ public class ReportGeneration {
     private LocalDate createdAt;
 
     //establish relationship with source entity
-    @ManyToOne
-    @JoinColumn(name = "source_id")
-    private Source source;
+   @ManyToMany
+   @JoinTable(
+           name="reportgeneration_source",
+           joinColumns = @JoinColumn(name="reportgeneration_id"),
+           inverseJoinColumns = @JoinColumn(name = "source_id")
+   )
+    private List<Source> sources = new ArrayList<>();
 }
