@@ -5,7 +5,7 @@ import type{ AxiosResponse } from 'axios';
 
 
 export const createChatSession = async (): Promise<IChatSession> => {
-  const res: AxiosResponse<IChatSession> = await credApi.post('/chat');
+  const res = await credApi.post('/chat');
   return res.data;
 };
 
