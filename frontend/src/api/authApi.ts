@@ -1,7 +1,11 @@
-import type { ISigninRequest, JwtResponse } from "../types";
+import type { ISigninRequest, ISignUpRequest, JwtResponse } from "../types";
 import { api } from "../config/axios";
 
-export const signup = async (data: ISigninRequest): Promise<JwtResponse> => {
+
+//sending ISignUpRequest or ISigninRequest to backend //both gets accepted //wrong
+//todo in backend 
+//input validation
+export const signup = async (data: ISignUpRequest): Promise<JwtResponse> => {
   const res = await api.post<JwtResponse>("/auth/signup", data);
   return res.data;
 };

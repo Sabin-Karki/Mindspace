@@ -110,7 +110,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
         </div>
 
         {/* we only have 1 sources so not checking no. of sources*/}
-        <p>1 sources</p>
+        <p>{flashCard.sourceId.length ?? 0}</p>
         {/* menu options ||| rename and delete option */}
         <button         
           onClick={ (e) => { e.stopPropagation(); handleShowMenu(flashCard.cardOverViewId); } } 

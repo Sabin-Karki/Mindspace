@@ -32,7 +32,8 @@ export interface IChatRenameRequest {
 export interface ICardOverview {
   cardOverViewId: number;
   title: string;
-  sourceId: number;
+  sourceId: number[]; //we now get this as list
+
   // NO cardDetails array here!
 }
 
