@@ -3,13 +3,9 @@ import type { IChatMessage, IChatResponse, MessageRole } from "../../types";
 import { askQuestion, getChatHistory } from "../../api/chatApi";
 import { useSessionStore } from "../../store/sessionStore";
 import { toast } from "sonner";
+import ChatMessageBubble from "./ChatMessageBubble";
+import ChatInput from "./ChatInput";
 
-// interface IDisplayMessage {
-//   messageId: string; 
-//   message: string;
-//   role: 'user' | 'assistant' | 'system';
-//   timestamp: Date;
-// }
 
 //for later
 //use zod validation for input
@@ -17,24 +13,22 @@ import { toast } from "sonner";
 const ChatWindow: React.FC = () => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
-
   const [messages, setMessages] = useState<IChatMessage[]>([]);
-  const [input, setInput] = useState<string>('');
-  const messageInputRef = useRef<HTMLInputElement>(null);
+  
+  // const messageInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   
-
-  //scroll animation
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });//scroll to bottom
-    if (messageInputRef.current) {
-      messageInputRef.current.focus();  //focus on input
-    }
-  }, [messages]);
+  // // scroll animation
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });//scroll to bottom
+  //   if (messageInputRef.current) {
+  //     messageInputRef.current.focus();  //focus on input
+  //   }
+  // }, []);
 
 
   useEffect( () =>{
@@ -47,20 +41,10 @@ const ChatWindow: React.FC = () => {
       setError(null);
       setIsLoading(true);
       try {
-        //we get response as IChatMessage
-        //but to display we have IDisplayMessage
-        const history: IChatMessage[] = await getChatHistory(sessionId);
 
-        // const displayMessages: IDisplayMessage[] = history.map(
-        //   (msg) =>({
-        //     messageId: msg.messageId.toString(),//id needs to be unique //error here// message-2025-11-29
-        //     message: msg.message,
-        //     role: msg.role === "user" ? "user" : msg.role,
-        //     timestamp: new Date(msg.createdAt),
-        //     })
-        //   );
-        
+        const history: IChatMessage[] = await getChatHistory(sessionId);        
         console.log(history);
+
         setMessages(history);
       } catch (error: any) {
         console.log(error);
@@ -73,12 +57,10 @@ const ChatWindow: React.FC = () => {
         setIsLoading(false);
       }
     }
-    
   getMessageHistory();
-
   },[]);
 
-  const handleSendMessage = async() =>{
+  const handleSendMessage = async(input: string) =>{
     if(!sessionId || !input){
       setError("session or question not found");
       return;
@@ -87,38 +69,31 @@ const ChatWindow: React.FC = () => {
     setIsLoading(true);
 
     try {
+      //create users temporary message
+      const newMessage: IChatMessage = {
+        messageId: self.crypto.randomUUID(),
+        role: 'user',
+        message: input,
+        createdAt: new Date().toISOString(),
+      }
+
+      //immediately show user message 
+      //instead of waiting for server to respond
+      setMessages([...messages, newMessage]);
+
       const chatResponse: IChatResponse = await askQuestion(sessionId, input);
 
-      //we get response 
-      //but only question, answer
+      //if proper response from server with id 
+      //set messages using ids  
+      //create assistant temporary message
+      const assistantMessage: IChatMessage = {
+        messageId: self.crypto.randomUUID(),
+        role: 'assistant',
+        message: chatResponse.answer,
+        createdAt: new Date().toISOString()
+      }
 
-      //lets fetch chat history again
-      const history = await getChatHistory(sessionId);
-      setMessages(history);
-      
-      console.log("after asking question response and history")
-      console.log(chatResponse);
-      console.log(chatResponse);
-
-      // const timestamp = Date.now();
-
-      // setMessages( (prev) =>[
-      //   ...prev , 
-      //     {
-      //       id: `message-${timestamp}`,
-      //       text: chatResponse.question,
-      //       role: "user",
-      //       timestamp: new Date(timestamp),
-      //     },
-      //     {
-      //       id: `message-${timestamp + 1 }`,
-      //       text: chatResponse.answer,
-      //       role: "assistant",
-      //       timestamp: new Date(timestamp), 
-      //     },
-      //   ] 
-      // );
-
+      setMessages([...messages, newMessage, assistantMessage]);
     } catch (error) {
       console.log(error);
     }finally{
@@ -126,26 +101,17 @@ const ChatWindow: React.FC = () => {
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) =>{
-    if(e.key === "Enter"){
-      handleSendMessage();
-    }
-  }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-
-  //for diplaying messages based on
-  const getMessageStyle = (role: MessageRole) => {
-    if (role === 'user') {
-      return 'bg-blue-500 text-white self-end rounded-br-none'; 
-    } else if (role === 'assistant') {
-      return 'bg-gray-200 text-gray-800 self-start rounded-tl-none'; 
-    } else { // 'system' role
-      return 'bg-yellow-100 text-yellow-800 self-center rounded-lg italic text-sm max-w-lg';
-    }
-  };
+  // //for diplaying messages based on
+  // const getMessageStyle = (role: MessageRole) => {
+  //   if (role === 'user') {
+  //     return 'bg-blue-500 text-white self-end rounded-br-none'; 
+  //   } else if (role === 'assistant') {
+  //     return 'bg-gray-200 text-gray-800 self-start rounded-tl-none'; 
+  //   } else { // 'system' role
+  //     return 'bg-yellow-100 text-yellow-800 self-center rounded-lg italic text-sm max-w-lg';
+  //   }
+  // };
 
 
 return (
@@ -154,52 +120,40 @@ return (
       <div>
         <h2>Chat</h2>
         {sessionId && <p>Session: {sessionId}</p>}
-        
         {error && (
           <div>
             <p>Error: {error}</p>
           </div>
         )}
-        
         {isLoading && <p>Loading...</p>}
-        
-        {/* <button onClick={getMessageHistory} >
-          Load Chat History
-        </button> */}
       </div>
       
+      {/* message box */}
       <div>
         {messages.length === 0 ? (
-          <p>No messages yet. Start a conversation!</p>
+          <>
+          <div>No messages yet. Start a conversation!</div>
+          </>
         ) : (
-          messages.map((message) => (
-            <div key={message.messageId}>
-              <strong>{message.role}:</strong>
-              <p>{message.message}</p>
-              <small>{message.createdAt}</small>
-            </div>
+          messages.map((mess) => (
+            <ChatMessageBubble 
+              key={mess.messageId}
+              message={mess}
+            />
           ))
         )}
         <div ref={messagesEndRef} />
       </div>
       
+      {/* input box */}
       <div>
-        <input
-          ref={messageInputRef}
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your message..."
+        <ChatInput 
+          handleSendMessage={handleSendMessage}
         />
-
-        <button onClick={handleSendMessage} >
-          Send
-        </button>
       </div>
     </div>
   </>
-);
+)
 };
 
 
@@ -208,29 +162,75 @@ export default ChatWindow;
 
 
 
-const sampleMessages: IChatMessage[] = [
-  {
-    messageId: 1,
-    message: "Hello! Can you summarize the key points from the last quarter's sales report for me?",
-    role: "user",
-    createdAt: "2025-11-18T10:00:00Z", // User's first message
-  },
-  {
-    messageId: 3,
-    message: "Certainly! The key points from the Q3 sales report are: 1. Revenue increased by 15% year-over-year. 2. Product Z was the top seller, accounting for 40% of all units sold. 3. New market penetration in the Asia region exceeded projections by 5%.",
-    role: "assistant", // The AI model's response
-    createdAt: "2025-11-18T10:00:35Z",
-  },
-  {
-    messageId: 4,
-    message: "That's helpful, thank you. What was the exact dollar amount of the Q3 revenue?",
-    role: "user",
-    createdAt: "2025-11-18T10:01:45Z",
-  },
-  {
-    messageId: 5,
-    message: "The exact Q3 revenue was $4.5 million USD.",
-    role: "assistant",
-    createdAt: "2025-11-18T10:01:59Z",
-  },
-];
+// const sampleMessages: IChatMessage[] = [
+//   {
+//     messageId: 1,
+//     message:
+//       "Hello! I need your help reviewing our full-year product performance report. We launched several new features this year, including the Smart Recommendations Engine and the Collaborative Workspace Module. I want a clear summary of how these features performed across different user segments, especially focusing on retention and overall engagement patterns. Can you go through the data and provide a high-level analysis for me?",
+//     role: "user",
+//     createdAt: "2025-12-01",
+//   },
+//   {
+//     messageId: 2,
+//     message:
+//       "Certainly! Based on the full-year report, the Smart Recommendations Engine significantly improved user satisfaction and overall content discovery. Users who interacted with recommendations spent an average of 37% more time on the platform, and retention improved particularly within the 18–30 age group. Meanwhile, the Collaborative Workspace Module performed strongly among professional and enterprise users, with adoption increasing steadily throughout the year. Overall, both features contributed to higher engagement, extended session durations, and a noticeable improvement in repeat usage.",
+//     role: "assistant",
+//     createdAt: "2025-12-01",
+//   },
+//   {
+//     messageId: 3,
+//     message:
+//       "That sounds positive. Could you elaborate more on the Collaborative Workspace Module? Specifically, I'm interested in how often teams used the shared boards, how many tasks were created on average, and whether the real-time sync feature had any measurable effect on user activity during peak hours.",
+//     role: "user",
+//     createdAt: "2025-12-02",
+//   },
+//   {
+//     messageId: 4,
+//     message:
+//       "Absolutely. The Collaborative Workspace Module became one of the most frequently used features among teams with more than five members. On average, each team created around 142 shared tasks per month, with activity peaks during midweek, especially Tuesdays and Wednesdays. The real-time sync feature significantly enhanced the user experience by reducing update delays, resulting in smoother collaboration. During peak hours—mostly between 10 AM and 1 PM—overall interaction increased by almost 24% compared to the previous collaboration system. This improvement also reduced user complaints about data mismatches or slow updates.",
+//     role: "assistant",
+//     createdAt: "2025-12-02",
+//   },
+//   {
+//     messageId: 5,
+//     message:
+//       "Good to know. Now I want you to give me a comparative overview between the first and second half of the year. Did engagement continue to rise consistently, or were there dips during certain months? Also, were there any major trends related to user churn or acquisition that I should be aware of before preparing my presentation for the board?",
+//     role: "user",
+//     createdAt: "2025-12-03",
+//   },
+//   {
+//     messageId: 6,
+//     message:
+//       "Here is the comparative analysis: During the first half of the year, engagement saw a steady rise fueled by the rollout of the upgraded mobile app and the early release of the Recommendations Engine. User acquisition grew fast in Q2, mostly due to aggressive marketing campaigns and seasonal demand. The second half of the year showed more stability but with occasional dips in September and November as competition in the productivity space intensified. However, churn remained lower than expected, primarily because returning users found increased value in the new collaboration tools. Growth was not as steep as in the first half, but retention performance compensated for the slower acquisition rate.",
+//     role: "assistant",
+//     createdAt: "2025-12-03",
+//   },
+//   {
+//     messageId: 7,
+//     message:
+//       "That's helpful. Now I also want the exact revenue generated from premium subscriptions this year along with a breakdown of which features influenced conversions the most. Provide a full narrative explanation, not just numbers, because I need to use this in a detailed slide for the revenue growth section.",
+//     role: "user",
+//     createdAt: "2025-12-03",
+//   },
+//   {
+//     messageId: 8,
+//     message:
+//       "Premium subscriptions generated **$12.8 million USD** this year, marking a 17% increase compared to the previous year. A large portion of this growth was driven by the introduction of the Smart Recommendations Engine, which encouraged more free users to upgrade after realizing the value of personalized suggestions. The Collaborative Workspace Module also played a major role; once teams experienced smoother real-time synchronization and task sharing, many upgraded to access higher storage limits and cross-team collaboration features. In addition, seasonal discounts in Q2 and Q4 boosted conversion rates by attracting new users who remained subscribed even after the promotional period ended.",
+//     role: "assistant",
+//     createdAt: "2025-12-03",
+//   },
+//   {
+//     messageId: 9,
+//     message:
+//       "Nice. One more thing — can you prepare a short but detailed paragraph summarizing the biggest risks we face going into next year? Focus mainly on potential user churn, market competition, and any technical limitations that might slow down product growth.",
+//     role: "user",
+//     createdAt: "2025-12-04",
+//   },
+//   {
+//     messageId: 10,
+//     message:
+//       "**With `react-markdown`, your app can automatically handle:**",
+//     role: "assistant",
+//     createdAt: "2025-12-04",
+//   }
+// ];
