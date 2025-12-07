@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
 import { renameChatTitle } from "../../api/chatApi";
+import { toast } from "sonner";
 
 const ChatTitle = () =>{
   const sessionId = useSessionStore((state) => state.sessionId);
@@ -22,12 +23,14 @@ const ChatTitle = () =>{
       return;
     }
     try {   
-        //handle rename api
-        const response = await renameChatTitle(sessionId, localTitle);
-        console.log(response);
-        changeChatTitle(response.title);
+      //handle rename api
+      const response = await renameChatTitle(sessionId, localTitle);
+      console.log(response);
+      changeChatTitle(response.title);
+      toast.success("Chat renamed successfully. New title: " + response.title);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to rename chat. Please try again.");
     }
   }
 

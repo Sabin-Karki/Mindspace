@@ -13,6 +13,12 @@ const RenameChatModal = ({handleHideRenameModal, handleRenameChatTitle, localSes
   const renameSession = useChatListStore((state) => state.renameSession);
 
   const handleKeyEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === 'Escape') {
+      handleHideRenameModal();
+    }
+    if(localTitle === localChatTitle || localTitle.trim().length === 0) {
+      return;
+    } 
     if (e.key === 'Enter') {
       handleRenameChatTitle(localSessionId, localTitle);
       handleHideRenameModal();

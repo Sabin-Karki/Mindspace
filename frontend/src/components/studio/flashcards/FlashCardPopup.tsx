@@ -1,21 +1,22 @@
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import type { ICardDetailResponse, ICardResponse } from "../../../types";
+import type { ICardDetailResponse, ICardOverview, ICardResponse } from "../../../types";
 import { getFlashCardByCardId } from "../../../api/flashApi";
 import Modal from "react-modal";
 
 interface FlashCardPopupProps {
   cardId: number;
   closeModal: () => void;
-  flashCardName: string;
-  handleUpdateFlashCardName: () => void;
-  setLocalFlashCardName: (flashCardName: string) => void
+  flashCard: ICardOverview; //only overview of card
+  handleUpdateFlashCardName: (input: string) => void;
 }
 
 Modal.setAppElement("#root");
 
-const FlashCardPopup = ( {cardId, closeModal, flashCardName, handleUpdateFlashCardName, setLocalFlashCardName}: FlashCardPopupProps) => {
+const FlashCardPopup = ( {cardId, closeModal, flashCard, handleUpdateFlashCardName}: FlashCardPopupProps) => {
   
+  const [localFlashCardName, setLocalFlashCardName] = useState(flashCard.title || "");
+
   const [cardDetails, setCardDetails] = useState<ICardDetailResponse[]>([]);
 
   const [currentIndex, setCurrentIndex] = useState(0);//for index of card
@@ -26,6 +27,7 @@ const FlashCardPopup = ( {cardId, closeModal, flashCardName, handleUpdateFlashCa
   useEffect(() =>{
     const getFlashCard = async(cardId: number) =>{
       try {
+        //get full flashcard response
         const response: ICardResponse = await getFlashCardByCardId(cardId);
         console.log(response);
         setCardDetails(response.cardDetails);
@@ -65,7 +67,7 @@ const FlashCardPopup = ( {cardId, closeModal, flashCardName, handleUpdateFlashCa
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if(e.key === "Enter"){
-      handleUpdateFlashCardName();
+      handleUpdateFlashCardName(localFlashCardName);
     }
   }
   
@@ -85,9 +87,10 @@ const FlashCardPopup = ( {cardId, closeModal, flashCardName, handleUpdateFlashCa
         <div  className="flex justify-between items-center p-2">
           <div>
             <input type="text" 
-              value={flashCardName} 
+              value={localFlashCardName} 
               onChange={handleChangeCardName} 
-              onKeyDown={handleKeyDown}/>
+              onKeyDown={handleKeyDown}
+              />
           </div>
           <div> {currentIndex+1}/{cardDetails.length} </div>
           <button onClick={closeModal} className="text-xl">&times;</button>
