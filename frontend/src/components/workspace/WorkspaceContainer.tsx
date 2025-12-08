@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import UploadPanel from "../upload/UploadPanel";
-import ChatWindow from "../chat/ChatWindow";
-import StudioPanel from "../studio/StudioPanel";
+import { useCallback, useEffect, useRef } from "react";
+import { ChatWindow } from "../chat";
+import { UploadPanel } from "../upload";
 import { useLayoutStore } from "../../store/layoutStore";
+import StudioPanel from "../studio/StudioPanel";
 
 
 // const InitialWidth = {

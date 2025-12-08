@@ -6,6 +6,7 @@ import { useFlashCardStore } from "../../../store/flashCardStore";
 import { toast } from "sonner";
 import { updateFlashCardOverviewTitle } from "../../../api/flashApi";
 import DeleteFlashCard from "./DeleteFlashCard";
+import RenameFlashCard from "./RenameFlashCard";
 
 interface FlashCardProps {
   flashCard: ICardOverview;
@@ -14,7 +15,7 @@ interface FlashCardProps {
 //getting a specific flash card
 const FlashGet = ( {flashCard}: FlashCardProps ) => {
   
-  const [localFlashCardName, setLocalFlashCardName] = useState(flashCard.title || ""); //local state
+  
   const updateFlashCardName = useFlashCardStore((state) => state.updateFlashCardName);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,7 +28,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
 
 
   //rename flash card
-  const handleUpdateFlashCardName = async() =>{
+  const handleUpdateFlashCardName = async( localFlashCardName: string ) =>{
     try {
       const response: ICardResponse = await updateFlashCardOverviewTitle(flashCard.cardOverViewId, localFlashCardName);
       updateFlashCardName(response.cardOverViewId, response.title);  //update global state after flashcard name change
@@ -40,17 +41,17 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
   }
   
 
-  //change local state of flash card
-  const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalFlashCardName(e.target.value);
-  }  
+  // //change local state of flash card
+  // const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setLocalFlashCardName(e.target.value);
+  // }  
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if(e.key === "Enter"){
-      handleUpdateFlashCardName();
-      closeRenameModal();
-    }
-  }
+  // const handleKeyDown = (e: React.KeyboardEvent) => {
+  //   if(e.key === "Enter"){
+  //     handleUpdateFlashCardName();
+  //     closeRenameModal();
+  //   }
+  // }
 
   //show popup modal or close popup modal 
   const closeModal = () =>{
@@ -92,15 +93,12 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
       <div onClick={ openModal } className="flex justify-between border-4">
         
         <div className="relative flex items-center" >
-          {/* flash card name */}
+          {/* this not a popup  just editing mode flash card name */}
         {isRenameModalOpen ?(
-          <input type="text"
-          onClick={(e) => e.stopPropagation()}
-          value={localFlashCardName} 
-          onChange={handleChangeCardName}
-          onKeyDown={handleKeyDown} 
-          className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 "
-          autoFocus
+          <RenameFlashCard 
+            handleUpdateFlashCardName={handleUpdateFlashCardName}
+            closeRenameModal={closeRenameModal}
+            flashCard={flashCard}
           />
         ):(
           <p>
@@ -110,7 +108,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
         </div>
 
         {/* we only have 1 sources so not checking no. of sources*/}
-        <p>1 sources</p>
+        <p>{flashCard.sourceId.length ?? 0}</p>
         {/* menu options ||| rename and delete option */}
         <button         
           onClick={ (e) => { e.stopPropagation(); handleShowMenu(flashCard.cardOverViewId); } } 
@@ -163,10 +161,9 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
       >
         <FlashCardPopup 
           cardId={flashCard.cardOverViewId}
-          flashCardName={localFlashCardName}
-          handleUpdateFlashCardName={handleUpdateFlashCardName}
-          setLocalFlashCardName={setLocalFlashCardName}
           closeModal={closeModal}   
+          flashCard={flashCard}
+          handleUpdateFlashCardName={handleUpdateFlashCardName}
         />
       </Modal>
 

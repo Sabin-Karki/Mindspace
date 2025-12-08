@@ -1,5 +1,4 @@
-import AllChats from "../components/dashboard/AllChats";
-import CreateChat from "../components/dashboard/CreateChat";
+import { AllChats, CreateChat } from "../components/dashboard";
 
 const Dashboard = () => {
 

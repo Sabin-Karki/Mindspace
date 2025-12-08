@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import { deleteChat, fetchAllChatSessions, renameChatTitle } from "../../api/chatApi";
-import type { ChatSessionGetDTO } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { useSessionStore } from "../../store/sessionStore";
 import DeleteChatModal from "./DeleteChat";
@@ -208,22 +207,3 @@ const AllChats = () =>{
 }
 
 export default AllChats;
-
-//   //Eg data
-//   const sessions: ChatSessionGetDTO[] = [
-//   {
-//     sessionId: 101,
-//     title: "Project Alpha Planning Notes",
-//     createdAt: "2025-11-15"
-//   },
-//   {
-//     sessionId: 102,
-//     title: "Untitled notebook",
-//     createdAt: "2025-11-18"
-//   },
-//   {
-//     sessionId: 103,
-//     title: "Meeting Minutes - Q3 Review",
-//     createdAt: "2025-11-10"
-//   }
-// ];

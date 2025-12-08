@@ -5,6 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { toast } from "sonner";
 
+//for later
+// use RHF + Zod
+//react-hook-form and zod validation
+
 const Signin = () => {
 
   const navigate = useNavigate();

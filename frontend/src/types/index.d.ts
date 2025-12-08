@@ -32,7 +32,8 @@ export interface IChatRenameRequest {
 export interface ICardOverview {
   cardOverViewId: number;
   title: string;
-  sourceId: number;
+  sourceId: number[]; //we now get this as list
+
   // NO cardDetails array here!
 }
 
@@ -85,7 +86,7 @@ export interface IAudioResponseDTO {
 export type MessageRole = 'user' | 'assistant' | 'system';
 
 export interface IChatMessage {
-  messageId: number;
+  messageId: number | string;
   message: string;
   role: MessageRole; // Enforcing roles based on common chat structure
   createdAt: string; // LocalDate
