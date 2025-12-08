@@ -3,7 +3,6 @@ package com.backend.mindspace.controller;
 
 import com.backend.mindspace.dto.ChatMessageDTO;
 import com.backend.mindspace.dto.ChatRequest;
-import com.backend.mindspace.dto.ChatResponse;
 import com.backend.mindspace.dto.ChatSessionGetDTO;
 import com.backend.mindspace.dto.ChatTitleRenameRequest;
 import com.backend.mindspace.entity.ChatSession;
@@ -62,8 +61,8 @@ public class ChatController {
 
     
     @PostMapping("/{sessionId}/ask")
-    public  ResponseEntity<ChatResponse> askQuestion(@AuthenticationPrincipal User user, @PathVariable Long sessionId, @RequestBody ChatRequest chatRequest){
-        ChatResponse response = chatService.askQuestion(user, chatRequest.getQuestion(), sessionId);
+    public  ResponseEntity<ChatMessageDTO> askQuestion(@AuthenticationPrincipal User user, @PathVariable Long sessionId, @RequestBody ChatRequest chatRequest){
+        ChatMessageDTO response = chatService.askQuestion(user, chatRequest.getQuestion(), sessionId);
         return ResponseEntity.ok(response);
     }
 
