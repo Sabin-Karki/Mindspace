@@ -36,7 +36,7 @@ const FlashGenerator = () => {
       const response: ICardOverview = await generateFlashCard(sessionId, sId);
       console.log(response);
       addFlashCard(response);
-
+      // toast.promise("");
     } catch (error: any) {
       const serverMessage = error?.response?.data?.message;
       const axiosMessage = error?.message;

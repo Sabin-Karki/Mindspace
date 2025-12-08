@@ -1,6 +1,15 @@
-const ReportGet = () => {
+import type { IReportResponse } from "../../../types";
+
+const ReportGet = ({report}: {report: IReportResponse}) => {
+
   return (
-    <div>ReportGet</div>
+    <>
+    <div className=" border-amber-600 p-4">
+      <div>{report.reportContent}</div>
+      <div>{report.title}</div>
+      <div>{report.sourceId}</div>
+    </div>
+    </>
   )
 }
 

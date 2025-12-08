@@ -28,10 +28,10 @@ export const fetchAllChatSessions = async (): Promise<ChatSessionGetDTO[]> => {
 
 
 //chat bot apis
-export const askQuestion = async (sessionId: number, question: string): Promise<IChatResponse> => {
+export const askQuestion = async (sessionId: number, question: string): Promise<IChatMessage> => {
   const chatRequest: IChatRequest = { question };
 
-  const res: AxiosResponse<IChatResponse> = await credApi.post(`/chat/${sessionId}/ask`, chatRequest);
+  const res: AxiosResponse<IChatMessage> = await credApi.post(`/chat/${sessionId}/ask`, chatRequest);
   return res.data;
 };
 

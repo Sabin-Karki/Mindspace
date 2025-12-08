@@ -34,7 +34,11 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
       updateFlashCardName(response.cardOverViewId, response.title);  //update global state after flashcard name change
 
       toast.success("Flashcard name updated successfully.");
-    } catch (error) {
+    } catch (error: any) {
+      const serverMessage = error?.response?.data?.message;
+      const axiosMessage = error?.message;
+      const message = serverMessage || axiosMessage || "Failed to generate flashcard. Please try again.";
+      setError(message);
       toast.error("Failed to update flashcard name. Please try again.");
       return;
     }

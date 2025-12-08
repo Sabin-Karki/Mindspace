@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { IChatMessage, IChatResponse, MessageRole } from "../../types";
+import type { IChatMessage } from "../../types";
 import { askQuestion, getChatHistory } from "../../api/chatApi";
 import { useSessionStore } from "../../store/sessionStore";
 import { toast } from "sonner";
@@ -81,15 +81,15 @@ const ChatWindow: React.FC = () => {
       //instead of waiting for server to respond
       setMessages([...messages, newMessage]);
 
-      const chatResponse: IChatResponse = await askQuestion(sessionId, input);
+      const chatResponse: IChatMessage = await askQuestion(sessionId, input);
 
       //if proper response from server with id 
       //set messages using ids  
       //create assistant temporary message
       const assistantMessage: IChatMessage = {
-        messageId: self.crypto.randomUUID(),
+        messageId: chatResponse.messageId,
         role: 'assistant',
-        message: chatResponse.answer,
+        message: chatResponse.message,
         createdAt: new Date().toISOString()
       }
 
