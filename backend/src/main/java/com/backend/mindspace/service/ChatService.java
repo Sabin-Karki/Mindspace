@@ -1,7 +1,6 @@
 package com.backend.mindspace.service;
 
 import com.backend.mindspace.dto.ChatMessageDTO;
-import com.backend.mindspace.dto.ChatResponse;
 import com.backend.mindspace.dto.ChatSessionGetDTO;
 import com.backend.mindspace.entity.*;
 import com.backend.mindspace.repository.*;
@@ -35,7 +34,7 @@ public class ChatService {
         this.sourceRepository = sourceRepository;
     }
 
-    public ChatResponse askQuestion(User user, String question, Long sessionId) {
+    public ChatMessageDTO askQuestion(User user, String question, Long sessionId) {
         System.out.println("=== START askQuestion ===");
 
         // Find the chat session and verify it belongs to the user
@@ -119,7 +118,8 @@ public class ChatService {
 
         // Return response
         System.out.println("=== END askQuestion ===");
-        return new ChatResponse(question, answer);
+        return new ChatMessageDTO(assistantMsg.getMessageId(),assistantMsg.getMessage(),assistantMsg.getRole(),assistantMsg.getCreatedAt());
+
     }
 
 
