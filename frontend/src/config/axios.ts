@@ -6,17 +6,18 @@ const BASE_URL = "http://localhost:8080/api/v1";
 //Unauthenticated API instance
 export const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  
+  //axios automatically detects what type of content are u sending 
+  //and sets the correct headers
+  //no need to set it manually/force here
+  // headers: {
+  //   "Content-Type": "application/json",
+  // },
 });
 
 // Authenticated API instance (for protected routes)
 export const credApi: AxiosInstance = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 // AXIOS REQUEST INTERCEPTOR

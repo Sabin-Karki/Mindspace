@@ -47,10 +47,10 @@ const AudioList = () =>{
         <>
         <div>No Audios found</div> 
         </>
-      ): audioCards.map((card) =>{
+      ): audioCards.map((card) =>(
         
         <AudioGet key={card.id} card ={card}/>
-      })
+      ))
     }
     </>
   )

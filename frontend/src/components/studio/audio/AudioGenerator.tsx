@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useSessionStore } from "../../../store/sessionStore";
-import type { IAudioResponseDTO } from "../../../types";
+import type { IAudioResponseDTO, IUploadResponse } from "../../../types";
 import { generateAudioOverview } from "../../../api/audioApi";
 import { toast } from "sonner";
 
 const AudioGenerator = () =>{
   
   const sessionId = useSessionStore((state) => state.sessionId);
+  const sources: IUploadResponse[] = useSessionStore((state) => state.sources);
   const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
   const [audioCards, setAudioCards] = useState<IAudioResponseDTO>();
 
@@ -18,6 +19,11 @@ const AudioGenerator = () =>{
       setError(null);
       setIsLoading(true);
       if(!sessionId) return;
+
+      if(sources.length === 0) {
+        toast.error("No sources available. Please upload a document first.");
+        return;
+      }
 
       let sId: number;
 

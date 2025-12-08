@@ -46,9 +46,9 @@ const ReportList = () => {
         <>
         <div>No Report found</div> 
         </>
-      ): reportList.map((report) =>{
+      ): reportList.map((report) =>(
         <ReportGet key={report.reportId} report ={report}/>
-      })
+      ))
     }
     </>
   )

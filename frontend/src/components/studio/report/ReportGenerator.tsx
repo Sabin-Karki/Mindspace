@@ -21,6 +21,11 @@ const ReportGenerator = () => {
       setIsLoading(true);
       if(!sessionId) return;
 
+      if(sources.length === 0) {
+        toast.error("No sources available. Please upload a document first.");
+        return;
+      }
+
       let sIds: number[] = [];
       if(selectedSourceIds.length === 0){
         //if nothing selected then get all source ids
@@ -48,7 +53,7 @@ const ReportGenerator = () => {
   }
 
   return (
-     <div onClick={handleGenerateReport}>Audio</div>
+     <div onClick={handleGenerateReport}>Report</div>
   )
 }
 
