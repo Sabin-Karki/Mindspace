@@ -4,12 +4,14 @@ import { useSessionStore } from "../../../store/sessionStore";
 import { getAudioOverviewsBySessionId } from "../../../api/audioApi";
 import type { IAudioResponseDTO } from "../../../types";
 import AudioGet from "./AudioGet";
+import { useAudioCardStore } from "../../../store/audioStore";
 
 const AudioList = () =>{
   
   const sessionId = useSessionStore((state) => state.sessionId);
-  const [audioCards, setAudioCards] = useState<IAudioResponseDTO[]>([]);
-
+  const setAudioCards = useAudioCardStore((state) =>state.setAudioCards);
+  const audios = useAudioCardStore((state) =>state.audios);
+  
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,13 +45,15 @@ const AudioList = () =>{
     <>
     <div>Audio list</div>
     {
-      audioCards.length === 0 ? (
+      audios.length === 0 ? (
         <>
         <div>No Audios found</div> 
         </>
-      ): audioCards.map((card) =>(
+      ): audios.map((audio) =>(
         
-        <AudioGet key={card.id} card ={card}/>
+        <AudioGet 
+          key={audio.id}
+          audio ={audio}/>
       ))
     }
     </>

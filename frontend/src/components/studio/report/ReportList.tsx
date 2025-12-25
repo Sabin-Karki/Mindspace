@@ -4,11 +4,13 @@ import { useSessionStore } from "../../../store/sessionStore";
 import ReportGet from "./ReportGet";
 import { getAllReports } from "../../../api/reportApi";
 import type { IReportResponse } from "../../../types";
+import { useReportCardStore } from "../../../store/reportStore";
 
 const ReportList = () => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
-  const [reportList, setReportList] = useState<IReportResponse[]>([]);
+  const setReportCards = useReportCardStore((state) =>state.setReportCards);
+  const reports = useReportCardStore((state) =>state.reports);
   
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +25,7 @@ const ReportList = () => {
         const response: IReportResponse[] = await getAllReports(sessionId);
         console.log(response);
         
-        setReportList(response);
+        setReportCards(response);
       } catch (error: any) {
         const serverMessage = error?.response?.data?.message;
         const axiosMessage = error?.message;
@@ -42,11 +44,11 @@ const ReportList = () => {
     <>
     <div>ReportList</div>
     {
-      reportList.length === 0 ? (
+      reports.length === 0 ? (
         <>
         <div>No Report found</div> 
         </>
-      ): reportList.map((report) =>(
+      ): reports.map((report) =>(
         <ReportGet key={report.reportId} report ={report}/>
       ))
     }
