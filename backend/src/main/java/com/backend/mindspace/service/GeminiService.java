@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -154,6 +157,34 @@ public class GeminiService implements AIService {
         }
     }
 
+    //i need to create a new method with a 2.5-flash-lite model to make sure i have enough limit strictly for Chat purpose only,20 back and forth is enough,20 answers.
+
+//    public String callGeminiTextApiForAnswer(String prompt){
+//        try{
+//            String payload = """
+//                    {
+//                    "contents":[
+//                    {
+//                    "parts": {
+//                    {
+//                    "text": "%s"
+//                    }
+//                    ]
+//                    }
+//                    ],
+//                    "generationConfig": {
+//                    "thinkingConfig": {
+//                    "thinkingBudget":0
+//                    }
+//                    }
+//                    }
+//                    """.formatted(prompt.replace("\"","\\\""));
+//
+//            String responseJson = webClient.post()
+//                    .uri("/models/gemini-2.5-flash")
+//        }
+//    }
+//
     public String callGeminiTextApi(String prompt) {
         try {
             String payload = """
@@ -223,7 +254,6 @@ public class GeminiService implements AIService {
             System.out.println("📞 Calling Gemini TTS API - script length: " + text.length() + " chars");
             long apiStart = System.currentTimeMillis();
 
-
             String payload = """
             {
                 "contents": [{"parts":[{"text": "%s"}]}],
@@ -243,7 +273,7 @@ public class GeminiService implements AIService {
                     .bodyToMono(String.class)
                     .block();
 
-            System.out.println("✅ Gemini API responded in " + (System.currentTimeMillis() - apiStart) + "ms");
+            System.out.println("Gemini API responded in " + (System.currentTimeMillis() - apiStart) + "ms");
 
             JsonNode root = objectMapper.readTree(responseJson);
             JsonNode candidates = root.path("candidates");
@@ -252,30 +282,28 @@ public class GeminiService implements AIService {
                 throw new RuntimeException("Failed to generate speech. The API returned no content, possibly due to safety filters.");
             }
 
-            System.out.println("🔀 Decoding base64 audio data...");
+            System.out.println("Decoding base64 audio data...");
             String audioContent = candidates.get(0).path("content").path("parts").get(0).path("inlineData").path("data").asText();
             byte[] pcmData = java.util.Base64.getDecoder().decode(audioContent);
-            System.out.println("✅ Decoded " + pcmData.length + " bytes of PCM data");
+            System.out.println("Decoded " + pcmData.length + " bytes of PCM data");
 
-            System.out.println("💾 Writing PCM to temp file...");
+            System.out.println("Writing PCM to temp file...");
             pcmFile = Files.createTempFile("mindspace-audio", ".pcm");
             Files.write(pcmFile, pcmData);
 
             wavFile = pcmFile.resolveSibling(pcmFile.getFileName().toString().replace(".pcm", ".wav"));
 
-            System.out.println("🎵 Running ffmpeg conversion...");
+            System.out.println("Running ffmpeg conversion...");
             long ffmpegStart = System.currentTimeMillis();
             ProcessBuilder processBuilder = new ProcessBuilder(
-                    "ffmpeg", "-y",
-                    "-f", "s16le",
-                    "-ar", "24000",
-                    "-ac", "1",
-                    "-i", pcmFile.toAbsolutePath().toString(),
-                    wavFile.toAbsolutePath().toString()
+                    "ffmpeg", "-y", "-f", "s16le", "-ar", "24000", "-ac", "1",
+                    "-i", pcmFile.toAbsolutePath().toString(), wavFile.toAbsolutePath().toString()
             );
+
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
-            System.out.println("✅ ffmpeg completed in " + (System.currentTimeMillis() - ffmpegStart) + "ms");
+
+            System.out.println("ffmpeg completed in " + (System.currentTimeMillis() - ffmpegStart) + "ms");
 
             if (exitCode != 0) {
                 String errorOutput = new String(process.getErrorStream().readAllBytes());
@@ -283,9 +311,13 @@ public class GeminiService implements AIService {
                 throw new RuntimeException("ffmpeg process failed with exit code " + exitCode + ": " + errorOutput);
             }
 
-            System.out.println("📖 Reading WAV file...");
+            System.out.println("Reading WAV file......");
             byte[] wavData = Files.readAllBytes(wavFile);
-            System.out.println("✅ Final WAV size: " + wavData.length + " bytes");
+            System.out.println("Final WAV size: " + wavData.length + " bytes");
+
+            if (wavData.length == 0) {
+                throw new RuntimeException("WAV file is empty after ffmpeg conversion");
+            }
 
             return wavData;
 
