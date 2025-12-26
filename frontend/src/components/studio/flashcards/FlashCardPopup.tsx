@@ -52,12 +52,16 @@ const FlashCardPopup = ( {cardId, closeModal, flashCard, handleUpdateFlashCardNa
   const handleNextButton = () => {
     if(currentIndex === cardDetails.length - 1) return;
     setCurrentIndex( (prevIndex) => prevIndex + 1);
+    //show question
+    setIsShowQuestion(true);
   }
 
   //handle prev btn
   const handlePrevButton = () => {
     if(currentIndex === 0) return;
     setCurrentIndex( (prevIndex) => prevIndex - 1);
+    //show question
+    setIsShowQuestion(true);
   }
 
 

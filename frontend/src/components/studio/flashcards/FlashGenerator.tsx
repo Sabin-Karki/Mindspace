@@ -23,6 +23,11 @@ const FlashGenerator = () => {
       setIsLoading(true);
       if(!sessionId) return;
 
+      //what if there are no uploaded sources ??
+      if(sources.length === 0) {
+        toast.error("No sources available. Please upload a document first.");
+        return;
+      }
       let sId:number[] = [];
       if(selectedSourceIds.length === 0){
         //if nothing selected then get all source ids
@@ -36,7 +41,7 @@ const FlashGenerator = () => {
       const response: ICardOverview = await generateFlashCard(sessionId, sId);
       console.log(response);
       addFlashCard(response);
-
+      // toast.promise("");
     } catch (error: any) {
       const serverMessage = error?.response?.data?.message;
       const axiosMessage = error?.message;

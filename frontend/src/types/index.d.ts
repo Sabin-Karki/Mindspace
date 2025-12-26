@@ -197,3 +197,21 @@ export interface IChatSessionDetail extends IChatSessionSummary {
 export interface IFlashCardOverviewDetail extends IFlashCardOverview {
   flashCards: IFlashCard[];
 }
+
+//for report 
+
+export interface IReportResponse {
+  reportId: number;
+  reportContent: string;
+  title: string;
+  sourceId: number[];
+}
+
+export interface IReportRequest {
+  sourceIds: number[];
+}
+
+export interface IReportUpdate {
+  title: string;
+}
+

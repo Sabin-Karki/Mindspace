@@ -15,7 +15,7 @@ const UploadedInfo = () => {
   const removeSelectedSourceId = useSessionStore((state) => state.removeSelectedSourceId);
   const clearSelectedSourceIds = useSessionStore((state) => state.clearSelectedSourceIds);
 
-
+  
   const [expandedSourceId, setExpandedSourceId] = useState<number| null>(null);
 
   //fetch all sources of specific sessionId
@@ -62,11 +62,12 @@ const UploadedInfo = () => {
   //check whether the title is clicked or not
   //to toggle visibility for summary
   const handleTitleClick = (sourceId: number) =>{
-    setExpandedSourceId(prevId => prevId === sourceId ? null : sourceId);
+    setExpandedSourceId( prevId => prevId === sourceId ? null : sourceId  );
   }
 
   return (
-    <div className="bg-gray-800 p-4 rounded-lg text-white shadow-xl max-w-sm">
+    <>
+    <div className="bg-gray-800 p-4 rounded-lg text-white ">
       {/* "Select all sources" Row */}
       <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-700">
         <span className="text-sm font-semibold text-gray-300">
@@ -87,42 +88,48 @@ const UploadedInfo = () => {
         sources.map((source) => (
           <div
             key={source.sourceId}
-            className="flex justify-between items-center py-2 hover:bg-gray-700 rounded-md px-1 transition-colors"
+            className=" flex flex-col py-2 hover:bg-gray-700 rounded-md px-1 transition-colors"
+            onClick={() => handleTitleClick(source.sourceId)}
           >
-            <div className="flex items-center space-x-2">
-              {/* YouTube Icon (Mocked with a simple div) */}
-              <div className="flex-shrink-0 w-4 h-4 bg-red-600 rounded flex items-center justify-center text-xs">
-                ▶
+
+            <div className="grid grid-cols-2 grid-rows-1 w-full">
+              <div
+                className="flex items-start justify-start cursor-pointer text-sm font-medium truncate"
+                title={source.title} 
+                >
+                <span className={expandedSourceId === source.sourceId ? "rotate-90 transition-transform" : "transition-transform"}>
+                  ▶
+                </span>
+                {source.title} 
               </div>
               
-              {/* Title - Clickable to toggle summary */}
-              <span
-                onClick={() => handleTitleClick(source.sourceId)}
-                className="cursor-pointer text-sm font-medium truncate max-w-[200px]"
-                title={source.title} // Use title attribute for full name on hover
-              >
-                {source.title}
-              </span>
-            </div>
-            
-            {/* Checkbox */}
-            <input
-              type="checkbox"
-              onChange={() => handleSelectSource(source.sourceId)}
-              checked={selectedSourceIds.includes(source.sourceId)}//checked or not
-              className="form-checkbox h-5 w-5 text-blue-500 bg-gray-700 border-gray-600 rounded cursor-pointer"
-            />
+              {/* Checkbox */}
+              <div className="flex  items-end justify-end pl-2 ">
+                <input
+                  onClick={(e) => e.stopPropagation()}
+                  type="checkbox"
+                  onChange={() => handleSelectSource(source.sourceId)}
+                  checked={selectedSourceIds.includes(source.sourceId)}//checked or not
+                  className="form-checkbox h-5 w-5 text-blue-500 bg-gray-700 border-gray-600 rounded cursor-pointer"
+                />
+              </div>
 
-            {/* Expanded Summary - positioned outside the main flex container for proper flow */}
-            {expandedSourceId === source.sourceId && (
-              <p className="text-xs text-gray-400 mt-1 p-2 bg-gray-700/50 rounded-md w-full">
-                {source.summary}
-              </p>
-            )}
+            </div>
+
+            <div className="flex items-center justify-center">
+              {/* Expanded Summary - positioned outside the main flex container for proper flow */}
+              {expandedSourceId === source.sourceId && (
+                <p className="text-sm text-gray-400 mt-1 p-2 bg-gray-700/50 rounded-md w-full">
+                  {source.summary}
+                </p>
+              )}
+            </div>
+
           </div>
         ))
       )}
     </div>
+    </>
   );
 };
 
@@ -135,7 +142,7 @@ export default UploadedInfo;
 //   {
 //     sourceId: 501,
 //     chunksSize: 125, // This could represent the number of chunks/segments the file was broken into
-//     summary: "A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.",
+//     summary: "A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.",
 //     title: "Annual Budget 2025.pdf",
 //   },
 //   {
