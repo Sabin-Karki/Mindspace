@@ -30,6 +30,6 @@ export const updateQuizTitle = async (quizId: number, title: string): Promise<IQ
 };
 
 export const deleteQuiz = async (quizId: number): Promise<void> => {
-  await credApi.delete(`/quizzes/${quizId}`);
+  await credApi.delete(`/quizzes/delete/${quizId}`);
 };
 

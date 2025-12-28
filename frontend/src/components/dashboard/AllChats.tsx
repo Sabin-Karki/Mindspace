@@ -25,6 +25,9 @@ const AllChats = () =>{
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
+  const isDefaultView = useState(false);
+  // const isDefaultView = useState(true);
+
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,24 +130,22 @@ const AllChats = () =>{
 
   return (
   <>
-    <div className="flex flex-wrap gap-4 p-4" >
+    <div className="flex w-48 h-48 px-2 gap-2" >
     {sessions.map((session) => (
-      // Added 'relative' to the chat item for absolute positioning of the menu
-      <div key={session.sessionId} className="flex bg-white rounded-lg border border-amber-400 p-12 relative">
-        
-        {/* set global sessionId and title and go to chat  */}
-        <button 
-          className="flex-grow text-left p-2"
-          onClick={() => handleChatClick(session.sessionId, session.title)}
-        > 
-          <div className="text-2xl text-red-800">{session.title}</div>
-          <div className="text-2xl text-gray-500">{session.createdAt}</div>
+
+      <div key={session.sessionId} 
+        className="flex justify-center bg-white rounded-lg border border-amber-400 p-12 relative">
+
+        <button className="flex" onClick={() => handleChatClick(session.sessionId, session.title)}> 
+          <div className="flex text-2xl text-red-800">{session.title}</div>
+          <div className="flex text-2xl text-gray-500">{session.createdAt}</div>
         </button>
-        
+
+
         {/* 3 dots menu container */}
         <div className="relative flex items-center">
           <button 
-          // this shows a drop menu with rename and delete option
+            // this shows a drop menu with rename and delete option
             onClick={ () => handleShowMenu(session.sessionId) } 
             className="text-2xl text-gray-700 hover:text-amber-600 px-2 ">
             &#x22EE;
@@ -180,12 +181,15 @@ const AllChats = () =>{
                 Rename
               </button>
             </div>
+
             </>
           )}
           </div>
         </div>
+
       ))}
     </div>
+
 
     {/* this will be all over the page whole screen */}
     {isDeleteModalOpen && localSessionId && (
@@ -202,6 +206,7 @@ const AllChats = () =>{
         localChatTitle={localChatTitle}
       />
     )}
+
   </>
   )
 }

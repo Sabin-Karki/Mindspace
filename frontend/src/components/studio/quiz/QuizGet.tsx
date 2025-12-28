@@ -1,6 +1,6 @@
 //this is to make these things visibile->title,sourcelength , menu for rename and delete and also view quiz<the popup modal>
 import { useState } from "react";
-import type { IQuizOverviewResponse,IQuestionResponse } from "../../../types";
+import type { IQuizOverviewResponse } from "../../../types";
 import Modal from "react-modal";
 import { toast } from "sonner";
 import { useQuizStore } from "../../../store/quizStore";
@@ -80,69 +80,79 @@ interface QuizProps {
             setIsRenameModalOpen(false);
         }
        
-      return (
-       <>
-  <div className="relative">
-    <div onClick={openModal} className="flex justify-between border-4">
-      <div className="relative flex items-center">
-        {isRenameModalOpen ? (
-          <RenameQuizOverview handleUpdateQuizTitle={handleUpdateQuizName} closeRenameModal={closeRenameModal} quiz={quiz} />
-        ) : (
-          <p>{quiz.title}</p>
-        )}
+  return (
+    <>
+    <div className="relative">
+      <div onClick={openModal} className="flex justify-between border-4">
+        <div className="relative flex items-center">
+          {isRenameModalOpen ? (
+            <RenameQuizOverview 
+              handleUpdateQuizTitle={handleUpdateQuizName}
+              closeRenameModal={closeRenameModal}
+              quiz={quiz}
+            />
+          ) : (
+            <p>{quiz.title}</p>
+          )}
+        </div>
+
+        <p>{quiz.sourceId?.length ?? 0}</p>
+
+        <button onClick={(e) => { e.stopPropagation(); handleShowMenu(quiz.quizId); }} 
+          className="text-2xl text-gray-700 hover:text-amber-600 px-2">
+          &#x22EE;
+        </button>
       </div>
 
-      <p>{quiz.sourceId?.length ?? 0}</p>
-
-      <button onClick={(e) => { e.stopPropagation(); handleShowMenu(quiz.quizId); }} className="text-2xl text-gray-700 hover:text-amber-600 px-2">
-        &#x22EE;
-      </button>
-    </div>
-
-    {openMenuId === quiz.quizId && (
+      {openMenuId === quiz.quizId && (
       <>
         <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); handleHideMenu(); }}></div>
 
         <div className="absolute top-10 right-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100">
-          <button onClick={(e) => { e.stopPropagation(); openDeleteModal(); handleHideMenu(); }} className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
+
+          <button onClick={(e) => { e.stopPropagation(); openDeleteModal(); handleHideMenu(); }} 
+            className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
             Delete
           </button>
 
-          <button onClick={(e) => { e.stopPropagation(); openRenameModal(); handleHideMenu(); }} className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100">
+          <button onClick={(e) => { e.stopPropagation(); openRenameModal(); handleHideMenu(); }} 
+            className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100">
             Rename
           </button>
         </div>
       </>
-    )}
-  </div>
+      )}
+    </div>
       
-         <Modal
-         isOpen={isModalOpen}
-         onRequestClose={closeDeleteModal} 
-         overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
-         className="outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" >
+    <Modal
+      isOpen={isDeleteModalOpen} //changes done here only
+      onRequestClose={closeDeleteModal} 
+      overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
+      className="outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" >
 
-            <DeleteQuizOverview quizId={quiz.quizId} 
-            closeDeleteModal={closeDeleteModal} />
-         </Modal>
+      <DeleteQuizOverview 
+        quizId={quiz.quizId} 
+        closeDeleteModal={closeDeleteModal}
+      />
+    </Modal>
 
-          <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal} //press esc to close
-        overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
-        className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" 
-      >
-        <QuizViewer
-          quiz={quiz}
-          onClose={closeModal}
-        />
-      </Modal>
+    <Modal
+      isOpen={isModalOpen}
+      onRequestClose={closeModal} //press esc to close
+      overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
+      className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" >
+      <QuizViewer
+        quiz={quiz}
+        onClose={closeModal}
+        handleUpdateQuizName={handleUpdateQuizName}
+        
+      />
+    </Modal>
     
-</>  
+    </>  
 
 
-      ); 
-
+  )
 };
 
 export default QuizGet;

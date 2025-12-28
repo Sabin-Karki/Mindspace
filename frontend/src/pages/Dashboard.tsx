@@ -6,8 +6,10 @@ const Dashboard = () => {
     <>
     <div>
       <div>Recent notebooks</div>
-      <CreateChat />
-      <AllChats />
+      <div className="flex rounded-xl">
+        <CreateChat />
+        <AllChats />
+      </div>
     </div>
     </>
   )
