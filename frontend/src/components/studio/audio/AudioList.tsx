@@ -61,20 +61,24 @@ const AudioList = () =>{
 
   return(
     <>
-    <div>Audio list</div>
-    {
-      audios.length === 0 ? (
-        <>
-        <div>No Audios found</div> 
-        </>
-      ):(
-        <>
-        <p className="lg-text text-gray-700 font-light">{audios.length}</p>
-        {audios.map((audio) =>(
-        <AudioGet 
-          key={audio.id}
-          audio ={audio}/>
-      ))}
+
+    { audios.length === 0 ? (
+      <> 
+        <button onClick={ handleCloseList } > &lt; Back </button>
+        <div>No audios found</div>
+      </>
+    ): (
+      <>
+        <div>
+          <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+        </div>
+        {audios.map( (audio) =>(
+          <AudioGet 
+            key={audio.id}
+            audio ={audio}
+          />
+        ))
+        }
       </>
     )}
     </>

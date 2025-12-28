@@ -47,51 +47,39 @@ const QuizList = () => {
   const handleExtendList = () => setIsExpanded(true);
   const handleCloseList = () => setIsExpanded(false);
 
-  if (!isExpanded) {
-    return (
-      <>
-        <div onClick={handleExtendList} className="flex cursor-pointer gap-2">
-          <div>Quiz</div>
-          <div>{quizzes.length}</div>
-          <div>&gt;</div>
+    if(!isExpanded){
+        return (
+        <div onClick={ handleExtendList } className="flex" >
+            <div>Quiz </div> 
+            <div>{quizzes.length}</div>
+            <div> &gt; </div>
         </div>
+        )
+    }
 
-        {quizzes.length === 0 ? (
-          <div>No Quiz Found</div>
-        ) : (
-        
-
-            quizzes.map((quiz) => (
-              <QuizGet quizId={quiz.quizId} quiz={quiz} />
-            ))
-          
-        )}
-      </>
-    );
-  }
-
-  return (
+    return(
     <>
-      <div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleCloseList();
-          }}
-        >
-          &lt; Back
-        </button>
-      </div>
-
-      {quizzes.map((quiz) => (
-        <QuizGet
-          key={quiz.quizId}
-          quiz={quiz}
-          quizId={quiz.quizId}
-        />
-      ))}
-    </>
-  );
-};
-
+        { quizzes.length === 0 ? (
+        <> 
+            <button onClick={ handleCloseList } > &lt; Back </button>
+            <div>No quizzes found</div>
+        </>
+        ): (
+        <>
+            <div>
+                <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+            </div>
+            {quizzes.map( (quiz) =>(
+            <QuizGet
+                key={quiz.quizId} 
+                quiz={quiz} 
+                quizId={quiz.quizId}
+            />
+            ))
+            }
+        </>
+        )}
+    </> 
+    )
+}
 export default QuizList;

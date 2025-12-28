@@ -11,8 +11,6 @@ const FlashList = () => {
   const sessionId = useSessionStore((state) => state.sessionId);
   const setFlashCards = useFlashCardStore((state) => state.setFlashCards);
   const flashCards = useFlashCardStore((state) => state.flashCards);
-
-  console.log("Flashcards in store: " , flashCards);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [error, setError ] = useState<string | null>(null);
@@ -63,18 +61,24 @@ const FlashList = () => {
   return (
     <>
     { flashCards.length === 0 ? (
-      <div>No flashcards found</div>
-
-      ):(
-
-        flashCards.map( (flashCard) =>(
-       
-        <FlashGet
-          key={flashCard.cardOverViewId}
-          flashCard={flashCard} 
-        />
-      ))
-      )}
+      <> 
+        <button onClick={ handleCloseList } > &lt; Back </button>
+        <div>No flashcards found</div>
+      </>
+    ): (
+      <>
+        <div>
+          <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+        </div>
+        {flashCards.map( (flashCard) =>(
+          <FlashGet
+            key={flashCard.cardOverViewId}
+            flashCard={flashCard} 
+          />
+        ))
+        }
+      </>
+    )}
     </>
   )
 }
