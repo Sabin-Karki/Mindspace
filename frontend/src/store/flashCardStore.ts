@@ -3,6 +3,7 @@ import type { ICardOverview } from "../types";
 
 interface FlashCardState {
   flashCards: ICardOverview[];
+ 
   flashCardName: string;
   
   setFlashCards: (flashCards: ICardOverview[]) => void;
@@ -21,9 +22,10 @@ export const useFlashCardStore = create<FlashCardState>(
   (set) =>({
 
     flashCards: [],
+    sourceSessionId: null,
     flashCardName: "",
 
-    setFlashCards: (flashCards: ICardOverview[]) =>set({ flashCards }),
+    setFlashCards: (flashCards: ICardOverview[]) => set({ flashCards}),
     clearFlashCards: () => set({flashCards :[]}),
     addFlashCard:(flashCard : ICardOverview) =>set(
       (state) => {

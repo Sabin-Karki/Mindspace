@@ -1,4 +1,3 @@
-
 export interface ISignUpRequest {
   firstName: string;
   lastName: string;
@@ -167,13 +166,14 @@ export interface IQuestion {
   quizId: number; // ID of the parent QuizOverview
 }
 
-export interface IQuizOverview {
-  id: number;
-  title: string;
-  createdAt: string; // LocalDate
-  sourceId?: number; // Optional in case Source is null
-  // questions (OneToMany) is typically omitted in the overview/summary model
-}
+// export interface IQuizOverview {
+//   id: number;
+//   title: string;
+//   createdAt: string; // LocalDate
+//   sourceId?: number; // Optional in case Source is null
+//   // questions (OneToMany) is typically omitted in the overview/summary model
+//   questions:
+// }
 
 export interface ISource {
   sourceId: number;

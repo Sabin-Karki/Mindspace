@@ -23,8 +23,8 @@ public class FlashCardOverview {
     @ManyToMany
     @JoinTable(
             name="flashcardoverview_source",
-            joinColumns = @JoinColumn(name="flashcardoverview_id"),
-            inverseJoinColumns = @JoinColumn(name="source_id")
+            joinColumns=@JoinColumn(name="flashcardoverview_id"),
+            inverseJoinColumns=@JoinColumn(name="source_id")
     )
     private List<Source> sources = new ArrayList<>();
     @OneToMany(mappedBy = "flashCard",cascade = CascadeType.ALL,orphanRemoval = true)

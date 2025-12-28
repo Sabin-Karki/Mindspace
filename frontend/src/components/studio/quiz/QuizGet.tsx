@@ -132,7 +132,8 @@ interface QuizProps {
           )}
         </div>
 
-        <p>{quiz.sourceId?.length ?? 0}</p>
+        
+        <p>{quiz.sourceId.length ?? 0 }</p>
 
         <button onClick={(e) => { e.stopPropagation(); handleShowMenu(quiz.quizId); }} 
           className="text-2xl text-gray-700 hover:text-amber-600 px-2">

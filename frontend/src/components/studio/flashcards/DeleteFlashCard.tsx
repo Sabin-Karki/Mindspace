@@ -11,11 +11,11 @@ const DeleteFlashCard = ( {cardOverViewId, closeDeleteModal} :{cardOverViewId : 
   const handleDeleteFlashCard = async() =>{
     try {
       await deleteFlashCardOverview(cardOverViewId);
-      toast.success("Chat deleted successfully.");
+      toast.success("Card deleted successfully.");
 
       //update state
       removeFlashCard(cardOverViewId);
-      toast.success("Chat deleted successfully.");
+      toast.success("Card deleted successfully.");
       // closeDeleteModal();
     } catch (error) {
       console.log(error);
