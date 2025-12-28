@@ -2,7 +2,11 @@ import { toast } from "sonner";
 import { deleteQuiz } from "../../../api/quizApi";
 import { useQuizStore } from "../../../store/quizStore";
 
- const DeleteQuizOverview = ({quizId,closeDeleteModal}:{quizId:number,closeDeleteModal:()=>void})=>{
+interface DeleteQuizOverviewProps{
+quizId:number,closeDeleteModal:()=>void
+}
+
+ const DeleteQuizOverview = ( {quizId, closeDeleteModal}: DeleteQuizOverviewProps ) =>{
     const removeQuiz = useQuizStore((state)=>state.removeQuiz);
 
     //delete quiz overview
@@ -11,6 +15,7 @@ import { useQuizStore } from "../../../store/quizStore";
             await deleteQuiz(quizId);
             toast.success("Quiz deleted successfully");
             
+            console.log("deleted quiz")
             //update state 
             removeQuiz(quizId); //remove from global state
             toast.success("Quiz deleted successfully") ;

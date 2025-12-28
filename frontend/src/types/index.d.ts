@@ -102,7 +102,7 @@ export interface IQuestionResponse {
 export interface IQuizOverviewResponse {
   quizId: number;
   title: string;
-  sourceId: number;
+  sourceId: number[];
   questions: IQuestionResponse[];
 }
 

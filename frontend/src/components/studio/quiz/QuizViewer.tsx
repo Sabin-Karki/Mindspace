@@ -5,13 +5,26 @@ import type { IQuizOverviewResponse } from '../../../types'
 interface QuizViewerProps {
   quiz: IQuizOverviewResponse;
   onClose: () => void;
+  handleUpdateQuizName: (localQuizName: string) => Promise<void>;
 }
 
-export const QuizViewer = ({ quiz, onClose }: QuizViewerProps) => {
+export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>(new Array(quiz.questions.length).fill(null));
   const [isFinished, setIsFinished] = useState(false);
+  const [localQuizCardName, setLocalQuizCardName] = useState(quiz.title || "");
+
+  //for name rename
+  const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalQuizCardName(e.target.value);
+  }  
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if(e.key === "Enter"){
+      handleUpdateQuizName(localQuizCardName);
+    }
+  }
 
   const currentQuestion = quiz.questions[currentIndex];
   const totalQuestions = quiz.questions.length;
@@ -104,11 +117,16 @@ export const QuizViewer = ({ quiz, onClose }: QuizViewerProps) => {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl w-full max-w-2xl h-[600px] flex flex-col shadow-xl">
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">{quiz.title}</h2>
+          <div className='flex '>
+            <input type="text" 
+              className='text-xl font-bold text-gray-900 focus:ring-0 '
+              value={localQuizCardName} 
+              onChange={handleChangeCardName} 
+              onKeyDown={handleKeyDown}
+            />
             <p className="text-sm text-gray-600 mt-1">Question {currentIndex + 1} of {totalQuestions}</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+          <button onClick={onClose} className="flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
             <X size={24} />
           </button>
         </div>
