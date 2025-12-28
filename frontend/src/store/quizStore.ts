@@ -23,10 +23,24 @@ export const useQuizStore=create<QuizStateStore>((set)=>(
         quizzes:[],
 
         setQuizzes:(quizzes:IQuizOverviewResponse[])=>set({quizzes}),
-        addQuiz:(quiz:IQuizOverviewResponse)=>set((state)=>{
-            const alreadyExists=state.quizzes.some((q)=>q.quizId==quiz.quizId);// prevent the duplicate
-            if(alreadyExists) return state;
-            return {quizzes:[...state.quizzes,quiz]}; //gotta return the existing one along with the new added,cant just replace the whole thing
+
+        //because we have incomplete data 
+        addQuiz:(newQuiz:IQuizOverviewResponse)=>set((state)=>{
+            const existingQuiz=state.quizzes.find((q)=>q.quizId == newQuiz.quizId);
+            
+            if(existingQuiz){
+                //if there is no questions then //no questoins === half data ok 
+                //so update half data with full data
+                if( !existingQuiz.questions || existingQuiz.questions.length === 0 ){
+                    return {
+                        quizzes: state.quizzes.map( (q) =>
+                            q.quizId === newQuiz.quizId ? newQuiz : q
+                        )
+                    }
+                }
+                return state;
+            } 
+            return {quizzes: [...state.quizzes,newQuiz]}; //gotta return the existing one along with the new added,cant just replace the whole thing
         }),
         removeQuiz:(quizId:number)=>set((state)=>(
             ({

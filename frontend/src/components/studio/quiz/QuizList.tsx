@@ -11,6 +11,8 @@ const QuizList = () =>{
     const sessionId = useSessionStore((state)=>state.sessionId) ;
     const setQuizzes =useQuizStore((state)=>state.setQuizzes);
     const quizzes = useQuizStore((state)=>state.quizzes);
+    const [isExpanded, setIsExpanded] = useState(false);
+
     const [error,setError] = useState<string | null >(null);
     const [isLoading , setIsLoading] = useState(false);
 
@@ -39,19 +41,47 @@ const QuizList = () =>{
         handleGetAllQuizList();
     },[sessionId ]);
 
-    return(
-        <>
-        <div>
-            QuizList
+    const handleExtendList = () =>{
+        setIsExpanded(true);
+    }
+    const handleCloseList = () =>{
+        setIsExpanded(false);
+        console.log("close list")
+    }
+
+    if(!isExpanded){
+        return (
+        <div onClick={ handleExtendList } className="flex" >
+            <div>Quiz </div> 
+            <div>{quizzes.length}</div>
+            <div> &gt; </div>
         </div>
-        {quizzes.length==0 ? (
-            <div>No Quiz Found</div>):
-            quizzes.map((quiz)=>(
-                //display all quiz generated
-               <QuizGet   key={quiz.quizId} quiz={quiz} />
-            ))
-        }
+        )
+    }
+
+    return(
+    <>
+        { quizzes.length === 0 ? (
+        <> 
+            <button onClick={ handleCloseList } > &lt; Back </button>
+            <div>No quizzes found</div>
         </>
+        ): (
+        <>
+            <div>
+                <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+            </div>
+            {quizzes.map( (quiz) =>(
+            <QuizGet
+                key={quiz.quizId} 
+                quiz={quiz} 
+                quizId={quiz.quizId}
+            />
+            ))
+            }
+        </>
+        )}
+    </> 
     )
 }
 export default QuizList;

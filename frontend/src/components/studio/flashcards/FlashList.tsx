@@ -11,6 +11,8 @@ const FlashList = () => {
   const sessionId = useSessionStore((state) => state.sessionId);
   const setFlashCards = useFlashCardStore((state) => state.setFlashCards);
   const flashCards = useFlashCardStore((state) => state.flashCards);
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,22 +40,53 @@ const FlashList = () => {
   },[sessionId ]);
 
 
+  const handleExtendList = () =>{
+    setIsExpanded(true);
+  }
+  const handleCloseList = () =>{
+    setIsExpanded(false);
+  }
+
+  //if not expanded show this Flash > 
+  if(!isExpanded){
+    return (
+      <div onClick={ handleExtendList } className="flex" >
+        <div>Flash </div> 
+        <div>{flashCards.length}</div>
+        <div> &gt; </div>
+      </div>
+    )
+  }
+
   return (
     <>
-    <div>FlashList</div>
     { flashCards.length === 0 ? (
-      <div>No flashcards found</div>
-
-      ): flashCards.map( (flashCard) =>(
-        //display all flash cards 
-        <FlashGet
-          key={flashCard.cardOverViewId}
-          flashCard={flashCard} 
-        />
-      ))
-    }
+      <> 
+        <button onClick={ handleCloseList } > &lt; Back </button>
+        <div>No flashcards found</div>
+      </>
+    ): (
+      <>
+        <div>
+          <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+        </div>
+        {flashCards.map( (flashCard) =>(
+          <FlashGet
+            key={flashCard.cardOverViewId}
+            flashCard={flashCard} 
+          />
+        ))
+        }
+      </>
+    )}
     </>
   )
 }
 
 export default FlashList;
+
+// is expanded false show Flash 1 > 
+
+// isexpanded and isflashcards.length === 0 then show no cards found
+
+// isexpanded true then show one back button and flashcards
