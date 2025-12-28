@@ -4,18 +4,19 @@ import type { IQuizOverviewResponse } from "../../../types";
 import Modal from "react-modal";
 import { toast } from "sonner";
 import { useQuizStore } from "../../../store/quizStore";
-import { updateQuizTitle } from "../../../api/quizApi";
+import { getQuizById, updateQuizTitle } from "../../../api/quizApi";
 import RenameQuizOverview from "./RenameQuizOverview";
 import DeleteQuizOverview from "./DeleteQuizOverview";
 import { QuizViewer } from "./QuizViewer";
 
 interface QuizProps {
     quiz:IQuizOverviewResponse;
+    quizId: number;
 }
 
 //get specific quiz
 //what this does is,quiz which is of type iquizoverviewresponse,its object is destructured here and i can now do quiz.title,quiz.quizId;
- const QuizGet=({quiz}:QuizProps)=>{
+ const QuizGet=({quiz, quizId }:QuizProps)=>{
 
     const updateQuiz = useQuizStore((state)=>state.updateQuiz);
 
@@ -24,61 +25,96 @@ interface QuizProps {
     const [isRenameModalOpen,setIsRenameModalOpen]=useState(false);
     const [isDeleteModalOpen,setIsDeleteModalOpen]=useState(false);
 
+    const quizzes = useQuizStore((state)=>state.quizzes);
+    const addQuiz = useQuizStore((state)=>state.addQuiz);
+
     const [error,setError] = useState<string|null>(null);
     const [isLoading,setIsLoading]=useState(false);
+    
+
+    //the newly generated quiz doesnot have all data
+    //so
+    //finding specific quiz
+    const specificQuiz = quizzes.find((q) => q.quizId === quiz.quizId);
+
+    const handleGetQuizById = async() => {
+      try{
+      setError(null);
+      setIsLoading(true);
+
+      const response : IQuizOverviewResponse= await getQuizById(quizId);
+      console.log(response);
+      //now we have all data of this specific quiz
+      addQuiz(response);
+        
+      }catch(err:any){
+        const serverMessage=err?.response?.data?.message;
+        const axiosMessage=err?.message;
+        const message=serverMessage||axiosMessage||"Error generating Quiz . Please try again !";
+        setError(message);
+        toast.error(message);
+      }finally{
+        setIsLoading(false);
+      }
+    }
 
     //rename quiz overview
     const handleUpdateQuizName=async(localQuizName:string)=>{
-        try{
-           const response:IQuizOverviewResponse= await updateQuizTitle(quiz.quizId,localQuizName);
-           updateQuiz(response.quizId,response.title);
+      try{
+        const response:IQuizOverviewResponse= await updateQuizTitle(quiz.quizId,localQuizName);
+        updateQuiz(response.quizId,response.title);
 
-           toast.success("Quiz name updated successfully");
-        }catch(error: any){
-            const serverMessage= error?.response?.data?.message;
-            const axiosMessage=error?.message;
-            const message=serverMessage||axiosMessage||"failed to update quiz title. please try again ";
-            setError(message);
-            toast.error("Failed to update quiz name.");
-            return;
-        }
+        toast.success("Quiz name updated successfully");
+      }catch(error: any){
+        const serverMessage= error?.response?.data?.message;
+        const axiosMessage=error?.message;
+        const message=serverMessage||axiosMessage||"failed to update quiz title. please try again ";
+        setError(message);
+        toast.error("Failed to update quiz name.");
+        return;
+      }
     }
 
-        const closeModal=()=>{
-            setIsModalOpen(false);
-        }
-        const openModal=()=>{
-            setIsModalOpen(true);
-        }
+    const closeModal=()=>{
+      setIsModalOpen(false);
+    }
+  
+    const openModal = ()=>{
+      setIsModalOpen(true);
+      //if length is 0, null, or undefined, then fetch
+      if ( !specificQuiz?.questions?.length ) {
+        handleGetQuizById();
+      }
+    }
 
-        //handling individual menu options for quiz
-        const handleShowMenu=(id:number)=>{
-            if(openMenuId===id){
-                setMenuId(null);
-            }else{
-                setMenuId(id);
-            }
-        }
+    //handling individual menu options for quiz
+    const handleShowMenu=(id:number)=>{
+      if(openMenuId===id){
+          setMenuId(null);
+      }else{
+          setMenuId(id);
+      }
+    }
 
-        const handleHideMenu=()=>{
-            setMenuId(null);
-        }
+    const handleHideMenu=()=>{
+      setMenuId(null);
+    }
 
-        const openDeleteModal=()=>{
-            setIsDeleteModalOpen(true);
-        }
+    const openDeleteModal=()=>{
+      setIsDeleteModalOpen(true);
+    }
 
-        const closeDeleteModal=()=>{
-            setIsDeleteModalOpen(false);
-        }
+    const closeDeleteModal=()=>{
+      setIsDeleteModalOpen(false);
+    }
 
-        const openRenameModal=()=>{
-            setIsRenameModalOpen(true);
-        }
-        
-        const closeRenameModal=()=>{
-            setIsRenameModalOpen(false);
-        }
+    const openRenameModal=()=>{
+      setIsRenameModalOpen(true);
+    }
+    
+    const closeRenameModal=()=>{
+      setIsRenameModalOpen(false);
+    }
        
   return (
     <>
@@ -141,12 +177,18 @@ interface QuizProps {
       onRequestClose={closeModal} //press esc to close
       overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
       className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" >
-      <QuizViewer
-        quiz={quiz}
-        onClose={closeModal}
-        handleUpdateQuizName={handleUpdateQuizName}
+      
+      {specificQuiz && specificQuiz.questions && specificQuiz.questions.length > 0 ? (
+        <QuizViewer
+          quiz={specificQuiz}
+          onClose={closeModal}
+          handleUpdateQuizName={handleUpdateQuizName}
+          
+          />
+      ):(
+        <div>Error while occure while getting quiz </div>
+      )}
         
-      />
     </Modal>
     
     </>  

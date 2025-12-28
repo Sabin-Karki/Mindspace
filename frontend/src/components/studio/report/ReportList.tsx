@@ -11,7 +11,8 @@ const ReportList = () => {
   const sessionId = useSessionStore((state) => state.sessionId);
   const setReportCards = useReportCardStore((state) =>state.setReportCards);
   const reports = useReportCardStore((state) =>state.reports);
-  
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,20 +40,45 @@ const ReportList = () => {
     handleGetAllReportList();
   },[sessionId ]);
 
+  const handleExtendList = () =>{
+    setIsExpanded(true);
+  }
+  const handleCloseList = () =>{
+    setIsExpanded(false);
+  }
+
+  if(!isExpanded){
+    return (
+      <div onClick={ handleExtendList } className="flex" >
+        <div>Report </div> 
+        <div>{reports.length}</div>
+        <div> &gt; </div>
+      </div>
+    )
+  }
 
   return (
-    <>
-    <div>ReportList</div>
-    {
-      reports.length === 0 ? (
-        <>
-        <div>No Report found</div> 
-        </>
-      ): reports.map((report) =>(
-        <ReportGet key={report.reportId} report ={report}/>
-      ))
-    }
-    </>
+  <>
+    { reports.length === 0 ? (
+      <> 
+        <button onClick={ handleCloseList } > &lt; Back </button>
+        <div>No flashcards found</div>
+      </>
+    ): (
+      <>
+        <div>
+          <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+        </div>
+        {reports.map( (report) =>(
+          <ReportGet 
+            key={report.reportId} 
+            report ={report}
+          />
+        ))
+        }
+      </>
+    )}
+  </>
   )
 }
 

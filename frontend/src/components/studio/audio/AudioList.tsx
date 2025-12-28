@@ -11,9 +11,11 @@ const AudioList = () =>{
   const sessionId = useSessionStore((state) => state.sessionId);
   const setAudioCards = useAudioCardStore((state) =>state.setAudioCards);
   const audios = useAudioCardStore((state) =>state.audios);
-  
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() =>{
     const handleGetAllAudios = async() =>{
@@ -39,23 +41,47 @@ const AudioList = () =>{
     handleGetAllAudios();
   },[sessionId ]);
 
+  
+  const handleExtendList = () =>{
+    setIsExpanded(true);
+  }
+  const handleCloseList = () =>{
+    setIsExpanded(false);
+  }
 
+  if(!isExpanded){
+    return (
+      <div onClick={ handleExtendList } className="flex" >
+        <div>Audio </div> 
+        <div>{audios.length}</div>
+        <div> &gt; </div>
+      </div>
+    )
+  }
 
   return(
     <>
-    <div>Audio list</div>
-    {
-      audios.length === 0 ? (
-        <>
-        <div>No Audios found</div> 
-        </>
-      ): audios.map((audio) =>(
-        
-        <AudioGet 
-          key={audio.id}
-          audio ={audio}/>
-      ))
-    }
+
+    { audios.length === 0 ? (
+      <> 
+        <button onClick={ handleCloseList } > &lt; Back </button>
+        <div>No audios found</div>
+      </>
+    ): (
+      <>
+        <div>
+          <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+        </div>
+        {audios.map( (audio) =>(
+          <AudioGet 
+            key={audio.id}
+            audio ={audio}
+          />
+        ))
+        }
+      </>
+    )}
+
     </>
   )
 }
