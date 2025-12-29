@@ -8,7 +8,11 @@ import RenameChatModal from "./RenameChat";
 import { useChatListStore } from "../../store/chatListStore";
 import { toast } from "sonner";
 
-const AllChats = () =>{
+interface AllChatsProps {
+  searchQuery: string;
+}
+
+const AllChats = ({ searchQuery }: AllChatsProps) =>{
 
   const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
@@ -25,10 +29,6 @@ const AllChats = () =>{
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
-  const isDefaultView = useState(false);
-  // const isDefaultView = useState(true);
-
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -40,7 +40,6 @@ const AllChats = () =>{
   
         const response = await fetchAllChatSessions();
 
-        console.log(response);
         setSessions(response);  //set all chat sessions
 
       } catch (error: any) {
@@ -55,27 +54,23 @@ const AllChats = () =>{
     }
     
     handleUserChats();
-  },[token])
+  },[token, setSessions])
   
-
+  const filteredSessions = sessions.filter((session) =>
+    session.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-  if (sessions.length === 0) return <div>No chats found.</div>;
-
-
-  //update global sessionId and chat title
-  //before navigation
-  //?????????
+  if (sessions.length === 0) return null; // Don't show anything if there are no sessions at all
   
- const handleChatClick = (sessionId: number, title: string) => {
+  const handleChatClick = (sessionId: number, title: string) => {
     setSessionId(sessionId);
     changeChatTitle(title);
     
     navigate(`/chat`);
   };
 
-  //set localSessionId for menu options to know which to rename or delete
   const handleSelectSession = (sessionId: number) => {
     setLocalSessionId(sessionId);
   };
@@ -127,71 +122,60 @@ const AllChats = () =>{
     setIsRenameModalOpen(false);
   }
 
-
   return (
   <>
-    <div className="flex w-48 h-48 px-2 gap-2" >
-    {sessions.map((session) => (
-
-      <div key={session.sessionId} 
-        className="flex justify-center bg-white rounded-lg border border-amber-400 p-12 relative">
-
-        <button className="flex" onClick={() => handleChatClick(session.sessionId, session.title)}> 
-          <div className="flex text-2xl text-red-800">{session.title}</div>
-          <div className="flex text-2xl text-gray-500">{session.createdAt}</div>
-        </button>
-
-
-        {/* 3 dots menu container */}
-        <div className="relative flex items-center">
-          <button 
-            // this shows a drop menu with rename and delete option
-            onClick={ () => handleShowMenu(session.sessionId) } 
-            className="text-2xl text-gray-700 hover:text-amber-600 px-2 ">
-            &#x22EE;
-          </button>
+    {filteredSessions.length === 0 ? (
+      <div className="p-4 text-center text-gray-500">No notebooks found matching your search.</div>
+    ) : (
+      filteredSessions.map((session) => (
+        <div key={session.sessionId} 
+          className="w-48 h-48 flex flex-col justify-between rounded-xl border border-pink-300 p-5 text-left shadow-sm transition hover:shadow-md hover:border-pink-400 hover:bg-pink-50 focus:outline-none">
           
-          {/* Dropdown Menu has delete rename options*/}
-          {session.sessionId !== null && openMenuId === session.sessionId && (
-            <>
+          <button className="flex flex-col gap-1 text-left h-full" onClick={() => handleChatClick(session.sessionId, session.title)}> 
+            <h3 className="font-semibold text-gray-900 text-sm line-clamp-4">{session.title}</h3>
+            <span className="text-xs text-gray-500 mt-auto">{new Date(session.createdAt).toLocaleDateString()}</span>
+          </button>
+
+          <div className="flex flex-col items-end justify-end">
+            <button 
+              onClick={ () => handleShowMenu(session.sessionId) } 
+              className="text-xl text-gray-600 hover:text-amber-600 px-2 -mr-2">
+              &#x22EE;
+            </button>
             
-            {/* invisible backdrop for menu // covers whole screen //closes menu on click */}
-            <div onClick={ (e) =>{ e.stopPropagation(); handleHideMenu(); }} className="fixed inset-0  z-10" ></div>
-
-            <div className="absolute top-16 left-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100">
+            {session.sessionId !== null && openMenuId === session.sessionId && (
+              <>
               
-              {/* click to see delete modal */}
-              <button onClick={() => {
-                  handleShowDeleteModal();
-                  handleHideMenu(); //hide the dropdown menu
-                  handleSelectSession(session.sessionId);
-                }} 
-                className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
-                Delete
-              </button>
+              <div onClick={ (e) =>{ e.stopPropagation(); handleHideMenu(); }} className="fixed inset-0  z-10" ></div>
 
-              {/* click to see rename modal */}
-              <button onClick={() => {
-                  handleShowRenameModal(); 
-                  handleHideMenu();   //hide the dropdown menu
-                  handleSelectSession(session.sessionId);
-                  handleSelectLocalChatTitle(session.title);
-                }} 
-                className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100"> 
-                Rename
-              </button>
+              <div className="absolute top-8 right-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100">
+                
+                <button onClick={() => {
+                    handleShowDeleteModal();
+                    handleHideMenu();
+                    handleSelectSession(session.sessionId);
+                  }} 
+                  className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
+                  Delete
+                </button>
+
+                <button onClick={() => {
+                    handleShowRenameModal(); 
+                    handleHideMenu();
+                    handleSelectSession(session.sessionId);
+                    handleSelectLocalChatTitle(session.title);
+                  }} 
+                  className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100"> 
+                  Rename
+                </button>
+              </div>
+              </>
+            )}
             </div>
-
-            </>
-          )}
           </div>
-        </div>
+      ))
+    )}
 
-      ))}
-    </div>
-
-
-    {/* this will be all over the page whole screen */}
     {isDeleteModalOpen && localSessionId && (
       <DeleteChatModal 
         handleHideDeleteModal={handleHideDeleteModal} 
@@ -206,7 +190,6 @@ const AllChats = () =>{
         localChatTitle={localChatTitle}
       />
     )}
-
   </>
   )
 }
