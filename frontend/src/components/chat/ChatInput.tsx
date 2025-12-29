@@ -16,13 +16,14 @@ const ChatInput = ({handleSendMessage }: ChatInputProps) => {
   //  which only rerenders its own component not parent component
   const [localInput, setLocalInput] = useState<string>('');
 
-  const handleKeyDown = (e: React.KeyboardEvent) =>{
-    if(e.key === "Enter"){
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) =>{
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
       handleSendClick();
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setLocalInput(e.target.value);
   };
 
@@ -34,20 +35,21 @@ const ChatInput = ({handleSendMessage }: ChatInputProps) => {
 
   return (
     <>
-     <input
-
+    <div className="flex items-center  space-x-2 p-2 border-t border-gray-300">
+     <textarea
           autoFocus
-          type="text"
           value={localInput}
           onChange={handleInputChange}
+          rows={1}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
-          className="fixed bottom-2 bg-amber-600"
+          className=" flex-grow-1 px-3 py-1 focus:outline-none "
         />
 
-        <button onClick={() =>handleSendClick() } >
+        <button onClick={() =>handleSendClick() }>
           Send
         </button>
+        </div>
     </>
   );
 };
