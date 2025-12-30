@@ -28,22 +28,30 @@ const RenameChatModal = ({handleHideRenameModal, handleRenameChatTitle, localSes
 
   return(
     <>
-      <div onClick={handleHideRenameModal} className="fixed inset-0 bg-black/50  flex items-center justify-center z-50">
-      <div onClick={(e) => e.stopPropagation()} className="bg-gray-800 rounded-lg p-4 w-full max-w-md text-white" >
+      <div onClick={handleHideRenameModal} className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg p-6 shadow-xl w-full max-w-md text-gray-800" >
 
-        <h2 className="text-lg font-semibold mb-4">Rename Chat Title</h2>
-        <input type="text" 
-         value={localTitle}
-         onChange={(e) => setLocalTitle(e.target.value)} 
-         onKeyDown={handleKeyEnter}/>
+        <h2 className="text-xl font-semibold mb-4">Rename Notebook</h2>
+        <input 
+          type="text" 
+          value={localTitle}
+          onChange={(e) => setLocalTitle(e.target.value)} 
+          onKeyDown={handleKeyEnter}
+          className="w-full p-2 mb-6 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
 
-        <button onClick={() => 
-          {handleRenameChatTitle(localSessionId, localTitle);
-           handleHideRenameModal();
-           renameSession(localSessionId, localTitle);
-          } }>ok</button>
-        <button onClick={handleHideRenameModal}>cancel</button>
-
+        <div className="flex justify-end gap-3">
+          <button onClick={handleHideRenameModal} className="px-4 py-2 text-gray-700 rounded-md hover:bg-gray-100 transition duration-150 ease-in-out">
+            Cancel
+          </button>
+          <button onClick={() => {
+            handleRenameChatTitle(localSessionId, localTitle);
+            handleHideRenameModal();
+            renameSession(localSessionId, localTitle);
+          }} className="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition duration-150 ease-in-out">
+            OK
+          </button>
+        </div>
       </div>
       </div>
     </>
