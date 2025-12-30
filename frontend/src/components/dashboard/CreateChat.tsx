@@ -50,51 +50,23 @@ const CreateChat = () =>{
   <>
     <div 
       onClick={handleCreateChat}
-      // Dark background, rounded corners, subtle border/shadow, cursor pointer
-      className={`
-        w-48 h-48 px-2 flex flex-col justify-center items-center 
-        rounded-xl 
-        bg-gray-800 
-        shadow-lg 
-        border border-gray-700 
-        text-white 
-        transition duration-200 ease-in-out
-        ${isLoading || error // Disable interactions if loading or error
-          ? 'cursor-not-allowed opacity-60' 
-          : 'hover:bg-gray-700 cursor-pointer'
-        }
-      `}
+      className={`w-48 h-48 px-2 flex flex-col justify-center items-center rounded-xl bg-white shadow-lg border border-gray-200 text-gray-800 transition duration-200 ease-in-out ${isLoading || error ? 'cursor-not-allowed opacity-60' : 'hover:bg-gray-50 cursor-pointer'}`}
     >
       <button
-        disabled={isLoading || !!error} // Use the entire div as the click target, but the button handles the disabled state visually
+        disabled={isLoading || !!error}
         className="flex flex-col justify-center items-center"
       >
-        {/* Circular Button/Icon Area */}
         <div 
-          className={`
-            w-16 h-16 
-            rounded-full 
-            flex justify-center items-center 
-            mb-4 
-            transition-all duration-200
-            ${isLoading 
-              ? 'bg-gray-600 animate-pulse' // Loading state
-              : 'bg-indigo-900/70 hover:bg-indigo-800/80' // Active state color
-            }
-          `}
+          className={`w-16 h-16 rounded-full flex justify-center items-center mb-4 transition-all duration-200 ${isLoading ? 'bg-gray-200 animate-pulse' : 'bg-pink-500 hover:bg-pink-600'}`}
         >
-          {/* Plus Icon / Spinner */}
           {isLoading ? (
-            // Simple loading spinner (Tailwind doesn't have one, this is a basic substitute)
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
-            // Plus Icon
             <span className="text-3xl font-light text-white leading-none">+</span>
           )}
         </div>
 
-        {/* Text Label */}
-        <p className="text-xl text-gray-200 font-normal">
+        <p className="text-xl text-gray-700 font-medium">
           {isLoading ? 'Creating Session...' : 'Create new notebook'}
         </p>
       </button>
@@ -102,7 +74,7 @@ const CreateChat = () =>{
 
     {/* Error Display - Placed outside the card but in the component */}
     {error && (
-      <div className="mt-4 p-2 bg-red-800 border border-red-600 text-red-200 rounded-md">
+      <div className="mt-4 p-2 bg-red-100 border border-red-300 text-red-700 rounded-md">
         <p className="text-sm font-semibold">Error:</p>
         <p className="text-sm">{error}</p>
       </div>
