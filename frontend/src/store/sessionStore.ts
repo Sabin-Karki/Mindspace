@@ -6,7 +6,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 //it has sessionId chattitle 
 //multiple sources 
 interface SessionState {
-  sessionId : number | null;
+  sessionId : number | null ;
   chatTitle : string | null;
   sources : IUploadResponse[]; //sources list
   
