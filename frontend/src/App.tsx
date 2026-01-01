@@ -1,4 +1,4 @@
-import {  Routes, Route } from 'react-router-dom';
+import {  Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Navbar from './components/common/Navbar';
 import Home from './pages/Home';
 import Signin from './pages/Signin';
@@ -6,9 +6,35 @@ import Signup from './pages/Signup';
 import ThreeWindowPanel from './pages/Workspace';
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
-import { Toaster } from 'sonner';
+import { toast, Toaster } from 'sonner';
+import { useAuthStore } from './store/authStore';
+import { useEffect } from 'react';
+
+
+//middleware to check if user is authenticated or not
+//limit the unauthenticated user
+const ProtectedRoute = ( {isAuthenticated}: {isAuthenticated: boolean} ) => {
+  //useEffect to use toast which allows to render toast message only once
+  useEffect(()=>{
+    if(!isAuthenticated){
+      toast.info("Please sigin to access")
+    }
+  },[]);
+
+  if(!isAuthenticated){
+    return(
+      <Navigate to= "/signin" />
+    ) 
+  } 
+  //if authenticated then user can access the child elements
+  return <Outlet />;
+}
+
 
 const App = () => {
+
+  const token = useAuthStore((state) => state.token);
+
   return (
     <div className="h-screen flex flex-col bg-gray-50"> 
     <Toaster position="top-left" richColors={true} expand={false} theme='light' closeButton={true} />
@@ -18,8 +44,12 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/chat" element={<ThreeWindowPanel />} />
+
+          <Route element= { <ProtectedRoute isAuthenticated={!!token}/> } >
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/chat" element={<ThreeWindowPanel />} />
+          </Route>
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
