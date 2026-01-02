@@ -52,8 +52,8 @@ const AudioList = () =>{
   if(!isExpanded){
     return (
       <div onClick={ handleExtendList } className="flex" >
-        <div>Audio </div> 
-        <div>{audios.length}</div>
+        <div className="font-light text-green-600" >{audios.length<=1 ? "Audio":"Audios"}</div> 
+        <div className="px-1 text-green-600">{audios.length}</div>
         <div> &gt; </div>
       </div>
     )
@@ -64,16 +64,16 @@ const AudioList = () =>{
 
     { audios.length === 0 ? (
       <> 
-        <button onClick={ handleCloseList } > &lt; Back </button>
-        <div>No audios found</div>
+        <button onClick={ handleCloseList } className="text-green-500"> &lt; Back </button>
+        <div className="text-green-500 font-light">No audios found</div>
       </>
     ): (
       <>
         <div>
-          <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+          <button className="text-green-500" onClick={ (e) => {e.stopPropagation(); handleCloseList();}} > &lt; Back </button>
         </div>
         {audios.map( (audio) =>(
-          <AudioGet 
+          <AudioGet  
             key={audio.id}
             audio ={audio}
           />
