@@ -105,7 +105,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
             flashCard={flashCard}
           />
         ):(
-          <p>
+          <p className="font-light text-pink-700">
             {flashCard.title}
           </p>
         )}
