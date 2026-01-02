@@ -92,7 +92,7 @@ const WorkspaceContainer = () =>{
         //if new pos is 100 or closer to 100 close right panel
          if(newPos === 100 || newPos > 90){
           setIsRightPanelClose(true);
-          return {...prev, dragpos2: 95};
+          return {...prev, dragpos2: 100};
         }
         setIsRightPanelClose(false);
 
@@ -144,7 +144,7 @@ const WorkspaceContainer = () =>{
     setIsRightPanelClose(true);
 
     setDividerPos( (prev) =>{
-      return {...prev, dragpos2: 95};
+      return {...prev, dragpos2: 100};
     });
   },[]);
 
@@ -198,7 +198,7 @@ const WorkspaceContainer = () =>{
 
       {/* another content panel */}
       <div
-        className="bg-gray-100 border-gray-300 overflow-auto "
+        className="bg-gray-100 border-gray-300 overflow-auto scrollbar-hide "
         style={{ width: `${panel2}%` }}>
           <ChatWindow />
       </div>
