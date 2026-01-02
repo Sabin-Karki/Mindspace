@@ -86,7 +86,7 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
             audio={audio}
           />
         ):(
-          <p>
+          <p className="text-green-700 font-light">
             {audio.title}
           </p>
         )}
