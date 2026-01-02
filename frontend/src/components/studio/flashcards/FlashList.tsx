@@ -51,8 +51,8 @@ const FlashList = () => {
   if(!isExpanded){
     return (
       <div onClick={ handleExtendList } className="flex" >
-        <div>Flash </div> 
-        <div>{flashCards.length}</div>
+        <div className="font-light text-pink-600">{flashCards.length<=1?"Flashcard":"Flashcards"} </div> 
+        <div className="px-1 text-pink-500">{flashCards.length}</div>
         <div> &gt; </div>
       </div>
     )
@@ -62,13 +62,13 @@ const FlashList = () => {
     <>
     { flashCards.length === 0 ? (
       <> 
-        <button onClick={ handleCloseList } > &lt; Back </button>
-        <div>No flashcards found</div>
+        <button onClick={ handleCloseList } className="text-pink-500"> &lt; Back </button>
+        <div className="font-light text-pink-600">No flashcards found</div>
       </>
     ): (
       <>
         <div>
-          <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+          <button className="text-pink-500" onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
         </div>
         {flashCards.map( (flashCard) =>(
           <FlashGet
