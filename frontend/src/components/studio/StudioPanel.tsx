@@ -83,22 +83,22 @@ const StudioPanel = ({ closeRightSideBar, openRightSideBar, isRightPanelClose }:
 
         <div className="space-y-4">
           <div>
-            <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2 px-1">Flashcards</h3>
+            <h3 className="text-xs font-semibold text-pink-600 uppercase tracking-wider mb-2 px-1">Flashcard</h3>
             <FlashList />
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2 px-1">Quizzes</h3>
+            <h3 className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2 px-1">Quiz</h3>
             <QuizList />
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2 px-1">Audio</h3>
+            <h3 className="text-xs font-semibold text-green-600 uppercase tracking-wider mb-2 px-1">Audio</h3>
             <AudioList />
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2 px-1">Reports</h3>
+            <h3 className="text-xs font-semibold text-purple-600 uppercase tracking-wider mb-2 px-1">Report</h3>
             <ReportList />
           </div>
         </div>
