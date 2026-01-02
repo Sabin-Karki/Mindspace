@@ -1,6 +1,10 @@
 import type { IChatMessage } from "../../types";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 import {User,Bot} from "lucide-react";
+
 
 interface ChatMessageBubbleProps {
   message: IChatMessage;
@@ -20,9 +24,22 @@ const ChatMessageBubble = ( { message }: ChatMessageBubbleProps) => {
         </div>
       )}
       <div className={`min-w-xs lg:max-w-md xl:max-w-lg  py-3 rounded-2xl shadow-sm ${isSystem ? 'bg-blue-50 text-gray-700 border border-blue-200 text-xs italic' : isUser ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'}`}>
-        <p className="text-sm m-0.1 p-1 leading-relaxed whitespace-pre-wrap break-words">{message.message}</p>
+        <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw,rehypeSanitize]}
+        components={{
+          p:({children})=><p className="text-sm m-0.1 p-1 leading-relaxed whitespace-pre-wrap break-words">{children}</p>,
+          li:({children})=><li className="ml-4 list-disc">{children}</li>,
+          code: ({ children }) => (
+          <code className="bg-gray-200 text-sm px-1 rounded font-mono">{children}</code>
+             ),
+          strong:({children})=>(<strong className="font-semibold">{children}</strong>),
+          em:({children})=>(<em className="italic">{children}</em>),
+        }}>
+        {message.message}
+        </ReactMarkdown>
          </div>
-
+         
          {isUser && (
           <div className="max-w-xs h-full flex items-center justify-center flex-shrink-0 shadow-sm">
             <User size={20} className="text-green-400"/>
