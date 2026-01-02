@@ -50,8 +50,8 @@ const QuizList = () => {
     if(!isExpanded){
         return (
         <div onClick={ handleExtendList } className="flex" >
-            <div>Quiz </div> 
-            <div>{quizzes.length}</div>
+            <div className="font-light text-blue-500">{quizzes.length<=1? "Quiz":"Quizzes"} </div> 
+            <div className="px-1 text-blue-500">{quizzes.length}</div>
             <div> &gt; </div>
         </div>
         )
@@ -61,13 +61,13 @@ const QuizList = () => {
     <>
         { quizzes.length === 0 ? (
         <> 
-            <button onClick={ handleCloseList } > &lt; Back </button>
-            <div>No quizzes found</div>
+            <button className="text-blue-500" onClick={ handleCloseList } > &lt; Back </button>
+            <div className="font-light text-blue-600">No quizzes found</div>
         </>
         ): (
         <>
             <div>
-                <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+                <button className="text-blue-500" onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
             </div>
             {quizzes.map( (quiz) =>(
             <QuizGet
