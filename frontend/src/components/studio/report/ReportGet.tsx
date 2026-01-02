@@ -85,7 +85,7 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
               report={report}
             />
           ):(
-            <p>
+            <p className="font-light text-purple-700">
               {report.title}
             </p>
           )}

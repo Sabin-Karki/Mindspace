@@ -50,8 +50,8 @@ const ReportList = () => {
   if(!isExpanded){
     return (
       <div onClick={ handleExtendList } className="flex" >
-        <div>Report </div> 
-        <div>{reports.length}</div>
+        <div className="font-light text-purple-500">{reports.length<=1?"Report":"Reports"}</div> 
+        <div className="px-1 text-purple-500">{reports.length}</div>
         <div> &gt; </div>
       </div>
     )
@@ -61,13 +61,13 @@ const ReportList = () => {
   <>
     { reports.length === 0 ? (
       <> 
-        <button onClick={ handleCloseList } > &lt; Back </button>
-        <div>No flashcards found</div>
+        <button className="text-purple-500" onClick={ handleCloseList } > &lt; Back </button>
+        <div className="font-light text-purple-500">No flashcards found</div>
       </>
     ): (
       <>
         <div>
-          <button onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+          <button className="text-purple-600" onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
         </div>
         {reports.map( (report) =>(
           <ReportGet 
