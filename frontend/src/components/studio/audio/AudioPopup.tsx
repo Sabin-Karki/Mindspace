@@ -48,13 +48,13 @@ const AudioCardPopup = ({ audioId, closeModal, audio, handleUpdateAudioCardName 
     <div className="p-5 flex-1 overflow-y-auto space-y-4">
       
       {/* Info Section */}
-      <div className="bg-gray-700/40 rounded-lg p-4 space-y-2 border border-gray-600/50">
+      {/* <div className="bg-gray-700/40 rounded-lg p-4 space-y-2 border border-gray-600/50">
         <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Information</p>
         <div className="space-y-1">
           <p className="text-sm text-gray-300"><span className="text-gray-400">ID:</span> {audioId}</p>
           <p className="text-sm text-gray-300"><span className="text-gray-400">Title:</span> {audio.title}</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Audio Player Section */}
       <div className="bg-gray-700/40 rounded-lg p-5 border border-gray-600/50 space-y-3">
