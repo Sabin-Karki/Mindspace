@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, RotateCcw, ChevronLeft, ChevronRight, Check, X as XIcon } from 'lucide-react';
 import type { IQuizOverviewResponse } from '../../../types'
 
 interface QuizViewerProps {
@@ -141,13 +141,51 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
           <div className="space-y-3">
             {currentQuestion.options.map((option, idx) => {
               const isSelected = selectedAnswer === idx;
+              const isCorrect = idx === currentQuestion.correctAnswerIndex;
+              const showFeedback = selectedAnswer !== null;
+              
+              let borderColor = 'border-gray-200';
+              let bgColor = '';
+              let showIcon = false;
+              let iconColor = '';
+              let icon = null;
+              
+              if (showFeedback) {
+                if (isCorrect) {
+                  borderColor = 'border-4 border-green-500';
+                  bgColor = 'bg-green-50';
+                  showIcon = true;
+                  iconColor = 'text-green-600';
+                  icon = <Check size={20} />;
+                } else if (isSelected && !isCorrect) {
+                  borderColor = 'border-4 border-red-500';
+                  bgColor = 'bg-red-50';
+                  showIcon = true;
+                  iconColor = 'text-red-600';
+                  icon = <XIcon size={20} />;
+                }
+              } else if (isSelected) {
+                borderColor = 'border-blue-500';
+                bgColor = 'bg-blue-50';
+              }
+              
               return (
-                <button key={idx} onClick={() => handleSelectAnswer(idx)} className={`w-full text-left p-4 rounded-xl border-2 transition-all ${isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'}`}>
+                <button 
+                  key={idx} 
+                  onClick={() => handleSelectAnswer(idx)} 
+                  disabled={selectedAnswer !== null}
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all ${borderColor} ${bgColor} ${selectedAnswer !== null ? 'cursor-default' : 'hover:border-blue-300 hover:bg-gray-50'}`}
+                >
                   <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm ${isSelected ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm flex-shrink-0 ${showFeedback && isCorrect ? 'bg-green-600 text-white' : showFeedback && isSelected && !isCorrect ? 'bg-red-600 text-white' : isSelected && !showFeedback ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
                       {String.fromCharCode(65 + idx)}
                     </div>
-                    <span className="text-gray-900 font-medium">{option}</span>
+                    <span className="text-gray-900 font-medium flex-1">{option}</span>
+                    {showFeedback && (isCorrect || (isSelected && !isCorrect)) && (
+                      <div className={iconColor}>
+                        {icon}
+                      </div>
+                    )}
                   </div>
                 </button>
               );
