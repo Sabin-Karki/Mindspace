@@ -159,32 +159,46 @@ public class GeminiService implements AIService {
 
     //i need to create a new method with a 2.5-flash-lite model to make sure i have enough limit strictly for Chat purpose only,20 back and forth is enough,20 answers.
 
-//    public String callGeminiTextApiForAnswer(String prompt){
-//        try{
-//            String payload = """
-//                    {
-//                    "contents":[
-//                    {
-//                    "parts": {
-//                    {
-//                    "text": "%s"
-//                    }
-//                    ]
-//                    }
-//                    ],
-//                    "generationConfig": {
-//                    "thinkingConfig": {
-//                    "thinkingBudget":0
-//                    }
-//                    }
-//                    }
-//                    """.formatted(prompt.replace("\"","\\\""));
-//
-//            String responseJson = webClient.post()
-//                    .uri("/models/gemini-2.5-flash")
-//        }
-//    }
-//
+    public String callGeminiTextApiForAnswer(String prompt){
+        try{
+            String payload = """
+                    {
+                    "contents":[
+                    {
+                    "parts": [
+                    {
+                    "text": "%s"
+                    }
+                    ]
+                    }
+                    ],
+                    "generationConfig": {
+                    "thinkingConfig": {
+                    "thinkingBudget":0
+                    }
+                    }
+                    }
+                    """.formatted(prompt.replace("\"","\\\""));
+
+            String responseJson = webClient.post()
+                    .uri("/models/gemini-2.5-flash-lite:generateContent?key=" + apiKey)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(payload)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            JsonNode root = objectMapper.readTree(responseJson);
+            JsonNode candidates=root.path("candidates");
+            if(candidates.isArray() && !candidates.isEmpty()){
+                return candidates.get(0).path("content").path("parts").get(0).path("text").asText();
+            }
+            return "No text response";
+        }catch (Exception e){
+          return  e.getMessage();
+        }
+    }
+
     public String callGeminiTextApi(String prompt) {
         try {
             String payload = """
@@ -251,7 +265,7 @@ public class GeminiService implements AIService {
         Path pcmFile = null;
         Path wavFile = null;
         try {
-            System.out.println("📞 Calling Gemini TTS API - script length: " + text.length() + " chars");
+            System.out.println(" Calling Gemini TTS API - script length: " + text.length() + " chars");
             long apiStart = System.currentTimeMillis();
 
             String payload = """
