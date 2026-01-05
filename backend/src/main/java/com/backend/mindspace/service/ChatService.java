@@ -92,7 +92,8 @@ public class ChatService {
             }
 
             String prompt = """
-                Use the following context to answer the user's question clearly and accurately.
+                Answer the following question based on the provided context.
+                Respond naturally and directly, without explicitly mentioning the source of the information (e.g., do not say "The context states" or "According to the provided text").
 
                 Context:
                 %s
@@ -102,7 +103,7 @@ public class ChatService {
 
             System.out.println("Calling Gemini with RAG context");
             // Get answer from Gemini
-            answer = geminiService.callGeminiTextApi(prompt);
+            answer = geminiService.callGeminiTextApiForAnswer(prompt);
         }
 
         System.out.println("Got answer from Gemini");
