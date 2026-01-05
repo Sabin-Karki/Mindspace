@@ -47,7 +47,9 @@ public class ReportService {
                 .map(Source::getContent)
                 .collect(Collectors.joining("\n\n--\n\n"));
 
+        System.out.println("Generating Report Title : ");
         String reportTitle = geminiService.generateTitle(combinedContent);
+        System.out.println("Generating Content for Report : ");
         String reportJson = geminiService.generateReport(combinedContent);
 
         ReportGeneration rg = new ReportGeneration();
