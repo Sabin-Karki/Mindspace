@@ -5,6 +5,7 @@ import ReportGet from "./ReportGet";
 import { getAllReports } from "../../../api/reportApi";
 import type { IReportResponse } from "../../../types";
 import { useReportCardStore } from "../../../store/reportStore";
+import { Newspaper } from "lucide-react";
 
 const ReportList = () => {
 
@@ -49,10 +50,12 @@ const ReportList = () => {
 
   if(!isExpanded){
     return (
-      <div onClick={ handleExtendList } className="flex" >
-        <div className="font-light text-purple-500">{reports.length<=1?"Report":"Reports"}</div> 
-        <div className="px-1 text-purple-500">{reports.length}</div>
-        <div> &gt; </div>
+      <div onClick={ handleExtendList } className="group purple-card">
+        <div className="flex items-start justify-between purple-hover">
+          <Newspaper size={18} className="text-purple-600" />
+          <div className="font-medium text-purple-500 px-1">{reports.length<=1? "Report":"Reports"} </div> 
+          <p className='p-1 text-xs text-purple-500 font-medium'>{reports.length}</p>
+        </div>
       </div>
     )
   }
@@ -60,14 +63,16 @@ const ReportList = () => {
   return (
   <>
     { reports.length === 0 ? (
-      <> 
-        <button className="text-purple-500" onClick={ handleCloseList } > &lt; Back </button>
-        <div className="font-light text-purple-500">No flashcards found</div>
+      <>
+      <div onClick={ handleCloseList } className="purple-hover">
+        <button className="text-purple-500"> &lt; Back </button>
+        <div className="font-medium text-purple-500">No reports found</div>
+      </div>
       </>
     ): (
       <>
-        <div>
-          <button className="text-purple-600" onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="purple-hover" >
+          <button className="text-purple-600"  > &lt; Back </button>
         </div>
         {reports.map( (report) =>(
           <ReportGet 

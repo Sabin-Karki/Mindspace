@@ -5,6 +5,7 @@ import { useSessionStore } from "../../../store/sessionStore";
 import { useFlashCardStore } from "../../../store/flashCardStore";
 import type { ICardOverview } from "../../../types";
 import FlashGet from "./FlashGet";
+import { CreditCard } from "lucide-react";
 
 const FlashList = () => {
  
@@ -50,11 +51,19 @@ const FlashList = () => {
   //if not expanded show this Flash > 
   if(!isExpanded){
     return (
-      <div onClick={ handleExtendList } className="flex" >
-        <div className="font-light text-pink-600">{flashCards.length<=1?"Flashcard":"Flashcards"} </div> 
-        <div className="px-1 text-pink-500">{flashCards.length}</div>
-        <div> &gt; </div>
+      <>
+      <div onClick={ handleExtendList } className="group pink-card">
+          <div className="flex items-start justify-between p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors"> 
+            <CreditCard size={18} className="text-pink-600" />
+            <div className="font-light text-pink-600">
+              {flashCards.length<=1?"Flashcard":"Flashcards"} 
+            </div> 
+            <div className="px-1 text-pink-500">
+              {flashCards.length}
+            </div>
+        </div>
       </div>
+      </>
     )
   }
 
@@ -62,13 +71,15 @@ const FlashList = () => {
     <>
     { flashCards.length === 0 ? (
       <> 
+      <div className="flex items-start justify-between p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors">
         <button onClick={ handleCloseList } className="text-pink-500"> &lt; Back </button>
-        <div className="font-light text-pink-600">No flashcards found</div>
+        <div className="font-medium text-pink-600">No flashcards found</div>
+      </div>
       </>
     ): (
       <>
-        <div>
-          <button className="text-pink-500" onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="p-2 bg-pink-100 hover:bg-pink-200 rounded-lg transition-colors">
+          <button className="text-pink-500"  > &lt; Back </button>
         </div>
         {flashCards.map( (flashCard) =>(
           <FlashGet

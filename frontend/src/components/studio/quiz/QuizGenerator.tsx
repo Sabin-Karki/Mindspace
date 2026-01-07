@@ -4,6 +4,7 @@ import { useQuizStore } from "../../../store/quizStore";
 import { useSessionStore } from "../../../store/sessionStore";
 import { generateQuiz } from "../../../api/quizApi";
 import type  { IQuizOverviewResponse, IUploadResponse } from "../../../types";
+import { FileQuestion } from "lucide-react";
 
 const QuizGenerator = () =>{
 
@@ -56,7 +57,12 @@ const QuizGenerator = () =>{
 
     return (
       <>
-      <div onClick={handleGenerateQuizOverview}>Quiz </div>
+      <div className="group blue-card">
+        <div className="blue-hover">
+          <FileQuestion size={18} className="text-blue-600" />
+          <div onClick={handleGenerateQuizOverview}>Quiz </div>
+        </div>
+      </div>
       </>
     )
 }

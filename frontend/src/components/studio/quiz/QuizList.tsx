@@ -5,6 +5,7 @@ import { useQuizStore } from "../../../store/quizStore";
 import { useEffect, useState } from "react";
 import QuizGet from "./QuizGet";
 import type { IQuizOverviewResponse } from "../../../types";
+import { FileQuestion } from "lucide-react";
 
 const QuizList = () => {
   const sessionId = useSessionStore((state) => state.sessionId);
@@ -47,27 +48,31 @@ const QuizList = () => {
   const handleExtendList = () => setIsExpanded(true);
   const handleCloseList = () => setIsExpanded(false);
 
-    if(!isExpanded){
-        return (
-        <div onClick={ handleExtendList } className="flex" >
-            <div className="font-light text-blue-500">{quizzes.length<=1? "Quiz":"Quizzes"} </div> 
-            <div className="px-1 text-blue-500">{quizzes.length}</div>
-            <div> &gt; </div>
+  if(!isExpanded){
+    return (
+    <div onClick={ handleExtendList } className="group blue-card">
+        <div className="flex items-start justify-between  p-2 bg-blue-100 group-hover:bg-blue-200 rounded-lg transition-colors">
+          <FileQuestion size={18} className="text-blue-600" />
+          <div className="font-medium text-blue-500 px-1">{quizzes.length<=1? "Quiz":"Quizzes"} </div> 
+          <p className='font-medium p-1 text-xs text-blue-500 '>{quizzes.length}</p>
         </div>
-        )
-    }
+    </div>
+    )
+  }
 
     return(
     <>
         { quizzes.length === 0 ? (
         <> 
-            <button className="text-blue-500" onClick={ handleCloseList } > &lt; Back </button>
-            <div className="font-light text-blue-600">No quizzes found</div>
+        <div onClick={ handleCloseList } className=" p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors">
+            <button className="text-blue-500"  > &lt; Back </button>
+            <div className="font-medium text-blue-600">No quizzes found</div>
+        </div>
         </>
         ): (
         <>
-            <div>
-                <button className="text-blue-500" onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+            <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors">
+                <button className="text-blue-500" > &lt; Back </button>
             </div>
             {quizzes.map( (quiz) =>(
             <QuizGet

@@ -74,7 +74,7 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
   
   return(
   <>
-  <div className="relative border-amber-600 p-4">
+  <div className="relative border-amber-600 ">
     <div onClick={ openModal } className="flex justify-between border-4">
       
       <div className="relative flex items-center" >

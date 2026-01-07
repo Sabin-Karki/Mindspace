@@ -1,6 +1,8 @@
 
 src/1notes/*
 
+frontend/src/pages/notes/*
+
 # Logs
 logs
 *.log

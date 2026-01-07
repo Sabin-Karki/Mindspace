@@ -4,6 +4,7 @@ import { useSessionStore } from "../../../store/sessionStore";
 import {  useState } from "react";
 import { useFlashCardStore } from "../../../store/flashCardStore";
 import type { ICardOverview, IUploadResponse } from "../../../types";
+import { CreditCard } from "lucide-react";
 
 const FlashGenerator = () => {
   
@@ -55,7 +56,12 @@ const FlashGenerator = () => {
 
   return(
     <>
-      <div onClick={handleGenerateFlashCard}>Flash</div>
+    <div className="pink-card">
+      <div className="pink-hover">
+        <CreditCard size={18} className="text-pink-600" />
+        <div onClick={handleGenerateFlashCard} text-xs font-semibold text-pink-900 mb-1>Flashcard</div>
+      </div>
+    </div>
     </>
   )
 }

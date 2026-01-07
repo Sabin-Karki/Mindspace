@@ -3,6 +3,7 @@ import { useSessionStore } from "../../../store/sessionStore";
 import type { IReportResponse, IUploadResponse } from "../../../types";
 import { toast } from "sonner";
 import { generateReport } from "../../../api/reportApi";
+import { Newspaper } from "lucide-react";
 
 const ReportGenerator = () => {
   
@@ -53,7 +54,12 @@ const ReportGenerator = () => {
   }
 
   return (
-     <div onClick={handleGenerateReport}>Report</div>
+    <div className="group purple-card">
+        <div className="purple-hover">
+          <Newspaper size={18} className="text-purple-600" />
+        <div onClick={handleGenerateReport}>Report</div>
+        </div>
+      </div>
   )
 }
 

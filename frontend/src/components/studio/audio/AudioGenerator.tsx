@@ -3,6 +3,7 @@ import { useSessionStore } from "../../../store/sessionStore";
 import type { IAudioResponseDTO, IUploadResponse } from "../../../types";
 import { generateAudioOverview } from "../../../api/audioApi";
 import { toast } from "sonner";
+import { Music } from "lucide-react";
 
 const AudioGenerator = () =>{
   
@@ -54,7 +55,12 @@ const AudioGenerator = () =>{
 
   return(
     <>
-      <div onClick={handleGenerateAudio}>Audio</div>
+    <div className="group green-card">
+        <div className="green-hover">
+          <Music size={18} className="text-blue-600" />
+          <div onClick={handleGenerateAudio}>Audio</div>
+        </div>
+      </div>
     </>
   )
 }
