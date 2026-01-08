@@ -5,6 +5,7 @@ import { useSessionStore } from "../../../store/sessionStore";
 import { generateQuiz } from "../../../api/quizApi";
 import type  { IQuizOverviewResponse, IUploadResponse } from "../../../types";
 import { FileQuestion } from "lucide-react";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const QuizGenerator = () =>{
 
@@ -14,6 +15,7 @@ const QuizGenerator = () =>{
     const selectedSourceIds= useSessionStore((state)=>state.selectedSourceIds);//selected sources
     const sources: IUploadResponse[] = useSessionStore((state) => state.sources);//all uploaded sources
     const addQuiz = useQuizStore((state)=>state.addQuiz);
+    const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
     const[error,setError] = useState<string|null>(null);
     const[loading,setIsLoading]=useState(false);
@@ -58,9 +60,11 @@ const QuizGenerator = () =>{
     return (
       <>
       <div className="group blue-card">
-        <div className="p-2 bg-blue-100 group-hover:bg-blue-200 rounded-lg transition-colors">
+        <div onClick={handleGenerateQuizOverview} className="p-2 bg-blue-100 group-hover:bg-blue-200 rounded-lg transition-colors">
           <FileQuestion size={18} className="text-blue-600" />
-          <div onClick={handleGenerateQuizOverview}>Quiz </div>
+          { !isRightPanelClose &&
+            <div  text-xs font-semibold text-pink-900 mb-1>Quiz</div>
+          }
         </div>
       </div>
       </>

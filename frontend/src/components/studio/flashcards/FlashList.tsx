@@ -6,6 +6,7 @@ import { useFlashCardStore } from "../../../store/flashCardStore";
 import type { ICardOverview } from "../../../types";
 import FlashGet from "./FlashGet";
 import { CreditCard } from "lucide-react";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const FlashList = () => {
  
@@ -13,6 +14,7 @@ const FlashList = () => {
   const setFlashCards = useFlashCardStore((state) => state.setFlashCards);
   const flashCards = useFlashCardStore((state) => state.flashCards);
   const [isExpanded, setIsExpanded] = useState(false);
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,14 +55,12 @@ const FlashList = () => {
     return (
       <>
       <div onClick={ handleExtendList } className="group pink-card">
-          <div className="flex items-start justify-between p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors"> 
+          <div className="flex items-center justify-between p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors"> 
             <CreditCard size={18} className="text-pink-600" />
-            <div className="font-light text-pink-600">
-              {flashCards.length<=1?"Flashcard":"Flashcards"} 
-            </div> 
-            <div className="px-1 text-pink-500">
-              {flashCards.length}
-            </div>
+              { !isRightPanelClose &&
+                <span className="font-medium text-pink-600"> {flashCards.length<=1?"Flashcard":"Flashcards"} </span>
+              }
+            <span className="px-1 text-pink-500"> {flashCards.length} </span>
         </div>
       </div>
       </>
@@ -73,7 +73,7 @@ const FlashList = () => {
       <> 
       <div onClick={ handleCloseList } className="pink-hover">
         <button  className="text-pink-500"> &lt; Back </button>
-        <div className="font-medium text-pink-600">No flashcards found</div>
+        <div className="font-normal text-pink-600">No flashcards found</div>
       </div>
       </>
     ): (

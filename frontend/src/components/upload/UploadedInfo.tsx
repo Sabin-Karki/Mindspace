@@ -71,7 +71,7 @@ const UploadedInfo = () => {
       {/* "Select all sources" Row */}
       <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-700">
         <span className="text-sm font-semibold text-gray-300">
-          Select all sources
+          Select all
         </span>
         <input
           type="checkbox"

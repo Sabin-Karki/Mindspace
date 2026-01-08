@@ -4,14 +4,18 @@ import type { IReportResponse, IUploadResponse } from "../../../types";
 import { toast } from "sonner";
 import { generateReport } from "../../../api/reportApi";
 import { Newspaper } from "lucide-react";
+import { useLayoutStore } from "../../../store/layoutStore";
+import { useReportCardStore } from "../../../store/reportStore";
 
 const ReportGenerator = () => {
   
   const sessionId = useSessionStore((state) => state.sessionId);
   const sources: IUploadResponse[] = useSessionStore((state) => state.sources);
   const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
-  
-  const [report, setReport] = useState<IReportResponse>();
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
+
+  const addReportCard = useReportCardStore((state) => state.addReportCard);
+
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
     
@@ -39,7 +43,7 @@ const ReportGenerator = () => {
 
       const response: IReportResponse = await generateReport(sessionId, sIds);
       console.log(response);
-      setReport(response);
+      addReportCard(response);
 
       // toast.promise("");
     } catch (error: any) {
@@ -55,11 +59,13 @@ const ReportGenerator = () => {
 
   return (
     <div className="group purple-card">
-        <div className="p-2 bg-purple-100 group-hover:bg-purple-200 rounded-lg transition-colors">
-          <Newspaper size={18} className="text-purple-600" />
-        <div onClick={handleGenerateReport}>Report</div>
-        </div>
+      <div onClick={handleGenerateReport} className="p-2 bg-purple-100 group-hover:bg-purple-200 rounded-lg transition-colors">
+        <Newspaper size={18} className="text-purple-600" />
+        { !isRightPanelClose &&
+          <div  text-xs font-semibold text-pink-900 mb-1>Report</div>
+        }
       </div>
+    </div>
   )
 }
 

@@ -6,13 +6,14 @@ import { useEffect, useState } from "react";
 import QuizGet from "./QuizGet";
 import type { IQuizOverviewResponse } from "../../../types";
 import { FileQuestion } from "lucide-react";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const QuizList = () => {
   const sessionId = useSessionStore((state) => state.sessionId);
   const setQuizzes = useQuizStore((state) => state.setQuizzes);
   const quizzes = useQuizStore((state) => state.quizzes);
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
-  console.log("Quizzes in store : " , quizzes);
   const [isExpanded, setIsExpanded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,10 +52,12 @@ const QuizList = () => {
   if(!isExpanded){
     return (
     <div onClick={ handleExtendList } className="group blue-card">
-        <div className="flex items-start justify-between  p-2 bg-blue-100 group-hover:bg-blue-200 rounded-lg transition-colors">
+        <div className="flex items-center justify-between  p-2 bg-blue-100 group-hover:bg-blue-200 rounded-lg transition-colors">
           <FileQuestion size={18} className="text-blue-600" />
-          <div className="font-medium text-blue-500 px-1">{quizzes.length<=1? "Quiz":"Quizzes"} </div> 
-          <p className='font-medium p-1 text-xs text-blue-500 '>{quizzes.length}</p>
+          { !isRightPanelClose && 
+            <span className="font-medium text-blue-500">{quizzes.length<=1? "Quiz":"Quizzes"} </span>
+          }
+          <span className='px-1 text-blue-500 '>{quizzes.length}</span>
         </div>
     </div>
     )
@@ -65,8 +68,8 @@ const QuizList = () => {
         { quizzes.length === 0 ? (
         <> 
         <div onClick={ handleCloseList } className="blue-hover">
-            <button className="text-blue-500"  > &lt; Back </button>
-            <div className="font-medium text-blue-600">No quizzes found</div>
+          <button className="text-blue-500"  > &lt; Back </button>
+          <div className="font-normal text-blue-600">No quizzes found</div>
         </div>
         </>
         ): (

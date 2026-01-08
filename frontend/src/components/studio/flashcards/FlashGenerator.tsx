@@ -5,6 +5,7 @@ import {  useState } from "react";
 import { useFlashCardStore } from "../../../store/flashCardStore";
 import type { ICardOverview, IUploadResponse } from "../../../types";
 import { CreditCard } from "lucide-react";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const FlashGenerator = () => {
   
@@ -13,6 +14,7 @@ const FlashGenerator = () => {
   const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
   
   const addFlashCard = useFlashCardStore((state) => state.addFlashCard);
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,9 +59,11 @@ const FlashGenerator = () => {
   return(
     <>
     <div className="group pink-card">
-      <div className="p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors">
+      <div onClick={handleGenerateFlashCard} className="p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors">
         <CreditCard size={18} className="text-pink-600" />
-        <div onClick={handleGenerateFlashCard} text-xs font-semibold text-pink-900 mb-1>Flashcard</div>
+          { !isRightPanelClose &&
+            <div  text-xs font-semibold text-pink-900 mb-1>FlashCard</div>
+          }
       </div>
     </div>
     </>
