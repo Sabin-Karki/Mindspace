@@ -56,8 +56,8 @@ const FlashGenerator = () => {
 
   return(
     <>
-    <div className="pink-card">
-      <div className="pink-hover">
+    <div className="group pink-card">
+      <div className="p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors">
         <CreditCard size={18} className="text-pink-600" />
         <div onClick={handleGenerateFlashCard} text-xs font-semibold text-pink-900 mb-1>Flashcard</div>
       </div>

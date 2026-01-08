@@ -53,9 +53,9 @@ const AudioList = () =>{
   if(!isExpanded){
     return (
       <div onClick={ handleExtendList } className="group green-card">
-        <div className="flex items-start justify-between green-hover ">
+        <div className="flex items-start justify-between p-2 bg-green-100 group-hover:bg-green-200 rounded-lg transition-colors ">
           <Music size={18} className="text-green-600" />
-          <p className="font-light text-green-600" >{audios.length<=1 ? "Audio":"Audios"}</p> 
+          <p className="font-medium text-green-600" >{audios.length<=1 ? "Audio":"Audios"}</p> 
           <h3 className="px-1 text-green-600">{audios.length}</h3>
         </div>
       </div>
@@ -69,7 +69,7 @@ const AudioList = () =>{
       <> 
       <div onClick={ handleCloseList } className="green-hover">
         <button  className="text-green-500"> &lt; Back </button>
-        <div className="text-green-500 font-light">No audios found</div>
+        <div className="text-green-500 font-medium">No audios found</div>
       </div>
       </>
     ): (

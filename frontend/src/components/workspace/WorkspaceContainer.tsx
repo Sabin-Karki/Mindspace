@@ -72,7 +72,7 @@ const WorkspaceContainer = () =>{
         //if new pos is 0 or closer to 0 //then we close left panel
         if(newPos === 0 || newPos < 10){
           setIsLeftPanelClose(true);
-          return {...prev, dragpos1: 5};
+          return {...prev, dragpos1: 10};
         }
         setIsLeftPanelClose(false);
 
@@ -89,10 +89,10 @@ const WorkspaceContainer = () =>{
         const min = prev.dragpos1 + MIN_WIDTH;   
         const max = MAX_CONTAINER_WIDTH - MIN_WIDTH;
 
-        //if new pos is 100 or closer to 100 close right panel
+        //if new pos is 90 or closer to 90 close right panel
          if(newPos === 100 || newPos > 90){
           setIsRightPanelClose(true);
-          return {...prev, dragpos2: 100};
+          return {...prev, dragpos2: 90};
         }
         setIsRightPanelClose(false);
 
@@ -135,7 +135,7 @@ const WorkspaceContainer = () =>{
     setIsLeftPanelClose(true);
 
     setDividerPos( (prev) =>{
-      return {...prev, dragpos1: 5};
+      return {...prev, dragpos1: 10};
     });
   },[]); 
 
@@ -144,7 +144,7 @@ const WorkspaceContainer = () =>{
     setIsRightPanelClose(true);
 
     setDividerPos( (prev) =>{
-      return {...prev, dragpos2: 100};
+      return {...prev, dragpos2: 90};
     });
   },[]);
 

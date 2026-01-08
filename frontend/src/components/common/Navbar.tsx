@@ -43,7 +43,7 @@ const Navbar = () => {
     <nav className="sticky top-0 z-10 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
       <div className=" mx-auto px-4">
 
-        <div className="flex items-center w-full h-16">
+        <div className="flex items-center w-full h-12">
           {/* Logo/Branding */}
           <Link to="/" className="text-2xl font-bold text-gray-900 flex items-center">
             <span className="text-blue-600 mr-1">📝</span> Mindspace
@@ -51,9 +51,7 @@ const Navbar = () => {
 
           {/* if it is chat page then show chat title in navbar */}
           { isChatPage && (
-            <div className="flex items-center p-4">
               <ChatTitle />
-            </div>
           )}
 
           <div className="flex items-center space-x-4 ml-auto">

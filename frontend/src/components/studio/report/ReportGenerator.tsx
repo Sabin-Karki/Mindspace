@@ -55,7 +55,7 @@ const ReportGenerator = () => {
 
   return (
     <div className="group purple-card">
-        <div className="purple-hover">
+        <div className="p-2 bg-purple-100 group-hover:bg-purple-200 rounded-lg transition-colors">
           <Newspaper size={18} className="text-purple-600" />
         <div onClick={handleGenerateReport}>Report</div>
         </div>

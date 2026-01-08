@@ -71,14 +71,14 @@ const FlashList = () => {
     <>
     { flashCards.length === 0 ? (
       <> 
-      <div className="flex items-start justify-between p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors">
-        <button onClick={ handleCloseList } className="text-pink-500"> &lt; Back </button>
+      <div onClick={ handleCloseList } className="pink-hover">
+        <button  className="text-pink-500"> &lt; Back </button>
         <div className="font-medium text-pink-600">No flashcards found</div>
       </div>
       </>
     ): (
       <>
-        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="p-2 bg-pink-100 hover:bg-pink-200 rounded-lg transition-colors">
+        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="pink-hover">
           <button className="text-pink-500"  > &lt; Back </button>
         </div>
         {flashCards.map( (flashCard) =>(

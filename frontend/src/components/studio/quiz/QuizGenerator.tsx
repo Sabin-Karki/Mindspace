@@ -58,7 +58,7 @@ const QuizGenerator = () =>{
     return (
       <>
       <div className="group blue-card">
-        <div className="blue-hover">
+        <div className="p-2 bg-blue-100 group-hover:bg-blue-200 rounded-lg transition-colors">
           <FileQuestion size={18} className="text-blue-600" />
           <div onClick={handleGenerateQuizOverview}>Quiz </div>
         </div>

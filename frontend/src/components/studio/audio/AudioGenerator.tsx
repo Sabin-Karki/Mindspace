@@ -55,9 +55,13 @@ const AudioGenerator = () =>{
 
   return(
     <>
+    {/* show some kind of loading when generating  */}
+    {/* show some kind of loading when generating  */}
+    {/* show some kind of loading when generating  */}
+    {/* show some kind of loading when generating  */}
     <div className="group green-card">
-        <div className="green-hover">
-          <Music size={18} className="text-blue-600" />
+        <div className="p-2 bg-green-100 group-hover:bg-green-200 rounded-lg transition-colors">
+          <Music size={18} className="text-green-600" />
           <div onClick={handleGenerateAudio}>Audio</div>
         </div>
       </div>

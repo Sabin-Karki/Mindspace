@@ -51,10 +51,10 @@ const ReportList = () => {
   if(!isExpanded){
     return (
       <div onClick={ handleExtendList } className="group purple-card">
-        <div className="flex items-start justify-between purple-hover">
+        <div className="flex items-start justify-between p-2 bg-purple-100 group-hover:bg-purple-200 rounded-lg transition-colors">
           <Newspaper size={18} className="text-purple-600" />
           <div className="font-medium text-purple-500 px-1">{reports.length<=1? "Report":"Reports"} </div> 
-          <p className='p-1 text-xs text-purple-500 font-medium'>{reports.length}</p>
+          <p className='font-medium p-1 text-xs text-purple-500 '>{reports.length}</p>
         </div>
       </div>
     )

@@ -64,14 +64,14 @@ const QuizList = () => {
     <>
         { quizzes.length === 0 ? (
         <> 
-        <div onClick={ handleCloseList } className=" p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors">
+        <div onClick={ handleCloseList } className="blue-hover">
             <button className="text-blue-500"  > &lt; Back </button>
             <div className="font-medium text-blue-600">No quizzes found</div>
         </div>
         </>
         ): (
         <>
-            <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors">
+            <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="blue-hover">
                 <button className="text-blue-500" > &lt; Back </button>
             </div>
             {quizzes.map( (quiz) =>(

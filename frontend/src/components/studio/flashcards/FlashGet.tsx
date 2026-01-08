@@ -109,7 +109,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
             {flashCard.title}
           </p>
         )}
-        </div>
+        </div>  
 
         {/* we only have 1 sources so not checking no. of sources*/}
         <p>{flashCard.sourceId.length ?? 0}</p>
