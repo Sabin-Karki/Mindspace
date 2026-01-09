@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
 import { getSourcesBySessionId } from "../../api/contentApi";
+import type { IUploadResponse } from "../../types";
 
 
-const UploadedInfo = () => {
+const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
-  const sources = useSessionStore((state) => state.sources);
+  // const sources = useSessionStore((state) => state.sources);
   const setSources = useSessionStore((state) => state.setSources);
   
   const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
@@ -14,8 +15,7 @@ const UploadedInfo = () => {
   const addSelectedSourceId = useSessionStore((state) => state.addSelectedSourceId);
   const removeSelectedSourceId = useSessionStore((state) => state.removeSelectedSourceId);
   const clearSelectedSourceIds = useSessionStore((state) => state.clearSelectedSourceIds);
-
-  
+ 
   const [expandedSourceId, setExpandedSourceId] = useState<number| null>(null);
 
   //fetch all sources of specific sessionId
@@ -61,7 +61,9 @@ const UploadedInfo = () => {
   
   //check whether the title is clicked or not
   //to toggle visibility for summary
+  // clicking to see summary will open left panel too
   const handleTitleClick = (sourceId: number) =>{
+    openLeftSideBar();
     setExpandedSourceId( prevId => prevId === sourceId ? null : sourceId  );
   }
 
@@ -116,7 +118,7 @@ const UploadedInfo = () => {
 
             </div>
 
-            <div className="flex items-center justify-center">
+            <div className="flex-center">
               {/* Expanded Summary - positioned outside the main flex container for proper flow */}
               {expandedSourceId === source.sourceId && (
                 <p className="text-sm text-gray-400 mt-1 p-2 bg-gray-700/50 rounded-md w-full">
@@ -138,23 +140,23 @@ export default UploadedInfo;
 
 //data eg
 
-// const sources: IUploadResponse[] = [
-//   {
-//     sourceId: 501,
-//     chunksSize: 125, // This could represent the number of chunks/segments the file was broken into
-//     summary: "A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.",
-//     title: "Annual Budget 2025.pdf",
-//   },
-//   {
-//     sourceId: 502,
-//     chunksSize: 82,
-//     summary: "The main points from the customer feedback survey for Q4, focusing on satisfaction scores for the mobile application.",
-//     title: "Q4 Customer Survey Results.docx",
-//   },
-//   {
-//     sourceId: 503,
-//     chunksSize: 450,
-//     summary: "Full transcript and summary of the 'Future of AI in Web Development' webinar held on November 10th.",
-//     title: "Webinar Transcript - AI Future.txt",
-//   }
-// ];
+const sources: IUploadResponse[] = [
+  {
+    sourceId: 501,
+    chunksSize: 125, // This could represent the number of chunks/segments the file was broken into
+    summary: "A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.",
+    title: "Annual Budget 2025.pdf",
+  },
+  {
+    sourceId: 502,
+    chunksSize: 82,
+    summary: "The main points from the customer feedback survey for Q4, focusing on satisfaction scores for the mobile application.",
+    title: "Q4 Customer Survey Results.docx",
+  },
+  {
+    sourceId: 503,
+    chunksSize: 450,
+    summary: "Full transcript and summary of the 'Future of AI in Web Development' webinar held on November 10th.",
+    title: "Webinar Transcript - AI Future.txt",
+  }
+];

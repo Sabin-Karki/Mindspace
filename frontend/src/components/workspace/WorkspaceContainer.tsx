@@ -131,40 +131,64 @@ const WorkspaceContainer = () =>{
 
 
   const closeLeftSideBar = useCallback(() => {
-    console.log("close left sidebar");
-    setIsLeftPanelClose(true);
-
-    setDividerPos( (prev) =>{
-      return {...prev, dragpos1: 10};
-    });
-  },[]); 
+    
+    if( !isLeftPanelClose){
+      console.log("close left sidebar");
+      setIsLeftPanelClose(true);
+  
+      setDividerPos( (prev) =>{
+        return {...prev, dragpos1: 10};
+      });
+    }else{
+      console.log("left already closed")
+    }
+  },[isLeftPanelClose]); 
 
   const closeRightSideBar = useCallback(() => {
-    console.log("close right sidebar");
-    setIsRightPanelClose(true);
+    
+    if( !isRightPanelClose){
+      console.log("close right sidebar");
+      setIsRightPanelClose(true);
 
-    setDividerPos( (prev) =>{
-      return {...prev, dragpos2: 90};
-    });
-  },[]);
+      setDividerPos( (prev) =>{
+        return {...prev, dragpos2: 90};
+      });
+    }else{
+      console.log("right already closed")
+    }
+  },[isRightPanelClose]);
+
 
   const openLeftSideBar = useCallback(() => {
-    console.log("open left sidebar");
-    setIsLeftPanelClose(false);
 
-    setDividerPos( (prev) =>{
-      return {...prev, dragpos1: MIN_WIDTH};
-    });
-  },[]);
+    if( isLeftPanelClose) {
+      console.log("left opening");
+
+      setIsLeftPanelClose(false)
+      setDividerPos( (prev) =>{
+        return {...prev, dragpos1: MIN_WIDTH};
+      });
+    }else{
+      console.log("already opened");
+    }
+
+  },[isLeftPanelClose]);
+
 
   const openRightSideBar = useCallback(() => {
-    console.log("open right sidebar");
-    setIsRightPanelClose(false);
 
-    setDividerPos( (prev) =>{
-      return {...prev, dragpos2: MAX_CONTAINER_WIDTH - MIN_WIDTH};
-     });
-  },[]);
+    if( isRightPanelClose){//true is open 
+      console.log("right opening");
+
+      setIsRightPanelClose(false);
+      setDividerPos( (prev) =>{
+        return {...prev, dragpos2: MAX_CONTAINER_WIDTH - MIN_WIDTH};
+      });
+    }else{
+      console.log("already opened");
+    }
+      
+  },[isRightPanelClose]);
 
   //calculate the width of each panel
   let panel1 = dividerPos.dragpos1;
@@ -181,12 +205,9 @@ const WorkspaceContainer = () =>{
         // className="overflow-auto"
         style={{ width: `${panel1}%` }}>
           <UploadPanel 
-          closeLeftSideBar={closeLeftSideBar}
-          openLeftSideBar={openLeftSideBar} 
-          isLeftPanelClose={isLeftPanelClose}/>
-
-         {/* if isLeftPanelClose then show buttons */}
-         {/* if isLeftPanelClose false then show UploadPanel */}
+            closeLeftSideBar={closeLeftSideBar}
+            openLeftSideBar={openLeftSideBar} 
+          />
       </div>
       {/* the div to be dragged */}
       <div 
@@ -215,9 +236,9 @@ const WorkspaceContainer = () =>{
         className="bg-gray-100 border-gray-300 overflow-auto "
         style={{ width: `${panel3}%` }}>
           <StudioPanel 
-          closeRightSideBar={closeRightSideBar}
-          openRightSideBar={openRightSideBar} 
-          isRightPanelClose={isRightPanelClose}/>
+            closeRightSideBar={closeRightSideBar}
+            openRightSideBar={openRightSideBar} 
+          />
       </div>
     </div>
     </>

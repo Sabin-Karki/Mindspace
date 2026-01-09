@@ -2,17 +2,19 @@ import { useState } from "react";
 import UploadedInfo from "./UploadedInfo";
 import UploadContent from "./UploadContent";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
+import { useLayoutStore } from "../../store/layoutStore";
 
 interface IUploadPanelProps {
   closeLeftSideBar: () => void;
   openLeftSideBar: () => void;
-  isLeftPanelClose: boolean;
 }
 
-const UploadPanel = ({closeLeftSideBar, openLeftSideBar, isLeftPanelClose }: IUploadPanelProps) =>{
+const UploadPanel = ({closeLeftSideBar, openLeftSideBar}: IUploadPanelProps) =>{
+  
+  const isLeftPanelClose = useLayoutStore((state) => state.isLeftPanelClose); 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  
   const handleShowModal = () => {
     setIsModalOpen(true);
   }
@@ -31,7 +33,8 @@ const UploadPanel = ({closeLeftSideBar, openLeftSideBar, isLeftPanelClose }: IUp
         <h2 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Sources</h2>
         { isLeftPanelClose ? (
           <button onClick={openLeftSideBar} className="text-xs text-gray-500 hover:text-gray-700 font-medium">
-            <PanelRightClose />
+            {/* this is just icon NAME NOT IMPORTANT */}
+            <PanelRightClose /> 
           </button>
         ):(
           <button onClick={closeLeftSideBar} className="text-xs text-gray-500 hover:text-gray-700 font-medium">
@@ -43,7 +46,9 @@ const UploadPanel = ({closeLeftSideBar, openLeftSideBar, isLeftPanelClose }: IUp
       <div onClick={handleShowModal} className="gray-hover m-2">
         <button  className="text-grey-600"> + Add </button>  
       </div>
-      <UploadedInfo />  
+      <UploadedInfo 
+        openLeftSideBar={openLeftSideBar}
+      />  
     </div>
 
     {
