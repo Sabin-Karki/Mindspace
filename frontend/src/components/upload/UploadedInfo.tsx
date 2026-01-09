@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
 import { getSourcesBySessionId } from "../../api/contentApi";
-import type { IUploadResponse } from "../../types";
 
 
 const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
 
   const sessionId = useSessionStore((state) => state.sessionId);
-  // const sources = useSessionStore((state) => state.sources);
+  const sources = useSessionStore((state) => state.sources);
   const setSources = useSessionStore((state) => state.setSources);
   
   const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
@@ -69,50 +68,55 @@ const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
 
   return (
     <>
-    <div className="bg-gray-800 p-4 rounded-lg text-white ">
+    <div className="bg-white p-4 rounded-lg text-gray-700 text-m">
       {/* "Select all sources" Row */}
-      <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-700">
-        <span className="text-sm font-semibold text-gray-300">
+      <div className="flex justify-between items-start mb-4 p-1 border-b border-gray-700">
+        <span className="font-semibold ">
           Select all
         </span>
         <input
           type="checkbox"
           checked={isSelectAllChecked}  //this shows checked or not
           onChange={() => handleSelectAll()}
-          className="form-checkbox h-5 w-5 text-blue-500 bg-gray-700 border-gray-600 rounded cursor-pointer"
+          className="form-checkbox h-5 w-5 rounded cursor-pointer accent-gray-200 hover:accent-gray-200"
         />
       </div>
 
       {/* List of individual sources */}
       {sources.length === 0 ? (
-        <p className="text-gray-400 text-sm">No sources available.</p>
+        <p className="">No sources available.</p>
       ) : (
         sources.map((source) => (
+          
+          // vertical
           <div
             key={source.sourceId}
-            className=" flex flex-col py-2 hover:bg-gray-700 rounded-md px-1 transition-colors"
+            className=" flex flex-col py-2 hover:bg-white-700 rounded-md px-1 "
             onClick={() => handleTitleClick(source.sourceId)}
           >
 
-            <div className="grid grid-cols-2 grid-rows-1 w-full">
+            {/* //horizontal */}
+            <div className="flex items-center justify-between gap-2">
+              {/* clickable title */}
+              {/*in parent min-w-0 so it allow shrinking (turncate) */}
               <div
-                className="flex items-start justify-start cursor-pointer text-sm font-medium truncate"
+                className="flex items-center cursor-pointer  font-medium min-w-0 flex-1"
                 title={source.title} 
                 >
-                <span className={expandedSourceId === source.sourceId ? "rotate-90 transition-transform" : "transition-transform"}>
-                  ▶
-                </span>
-                {source.title} 
+                  <span className={expandedSourceId === source.sourceId ? "rotate-90 transition-transform" : "transition-transform"}>
+                    ▶
+                  </span>
+                  <span className="truncate ml-1"> {source.title} </span>
               </div>
               
               {/* Checkbox */}
-              <div className="flex  items-end justify-end pl-2 ">
+              <div className="  ">
                 <input
                   onClick={(e) => e.stopPropagation()}
                   type="checkbox"
                   onChange={() => handleSelectSource(source.sourceId)}
                   checked={selectedSourceIds.includes(source.sourceId)}//checked or not
-                  className="form-checkbox h-5 w-5 text-blue-500 bg-gray-700 border-gray-600 rounded cursor-pointer"
+                  className="form-checkbox h-5 w-5 rounded cursor-pointer accent-gray-200 hover:accent-gray-200 "
                 />
               </div>
 
@@ -121,7 +125,7 @@ const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
             <div className="flex-center">
               {/* Expanded Summary - positioned outside the main flex container for proper flow */}
               {expandedSourceId === source.sourceId && (
-                <p className="text-sm text-gray-400 mt-1 p-2 bg-gray-700/50 rounded-md w-full">
+                <p className="text-sm  mt-1 p-2 bg-gray-100 rounded-md w-full">
                   {source.summary}
                 </p>
               )}
@@ -136,27 +140,3 @@ const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
 };
 
 export default UploadedInfo;
-
-
-//data eg
-
-const sources: IUploadResponse[] = [
-  {
-    sourceId: 501,
-    chunksSize: 125, // This could represent the number of chunks/segments the file was broken into
-    summary: "A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.A brief summary of the 'Annual Budget 2025' document, highlighting key allocations and growth projections for Q1.",
-    title: "Annual Budget 2025.pdf",
-  },
-  {
-    sourceId: 502,
-    chunksSize: 82,
-    summary: "The main points from the customer feedback survey for Q4, focusing on satisfaction scores for the mobile application.",
-    title: "Q4 Customer Survey Results.docx",
-  },
-  {
-    sourceId: 503,
-    chunksSize: 450,
-    summary: "Full transcript and summary of the 'Future of AI in Web Development' webinar held on November 10th.",
-    title: "Webinar Transcript - AI Future.txt",
-  }
-];

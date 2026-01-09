@@ -201,7 +201,7 @@ const WorkspaceContainer = () =>{
       ref={containerRef}>
       {/* first content panel */}
       <div
-        className="bg-gray-100 border-gray-300 overflow-auto"
+        className="overflow-auto"
         // className="overflow-auto"
         style={{ width: `${panel1}%` }}>
           <UploadPanel 
