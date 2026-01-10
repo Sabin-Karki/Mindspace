@@ -8,6 +8,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface SessionState {
   sessionId : number | null ;
   chatTitle : string | null;
+  uploadTitle : string | null;
   sources : IUploadResponse[]; //sources list
   
   setSessionId: (sessionId: number) => void;
@@ -18,8 +19,10 @@ interface SessionState {
 
   addSource: (source: IUploadResponse) => void; //add source to list of sources
   removeSource: (sourceId: number) => void;
+  changeUploadTitle: (uploadId:number, title: string) => void;
   clearSources: () => void;
 
+  //for selection in upload panel
   selectedSourceIds: number[];
   setSelectedSourceIds: (sourceIds: number[]) => void;
   addSelectedSourceId: (sourceId: number) => void;
@@ -33,6 +36,7 @@ export const useSessionStore = create<SessionState>()(
     (set) =>({
       sessionId: null, 
       chatTitle: null,
+      uploadTitle: null,
       sources: [],
       selectedSourceIds: [],
       
@@ -40,6 +44,19 @@ export const useSessionStore = create<SessionState>()(
       setSources: (sources: IUploadResponse[]) => set({ sources }),
       setSelectedSourceIds: (sourceIds: number[]) => set({ selectedSourceIds: sourceIds }),
       changeChatTitle: (title: string) => set({ chatTitle: title }),
+
+      changeUploadTitle: (uploadId: number, title: string) => set( 
+        (state) =>(
+          {
+            sources: state.sources.map( (source: IUploadResponse) => {
+              if(uploadId === source.sourceId){
+                return {...source, title: title };
+              }
+              return source;
+            })
+          }
+        )
+      ),
 
 
       addSource : (source: IUploadResponse) => set ( 

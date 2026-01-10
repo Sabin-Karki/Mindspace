@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSessionStore } from "../../store/sessionStore";
 import { getSourcesBySessionId } from "../../api/contentApi";
+import UploadSourceDetail from "./UploadSourceDetail";
 
 
 const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
@@ -68,7 +69,7 @@ const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
 
   return (
     <>
-    <div className="bg-white p-4 rounded-lg text-gray-700 text-m">
+    <div className="bg-white p-2 rounded-lg text-gray-700 text-m">
       {/* "Select all sources" Row */}
       <div className="flex justify-between items-start mb-4 p-1 border-b border-gray-700">
         <span className="font-semibold ">
@@ -88,50 +89,13 @@ const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
       ) : (
         sources.map((source) => (
           
-          // vertical
-          <div
-            key={source.sourceId}
-            className=" flex flex-col py-2 hover:bg-white-700 rounded-md px-1 "
-            onClick={() => handleTitleClick(source.sourceId)}
-          >
-
-            {/* //horizontal */}
-            <div className="flex items-center justify-between gap-2">
-              {/* clickable title */}
-              {/*in parent min-w-0 so it allow shrinking (turncate) */}
-              <div
-                className="flex items-center cursor-pointer  font-medium min-w-0 flex-1"
-                title={source.title} 
-                >
-                  <span className={expandedSourceId === source.sourceId ? "rotate-90 transition-transform" : "transition-transform"}>
-                    ▶
-                  </span>
-                  <span className="truncate ml-1"> {source.title} </span>
-              </div>
-              
-              {/* Checkbox */}
-              <div className="  ">
-                <input
-                  onClick={(e) => e.stopPropagation()}
-                  type="checkbox"
-                  onChange={() => handleSelectSource(source.sourceId)}
-                  checked={selectedSourceIds.includes(source.sourceId)}//checked or not
-                  className="form-checkbox h-5 w-5 rounded cursor-pointer accent-gray-200 hover:accent-gray-200 "
-                />
-              </div>
-
-            </div>
-
-            <div className="flex-center">
-              {/* Expanded Summary - positioned outside the main flex container for proper flow */}
-              {expandedSourceId === source.sourceId && (
-                <p className="text-sm  mt-1 p-2 bg-gray-100 rounded-md w-full">
-                  {source.summary}
-                </p>
-              )}
-            </div>
-
-          </div>
+          <UploadSourceDetail
+            source ={source}
+            handleTitleClick={handleTitleClick}
+            expandedSourceId= {expandedSourceId}
+            selectedSourceIds= {selectedSourceIds}
+            handleSelectSource= {handleSelectSource}
+          />
         ))
       )}
     </div>

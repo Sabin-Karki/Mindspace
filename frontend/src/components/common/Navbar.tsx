@@ -59,14 +59,14 @@ const Navbar = () => {
               // --- Logged In View ---
               <>
                 <Link
-                  to="/chat"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150"
+                  to="/dashboard"
+                  className="bg-gray-200 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150"
                 >
-                  chat
+                  Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150"
+                  className="bg-red-500/80 hover:bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150"
                 >
                   Logout
                 </button>

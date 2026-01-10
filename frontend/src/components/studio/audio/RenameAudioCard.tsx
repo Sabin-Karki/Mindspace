@@ -11,6 +11,10 @@ const RenameAudioCard = ({handleUpdateAudioCardName, closeRenameModal, audio}: R
 
   const [localAudioCardName, setLocalAudioCardName] = useState(audio.title || ""); //local state
   
+  const handleBlur = () => {
+    setLocalAudioCardName(localAudioCardName);
+    closeRenameModal();
+  };
 
   const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalAudioCardName(e.target.value);
@@ -28,14 +32,13 @@ const RenameAudioCard = ({handleUpdateAudioCardName, closeRenameModal, audio}: R
       closeRenameModal();
     }
   }
-  
-  
 
   return (
     <>
     <input type="text"
       onClick={(e) => e.stopPropagation()}
       value={localAudioCardName} 
+      onBlur={handleBlur}
       onChange={handleChangeCardName}
       onKeyDown={handleKeyDown} 
       className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 "

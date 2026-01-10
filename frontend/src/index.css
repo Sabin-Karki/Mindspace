@@ -42,6 +42,11 @@ html, body, #root {
   .flex-center{
     @apply flex items-center justify-center;
   }
+  /* using @apply just for readability  */
+  .three-dots{
+    @apply inline-flex items-center justify-center shrink-0 ; 
+    @apply w-8 h-8 text-base text-gray-900 border border-gray-300 rounded-full hover:bg-gray-100 cursor-pointer;  
+  } 
 }
 
 

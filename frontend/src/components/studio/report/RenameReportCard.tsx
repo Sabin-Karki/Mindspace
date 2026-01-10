@@ -11,7 +11,10 @@ const RenameReportCard = ({handleUpdateReportCardName, closeRenameModal, report}
 
   const [localReportCardName, setLocalReportCardName] = useState(report.title || ""); //local state
   
-
+  const handleBlur = () => {
+    setLocalReportCardName(localReportCardName);
+    closeRenameModal();
+  };
   const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalReportCardName(e.target.value);
   }  
@@ -37,6 +40,7 @@ const RenameReportCard = ({handleUpdateReportCardName, closeRenameModal, report}
       onClick={(e) => e.stopPropagation()}
       value={localReportCardName} 
       onChange={handleChangeCardName}
+      onBlur={handleBlur}
       onKeyDown={handleKeyDown} 
       className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 "
       autoFocus

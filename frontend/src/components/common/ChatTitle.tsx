@@ -34,6 +34,9 @@ const ChatTitle = () =>{
     }
   }
 
+  const handleBlur = () => {
+    setLocalTitle(localTitle);
+  };
   const handleChatTitle = (e: React.ChangeEvent<HTMLInputElement>) =>{
     setLocalTitle(e.target.value);//change state of local title
   }
@@ -48,7 +51,7 @@ const ChatTitle = () =>{
   return (
     <>
     <div className="mx-6">
-      <input type="text"   value={localTitle} onChange={handleChatTitle} onKeyDown={handleKeyDown} 
+      <input type="text"   value={localTitle} onChange={handleChatTitle} onKeyDown={handleKeyDown} onBlur={handleBlur}
         className="flex-grow p-2  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 "/>
       
       { error && <span className="text-red-500">{error}</span>}

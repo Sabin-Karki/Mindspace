@@ -12,6 +12,10 @@ const RenameFlashCard = ({handleUpdateFlashCardName, closeRenameModal, flashCard
   const [localFlashCardName, setLocalFlashCardName] = useState(flashCard.title || ""); //local state
   
 
+  const handleBlur = () => {
+    setLocalFlashCardName(localFlashCardName);
+    closeRenameModal();
+  };
   const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalFlashCardName(e.target.value);
   }  
@@ -36,6 +40,7 @@ const RenameFlashCard = ({handleUpdateFlashCardName, closeRenameModal, flashCard
     <input type="text"
       onClick={(e) => e.stopPropagation()}
       value={localFlashCardName} 
+      onBlur={handleBlur}
       onChange={handleChangeCardName}
       onKeyDown={handleKeyDown} 
       className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 "

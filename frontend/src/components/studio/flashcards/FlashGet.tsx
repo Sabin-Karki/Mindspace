@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { updateFlashCardOverviewTitle } from "../../../api/flashApi";
 import DeleteFlashCard from "./DeleteFlashCard";
 import RenameFlashCard from "./RenameFlashCard";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 interface FlashCardProps {
   flashCard: ICardOverview;
@@ -17,7 +18,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
   
   
   const updateFlashCardName = useFlashCardStore((state) => state.updateFlashCardName);
-
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openMenuId, setMenuId] = useState<number | null>(null);//which menu is open
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -44,18 +45,6 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
     }
   }
   
-
-  // //change local state of flash card
-  // const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setLocalFlashCardName(e.target.value);
-  // }  
-
-  // const handleKeyDown = (e: React.KeyboardEvent) => {
-  //   if(e.key === "Enter"){
-  //     handleUpdateFlashCardName();
-  //     closeRenameModal();
-  //   }
-  // }
 
   //show popup modal or close popup modal 
   const closeModal = () =>{
@@ -94,7 +83,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
   return(
     <>
     <div className="relative">
-      <div onClick={ openModal } className="flex justify-between border-4">
+      <div onClick={ openModal } className="flex justify-between green-hover">
         
         <div className="relative flex items-center" >
           {/* this not a popup  just editing mode flash card name */}
@@ -113,19 +102,21 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
 
         {/* we only have 1 sources so not checking no. of sources*/}
         <p>{flashCard.sourceId.length ?? 0}</p>
-        {/* menu options ||| rename and delete option */}
-        <button         
-          onClick={ (e) => { e.stopPropagation(); handleShowMenu(flashCard.cardOverViewId); } } 
-          className="text-2xl text-gray-700 hover:text-amber-600 px-2 " >
-          &#x22EE;
-        </button>
+
+        {/* menu option */}
+        {!isRightPanelClose &&(
+          <button         
+            onClick={ (e) => { e.stopPropagation(); handleShowMenu(flashCard.cardOverViewId); } } 
+            className="flex-center three-dots" >
+            &#x22EE;
+          </button>
+        )}
       </div>
 
       {openMenuId === flashCard.cardOverViewId && (
         <>
-
-        {/* invisible backdrop for menu // covers whole screen //closes menu on click */}
-        <div className="fixed inset-0 z-10" onClick={(e) =>{ e.stopPropagation(); handleHideMenu(); }}></div>
+        {/* this is invisible div if user click outside menu options they click here which hides the menu options */}
+        <div className="fixed inset-0 z-10" onClick={(e) =>{ e.stopPropagation(); handleHideMenu(); }}> </div>
 
         {/* menu options on top of invisible backdrop */}
         <div className=" absolute top-10 right-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100 " >
@@ -139,6 +130,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
             Rename
           </button>
         </div>
+        
         </>
       )}
     </div>

@@ -7,11 +7,12 @@ import Modal from "react-modal";
 import RenameReportCard from "./RenameReportCard";
 import ReportCardPopup from "./ReportPopup";
 import DeleteReportCard from "./DeleteReportCard";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const ReportGet = ({report}: {report: IReportResponse}) => {
 
     const updateReportCardName = useReportCardStore((state) => state.updateReportCardName);
-  
+    const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [openMenuId, setMenuId] = useState<number | null>(null);//which menu is open
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -74,7 +75,7 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
   return (
     <>
     <div className="relative border-amber-600 p-4">
-      <div onClick={ openModal } className="flex justify-between border-4">
+      <div onClick={ openModal } className="flex justify-between green-hover">
         
         <div className="relative flex items-center" >
           {/* this not a popup  just editing mode flash card name */}
@@ -93,12 +94,15 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
 
         {/* we only have 1 sources so not checking no. of sources*/}
         <p>{report.sourceId.length ?? 0}</p>
-        {/* menu options ||| rename and delete option */}
-        <button         
-          onClick={ (e) => { e.stopPropagation(); handleShowMenu(report.reportId); } } 
-          className="text-2xl text-gray-700 hover:text-amber-600 px-2 " >
-          &#x22EE;
-        </button>
+        
+        {/* menu options */}
+        {!isRightPanelClose &&(
+          <button         
+            onClick={ (e) => { e.stopPropagation(); handleShowMenu(report.reportId); } } 
+            className="three-dots" >
+            &#x22EE;
+          </button>
+        )}
       </div>
       
       {openMenuId === report.reportId && (
