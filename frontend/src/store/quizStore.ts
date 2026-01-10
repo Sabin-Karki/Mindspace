@@ -50,13 +50,15 @@ export const useQuizStore=create<QuizStateStore>((set)=>(
            
         )    
     ),
-        updateQuiz:(quizId:number,title:string)=>set((state)=>({
-            quizzes:state.quizzes.map((quiz)=>{
-                if(quiz.quizId===quizId){
-                    return {...quiz,title};
+        updateQuiz:(quizId:number,title:string)=>set((state)=>(
+            {
+                quizzes: state.quizzes.map((quiz)=>{
+                    if(quiz.quizId===quizId){
+                        return {...quiz,title};
+                    }
+                    return quiz;
                 }
-                return quiz;
-            }),
+            ),
         })),
 
     }

@@ -5,9 +5,14 @@ interface RenameQuizOverviewProps{
     closeRenameModal:()=>void;
     quiz:IQuizOverviewResponse;   
 }
- const RenameQuizOverview = ({handleUpdateQuizTitle,closeRenameModal,quiz}:RenameQuizOverviewProps)=>{
-    const [localQuizTitle,setLocalQuizTitle]=useState(quiz.title||" ");
+ const RenameQuizOverview = ({handleUpdateQuizTitle, closeRenameModal, quiz}: RenameQuizOverviewProps)=>{
 
+    const [localQuizTitle,setLocalQuizTitle] = useState(quiz.title||" ");
+
+    const handleBlur = () => {
+        setLocalQuizTitle(localQuizTitle);
+        closeRenameModal();
+    }
 
     const handleChangeQuizTitle=(e:React.ChangeEvent<HTMLInputElement>)=>{
         setLocalQuizTitle(e.target.value);
@@ -28,7 +33,7 @@ interface RenameQuizOverviewProps{
 
     return(
         <>
-        <input type="text" onClick={(e)=>e.stopPropagation()} value={localQuizTitle} onChange={handleChangeQuizTitle} onKeyDown={handleKeyDown} 
+        <input type="text" onClick={(e)=>e.stopPropagation()} value={localQuizTitle} onChange={handleChangeQuizTitle} onKeyDown={handleKeyDown} onBlur={handleBlur}
         className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         autoFocus />
         </>

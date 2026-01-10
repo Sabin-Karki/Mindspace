@@ -5,6 +5,8 @@ import { getAudioOverviewsBySessionId } from "../../../api/audioApi";
 import type { IAudioResponseDTO } from "../../../types";
 import AudioGet from "./AudioGet";
 import { useAudioCardStore } from "../../../store/audioStore";
+import { Music } from "lucide-react";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const AudioList = () =>{
   
@@ -12,6 +14,7 @@ const AudioList = () =>{
   const setAudioCards = useAudioCardStore((state) =>state.setAudioCards);
   const audios = useAudioCardStore((state) =>state.audios);
   const [isExpanded, setIsExpanded] = useState(false);
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,10 +54,14 @@ const AudioList = () =>{
 
   if(!isExpanded){
     return (
-      <div onClick={ handleExtendList } className="flex" >
-        <div className="font-light text-green-600" >{audios.length<=1 ? "Audio":"Audios"}</div> 
-        <div className="px-1 text-green-600">{audios.length}</div>
-        <div> &gt; </div>
+      <div onClick={ handleExtendList } className="group green-card">
+        <div className="flex items-center justify-between p-2 bg-green-100 group-hover:bg-green-200 rounded-lg transition-colors ">
+          <Music size={18} className="text-green-600" />   
+            { !isRightPanelClose &&
+              <span className="font-medium text-green-600" >{audios.length<=1 ? "Audio":"Audios"}</span> 
+            }
+          <span className="px-1 text-green-600">{audios.length}</span>
+        </div>
       </div>
     )
   }
@@ -64,13 +71,15 @@ const AudioList = () =>{
 
     { audios.length === 0 ? (
       <> 
-        <button onClick={ handleCloseList } className="text-green-500"> &lt; Back </button>
-        <div className="text-green-500 font-light">No audios found</div>
+      <div onClick={ handleCloseList } className="green-hover">
+        <button  className="text-green-500"> &lt; Back </button>
+        <div className="text-green-600 font-normal">No audios found</div>
+      </div>
       </>
     ): (
       <>
-        <div>
-          <button className="text-green-500" onClick={ (e) => {e.stopPropagation(); handleCloseList();}} > &lt; Back </button>
+        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();}} className="green-hover">
+          <button className="text-green-500"  > &lt; Back </button>
         </div>
         {audios.map( (audio) =>(
           <AudioGet  

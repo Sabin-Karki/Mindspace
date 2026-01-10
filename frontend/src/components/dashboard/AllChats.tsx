@@ -136,43 +136,46 @@ const AllChats = ({ searchQuery }: AllChatsProps) =>{
             <span className="text-xs text-gray-500 mt-auto">{new Date(session.createdAt).toLocaleDateString()}</span>
           </button>
 
-          <div className="flex flex-col items-end justify-end">
+          {/* menu options : for delete and rename */}
+          <div className="relative flex flex-col items-end justify-end">
             <button 
               onClick={ () => handleShowMenu(session.sessionId) } 
-              className="text-xl text-gray-600 hover:text-amber-600 px-2 -mr-2">
+              className=" flex-center w-8 h-8 text-xl text-gray-600 hover:text-amber-600 -mr-2
+                 border border-gray-300 rounded-full hover:bg-gray-100">
               &#x22EE;
-            </button>
+            </button> 
             
             {session.sessionId !== null && openMenuId === session.sessionId && (
               <>
-              
-              <div onClick={ (e) =>{ e.stopPropagation(); handleHideMenu(); }} className="fixed inset-0  z-10" ></div>
-
-              <div className="absolute top-8 right-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100">
+              {/* this is invisible div if user click outside menu options they click here which hides the menu options */}
+              <div onClick={ (e) =>{ e.stopPropagation(); handleHideMenu(); }} className="relative z-10" > </div>
+              {/* actual options */}
+              <div className="absolute right-0 z-20 w-32 top-10 bg-white rounded shadow-lg border border-gray-100">
                 
                 <button onClick={() => {
-                    handleShowDeleteModal();
-                    handleHideMenu();
-                    handleSelectSession(session.sessionId);
+                  handleShowRenameModal(); 
+                  handleHideMenu();
+                  handleSelectSession(session.sessionId);
+                  handleSelectLocalChatTitle(session.title);
                   }} 
-                  className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
-                  Delete
-                </button>
-
-                <button onClick={() => {
-                    handleShowRenameModal(); 
-                    handleHideMenu();
-                    handleSelectSession(session.sessionId);
-                    handleSelectLocalChatTitle(session.title);
-                  }} 
-                  className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100"> 
+                  className="w-full text-left p-4 text-m text-gray-800 hover:bg-gray-100"> 
                   Rename
                 </button>
+                <button onClick={() => {
+                  handleShowDeleteModal();
+                  handleHideMenu();
+                  handleSelectSession(session.sessionId);
+                  }} 
+                  className="w-full text-left p-4 text-m text-red-600 hover:bg-gray-100">
+                  Delete
+                </button>
+                
               </div>
-              </>
+            </>
             )}
-            </div>
           </div>
+
+        </div>
       ))
     )}
 
@@ -190,6 +193,7 @@ const AllChats = ({ searchQuery }: AllChatsProps) =>{
         localChatTitle={localChatTitle}
       />
     )}
+    
   </>
   )
 }

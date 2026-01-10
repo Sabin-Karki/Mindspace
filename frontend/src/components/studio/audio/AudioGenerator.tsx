@@ -3,6 +3,8 @@ import { useSessionStore } from "../../../store/sessionStore";
 import type { IAudioResponseDTO, IUploadResponse } from "../../../types";
 import { generateAudioOverview } from "../../../api/audioApi";
 import { toast } from "sonner";
+import { Music } from "lucide-react";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const AudioGenerator = () =>{
   
@@ -10,6 +12,7 @@ const AudioGenerator = () =>{
   const sources: IUploadResponse[] = useSessionStore((state) => state.sources);
   const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
   const [audioCards, setAudioCards] = useState<IAudioResponseDTO>();
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +57,18 @@ const AudioGenerator = () =>{
 
   return(
     <>
-      <div onClick={handleGenerateAudio}>Audio</div>
+    {/* show some kind of loading when generating  */}
+    {/* show some kind of loading when generating  */}
+    {/* show some kind of loading when generating  */}
+    {/* show some kind of loading when generating  */}
+    <div className="group green-card">
+        <div onClick={handleGenerateAudio} className="p-2 bg-green-100 group-hover:bg-green-200 rounded-lg transition-colors">
+          <Music size={18} className="text-green-600" />
+          { !isRightPanelClose &&
+            <div  text-xs font-semibold text-pink-900 mb-1>Audio</div>
+          }
+        </div>
+      </div>
     </>
   )
 }

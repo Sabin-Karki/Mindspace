@@ -5,6 +5,8 @@ import ReportGet from "./ReportGet";
 import { getAllReports } from "../../../api/reportApi";
 import type { IReportResponse } from "../../../types";
 import { useReportCardStore } from "../../../store/reportStore";
+import { Newspaper } from "lucide-react";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const ReportList = () => {
 
@@ -12,6 +14,7 @@ const ReportList = () => {
   const setReportCards = useReportCardStore((state) =>state.setReportCards);
   const reports = useReportCardStore((state) =>state.reports);
   const [isExpanded, setIsExpanded] = useState(false);
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
   const [error, setError ] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,10 +52,14 @@ const ReportList = () => {
 
   if(!isExpanded){
     return (
-      <div onClick={ handleExtendList } className="flex" >
-        <div className="font-light text-purple-500">{reports.length<=1?"Report":"Reports"}</div> 
-        <div className="px-1 text-purple-500">{reports.length}</div>
-        <div> &gt; </div>
+      <div onClick={ handleExtendList } className="group purple-card">
+        <div className="flex items-center justify-between p-2 bg-purple-100 group-hover:bg-purple-200 rounded-lg transition-colors">
+          <Newspaper size={18} className="text-purple-600" />
+          { !isRightPanelClose && 
+            <span className="font-medium text-purple-600">{reports.length<=1? "Report":"Reports"} </span> 
+          }
+          <span className='px-1 text-purple-500 '>{reports.length}</span>
+        </div>
       </div>
     )
   }
@@ -60,14 +67,16 @@ const ReportList = () => {
   return (
   <>
     { reports.length === 0 ? (
-      <> 
-        <button className="text-purple-500" onClick={ handleCloseList } > &lt; Back </button>
-        <div className="font-light text-purple-500">No flashcards found</div>
+      <>
+      <div onClick={ handleCloseList } className="purple-hover ">
+        <button className="text-purple-500"> &lt; Back </button>
+        <div className="font-normal text-purple-600 ">No reports found</div>
+      </div>
       </>
     ): (
       <>
-        <div>
-          <button className="text-purple-600" onClick={ (e) => {e.stopPropagation(); handleCloseList();} } > &lt; Back </button>
+        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="purple-hover" >
+          <button className="text-purple-600"  > &lt; Back </button>
         </div>
         {reports.map( (report) =>(
           <ReportGet 

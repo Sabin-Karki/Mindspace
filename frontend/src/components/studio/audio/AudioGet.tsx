@@ -7,11 +7,12 @@ import DeleteAudioCard from "./DeleteAudioCard";
 import Modal from "react-modal";
 import RenameAudioCard from "./RenameAudioCard";
 import AudioCardPopup from "./AudioPopup";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
   
   const updateAudioCardName = useAudioCardStore((state) => state.updateAudioCardName);
-
+  const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openMenuId, setMenuId] = useState<number | null>(null);//which menu is open
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -74,8 +75,8 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
   
   return(
   <>
-  <div className="relative border-amber-600 p-4">
-    <div onClick={ openModal } className="flex justify-between border-4">
+  <div className="relative ">
+    <div onClick={ openModal } className="flex justify-between green-hover">
       
       <div className="relative flex items-center" >
         {/* this not a popup  just editing mode flash card name */}
@@ -91,11 +92,14 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
           </p>
         )}
       </div>
-      <button         
-        onClick={ (e) => { e.stopPropagation(); handleShowMenu(audio.id); } } 
-        className="text-2xl text-gray-700 hover:text-amber-600 px-2 " >
-        &#x22EE;
-      </button>
+
+      {!isRightPanelClose &&(
+        <button         
+          onClick={ (e) => { e.stopPropagation(); handleShowMenu(audio.id); } } 
+          className=" flex-center three-dots " >
+          &#x22EE;
+        </button>
+      )}
     </div>
     
     {openMenuId === audio.id && (

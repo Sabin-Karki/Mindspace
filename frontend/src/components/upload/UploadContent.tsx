@@ -172,7 +172,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
   return (
   <>
   <div onClick={onClose} className="fixed inset-0 bg-black/50  flex items-center justify-center z-50">
-  <div onClick={(e) => e.stopPropagation()} className="bg-gray-800 rounded-lg p-4 w-full max-w-md text-white" >
+  <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg p-4 w-full max-w-md text-gray-700 text-m" >
 
     {error && (
       <div style={{ color: 'red', border: '1px solid red', padding: '10px', marginBottom: '15px' }}>
@@ -180,21 +180,29 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
       </div>
     )}
     <div>Upload Content</div>
-    <div>session:{sessionId}</div>
+
     {/* text as source */}
     <div>
-      <label htmlFor="textSource">Enter text as source</label>
-      <textarea name="textSource" id="textSource" rows={5} onChange={handleTextChange} value={textValue} disabled={!!file}
-        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+      <label htmlFor="textSource" className="block mb-2">
+        Enter text as source
+      </label>
+      <textarea name="textSource" id="textSource" 
+        rows={5} 
+        onChange={handleTextChange} 
+        value={textValue} 
+        disabled={!!file}
+        placeholder="Enter text as a source "
+        className="block w-full p-1 rounded-md border-2 border-gray-500 shadow-sm
+        focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
       </textarea>
     </div>
 
-    {/* File upload */}
-    <div>
-      <p className="block text-sm font-medium mb-2" >
+      {/* File upload */}
+      <div className="flex items-center text-sm font-medium  my-2" >
         Upload file
-      </p>
-      <div className="border-amber-400 border-dashed border-2 rounded-md p-8 text-center">   
+      </div>
+      
+      <div className="border-gray-500 border-dashed border-2 rounded-md p-10 text-center">   
         <input
           type="file"
           name="fileSource"
@@ -204,21 +212,21 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
           
           disabled={!!textValue.trim()} //disabled file input if textValue is empty
         />
+        
         {/* when clicked on label the input will be triggered then we can add files  */}
         <label htmlFor="fileSource">
-          <div className="text-gray-400 cursor-pointer">
+          <div className="cursor-pointer">
             {file ? (
-              <p className="text-green-400">Selected: {file.name}</p>
+              <p className="text-green-500">Selected: {file.name}</p>
             ) : (
               <>
                 <p>Click to upload or drag and drop</p>
-                <p className="text-sm mt-1">Files accepted</p>
+                <p className="text-sm mt-1">Files accepted: ( .txt .pdf .docx )</p>
               </>
             )}
           </div> 
         </label>
       </div>
-    </div>
 
     {/* Upload Button */}
     <div className="mt-6">
@@ -227,7 +235,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
         disabled={isUploadDisabled}
         className={`w-full py-3 rounded-md font-semibold transition duration-150 ${
           isUploadDisabled
-            ? 'bg-gray-400 text-gray-500 cursor-not-allowed'
+            ? 'bg-gray-300 text-gray-700 cursor-not-allowed'
             : 'bg-blue-600 text-white hover:bg-blue-700'
         }`}
       >
@@ -239,7 +247,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
   </div>
   </div>
 
-  {/* if user is dragging file show Full-screen drag overlay */}
+  {/* when user is dragging file show Full-screen drag overlay */}
     {isDragging && (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] pointer-events-none">
       <div className="text-white text-3xl border-4 border-dashed border-white rounded-lg p-16 bg-black/40">

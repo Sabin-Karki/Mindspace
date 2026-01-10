@@ -6,29 +6,53 @@ html, body, #root {
   overflow: hidden; /* THE KEY: Prevents browser-level scrolling */
 }
 
+/* @layer base{
+
+} */
+
+@layer components{
+  .purple-card{
+   @apply cursor-pointer bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-1 hover:shadow-md transition-all;
+  }
+  .green-card{
+    @apply cursor-pointer bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-1 hover:shadow-md transition-all;
+  }
+  .blue-card{
+    @apply cursor-pointer bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-1 hover:shadow-md transition-all;
+  }
+  .pink-card{
+    @apply cursor-pointer  bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 rounded-lg p-1 hover:shadow-md transition-all;
+  }
+
+  .purple-hover{
+    @apply cursor-pointer  p-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors;
+  }
+  .green-hover{
+    @apply cursor-pointer  p-2 bg-green-100 hover:bg-green-200 rounded-lg transition-colors;
+  }
+  .blue-hover{
+    @apply cursor-pointer p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors;
+  }
+  .pink-hover{
+    @apply cursor-pointer p-2 bg-pink-100 hover:bg-pink-200 rounded-lg transition-colors;
+  }
+  .gray-hover{
+    @apply cursor-pointer p-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors;
+  }
+  .flex-center{
+    @apply flex items-center justify-center;
+  }
+  /* using @apply just for readability  */
+  .three-dots{
+    @apply inline-flex items-center justify-center shrink-0 ; 
+    @apply w-8 h-8 text-base text-gray-900 border border-gray-300 rounded-full hover:bg-gray-100 cursor-pointer;  
+  } 
+}
+
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;  /* For IE and Edge */
     scrollbar-width: none;     /* For Firefox */
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;             /* For Chrome, Safari, and Opera */
-  }
-
-  .perspective {
-    perspective: 1000px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-
-  .rotate-y-180 {
-    transform: rotateY(180deg);
-  }
-
-  .backface-hidden {
-    backface-visibility: hidden;
   }
 }

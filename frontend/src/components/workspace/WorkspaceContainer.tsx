@@ -72,7 +72,7 @@ const WorkspaceContainer = () =>{
         //if new pos is 0 or closer to 0 //then we close left panel
         if(newPos === 0 || newPos < 10){
           setIsLeftPanelClose(true);
-          return {...prev, dragpos1: 5};
+          return {...prev, dragpos1: 10};
         }
         setIsLeftPanelClose(false);
 
@@ -89,10 +89,10 @@ const WorkspaceContainer = () =>{
         const min = prev.dragpos1 + MIN_WIDTH;   
         const max = MAX_CONTAINER_WIDTH - MIN_WIDTH;
 
-        //if new pos is 100 or closer to 100 close right panel
+        //if new pos is 90 or closer to 90 close right panel
          if(newPos === 100 || newPos > 90){
           setIsRightPanelClose(true);
-          return {...prev, dragpos2: 100};
+          return {...prev, dragpos2: 90};
         }
         setIsRightPanelClose(false);
 
@@ -131,40 +131,64 @@ const WorkspaceContainer = () =>{
 
 
   const closeLeftSideBar = useCallback(() => {
-    console.log("close left sidebar");
-    setIsLeftPanelClose(true);
-
-    setDividerPos( (prev) =>{
-      return {...prev, dragpos1: 5};
-    });
-  },[]); 
+    
+    if( !isLeftPanelClose){
+      console.log("close left sidebar");
+      setIsLeftPanelClose(true);
+  
+      setDividerPos( (prev) =>{
+        return {...prev, dragpos1: 10};
+      });
+    }else{
+      console.log("left already closed")
+    }
+  },[isLeftPanelClose]); 
 
   const closeRightSideBar = useCallback(() => {
-    console.log("close right sidebar");
-    setIsRightPanelClose(true);
+    
+    if( !isRightPanelClose){
+      console.log("close right sidebar");
+      setIsRightPanelClose(true);
 
-    setDividerPos( (prev) =>{
-      return {...prev, dragpos2: 100};
-    });
-  },[]);
+      setDividerPos( (prev) =>{
+        return {...prev, dragpos2: 90};
+      });
+    }else{
+      console.log("right already closed")
+    }
+  },[isRightPanelClose]);
+
 
   const openLeftSideBar = useCallback(() => {
-    console.log("open left sidebar");
-    setIsLeftPanelClose(false);
 
-    setDividerPos( (prev) =>{
-      return {...prev, dragpos1: MIN_WIDTH};
-    });
-  },[]);
+    if( isLeftPanelClose) {
+      console.log("left opening");
+
+      setIsLeftPanelClose(false)
+      setDividerPos( (prev) =>{
+        return {...prev, dragpos1: MIN_WIDTH};
+      });
+    }else{
+      console.log("already opened");
+    }
+
+  },[isLeftPanelClose]);
+
 
   const openRightSideBar = useCallback(() => {
-    console.log("open right sidebar");
-    setIsRightPanelClose(false);
 
-    setDividerPos( (prev) =>{
-      return {...prev, dragpos2: MAX_CONTAINER_WIDTH - MIN_WIDTH};
-     });
-  },[]);
+    if( isRightPanelClose){//true is open 
+      console.log("right opening");
+
+      setIsRightPanelClose(false);
+      setDividerPos( (prev) =>{
+        return {...prev, dragpos2: MAX_CONTAINER_WIDTH - MIN_WIDTH};
+      });
+    }else{
+      console.log("already opened");
+    }
+      
+  },[isRightPanelClose]);
 
   //calculate the width of each panel
   let panel1 = dividerPos.dragpos1;
@@ -177,16 +201,13 @@ const WorkspaceContainer = () =>{
       ref={containerRef}>
       {/* first content panel */}
       <div
-        className="bg-gray-100 border-gray-300 overflow-auto"
+        className="overflow-auto"
         // className="overflow-auto"
         style={{ width: `${panel1}%` }}>
           <UploadPanel 
-          closeLeftSideBar={closeLeftSideBar}
-          openLeftSideBar={openLeftSideBar} 
-          isLeftPanelClose={isLeftPanelClose}/>
-
-         {/* if isLeftPanelClose then show buttons */}
-         {/* if isLeftPanelClose false then show UploadPanel */}
+            closeLeftSideBar={closeLeftSideBar}
+            openLeftSideBar={openLeftSideBar} 
+          />
       </div>
       {/* the div to be dragged */}
       <div 
@@ -215,9 +236,9 @@ const WorkspaceContainer = () =>{
         className="bg-gray-100 border-gray-300 overflow-auto "
         style={{ width: `${panel3}%` }}>
           <StudioPanel 
-          closeRightSideBar={closeRightSideBar}
-          openRightSideBar={openRightSideBar} 
-          isRightPanelClose={isRightPanelClose}/>
+            closeRightSideBar={closeRightSideBar}
+            openRightSideBar={openRightSideBar} 
+          />
       </div>
     </div>
     </>

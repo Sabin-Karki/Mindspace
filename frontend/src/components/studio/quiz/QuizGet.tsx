@@ -8,6 +8,7 @@ import { getQuizById, updateQuizTitle } from "../../../api/quizApi";
 import RenameQuizOverview from "./RenameQuizOverview";
 import DeleteQuizOverview from "./DeleteQuizOverview";
 import { QuizViewer } from "./QuizViewer";
+import { useLayoutStore } from "../../../store/layoutStore";
 
 interface QuizProps {
     quiz:IQuizOverviewResponse;
@@ -19,7 +20,7 @@ interface QuizProps {
  const QuizGet=({quiz, quizId }:QuizProps)=>{
 
     const updateQuiz = useQuizStore((state)=>state.updateQuiz);
-
+    const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
     const [isModalOpen,setIsModalOpen]=useState(false);
     const [openMenuId,setMenuId]=useState<number|null>(null);
     const [isRenameModalOpen,setIsRenameModalOpen]=useState(false);
@@ -119,7 +120,7 @@ interface QuizProps {
   return (
     <>
     <div className="relative">
-      <div onClick={openModal} className="flex justify-between border-4">
+      <div onClick={openModal} className="flex justify-between green-hover">
         <div className="relative flex items-center">
           {isRenameModalOpen ? (
             <RenameQuizOverview 
@@ -134,11 +135,13 @@ interface QuizProps {
 
         
         <p >{quiz.sourceId.length ?? 0 }</p>
-
-        <button onClick={(e) => { e.stopPropagation(); handleShowMenu(quiz.quizId); }} 
-          className="text-2xl text-gray-700 hover:text-amber-600 px-2">
-          &#x22EE;
-        </button>
+        
+        {!isRightPanelClose &&(
+          <button onClick={(e) => { e.stopPropagation(); handleShowMenu(quiz.quizId); }} 
+            className=" flex-center three-dots">
+            &#x22EE;
+          </button>
+        )}
       </div>
 
       {openMenuId === quiz.quizId && (

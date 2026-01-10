@@ -9,14 +9,16 @@ const Home = () => {
   // Simple welcome for logged-in users
   if (isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] p-10 bg-gray-50">
-        <h1 className="text-5xl font-extrabold text-gray-900 mb-4">Welcome Back!</h1>
-        <p className="text-xl text-gray-600 mb-8">
-          Ready to dive into your notes?
-        </p>
+      <div className="mt-50 flex flex-col items-center justify-center font-semibold">
+        <div className="flex flex-col items-center">
+          <h1 className="text-5xl font-extrabold text-gray-900 mb-4">Welcome Back!</h1>
+          <h2 className="text-xl text-gray-600 mb-8">
+            Ready to dive into your notes?
+          </h2>
+        </div>
         <Link
           to="/dashboard"
-          className="px-8 py-3 text-lg font-semibold rounded-full text-white bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-lg hover:shadow-xl"
+          className="px-10 py-4 m-2 text-xl rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 "
         >
           Go to Dashboard
         </Link>
@@ -27,11 +29,11 @@ const Home = () => {
   // Marketing page for logged-out users (LLM Notebook Style)
   return (
     <div className="min-h-[calc(100vh-64px)] bg-white">
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-7xl mx-auto py-16 px-4 lg:px-8 text-center">
         
         {/* Main Heading/Pitch */}
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-6xl font-extrabold text-gray-900 leading-tight">
+          <h1 className="text-5xl font-extrabold text-gray-900 leading-tight">
             The <span className="text-blue-600">AI-Powered</span> Notebook for Next-Level Thinking
           </h1>
           <p className="mt-6 text-xl text-gray-600">
@@ -40,20 +42,22 @@ const Home = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-          <Link
-            to="/signup"
-            className="px-10 py-4 text-xl font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 transition duration-300 shadow-xl"
-          >
-            Start Taking Notes — It's Free
-          </Link>
-          <Link
-            to="/signin"
-            className="px-10 py-4 text-xl font-semibold rounded-lg text-blue-600 bg-white border-2 border-blue-600 hover:bg-blue-50 transition duration-300"
-          >
-            Already a User? Sign In
-          </Link>
-        </div>
+        { !isAuthenticated &&( 
+          <div className="m-10 flex justify-center space-y-4 text-xl font-semibold" >
+            <Link
+              to="/signup"
+              className="px-10 py-4 m-2 rounded-lg text-white bg-green-600 hover:bg-green-700 transition duration-300 shadow-2xl shadow-green-500"
+            >
+              Start Taking Notes
+            </Link>
+            <Link 
+              to="/signin"
+              className="px-10 py-4 m-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 "
+            >
+              Already a User? Sign In
+            </Link>
+          </div>
+        )}
         
         {/* Mockup/Feature Block (Visual Appeal) */}
         <div className="mt-20">
