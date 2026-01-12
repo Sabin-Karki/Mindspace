@@ -20,10 +20,14 @@ const ChatMessageBubble = ( { message }: ChatMessageBubbleProps) => {
       {!isUser && !isSystem && (
         <div className="w-21 p-0.4 h-full  flex items-center justify-center flex-shrink-0 shawdow-sm">
           <Bot size={20} className="text-blue-300"/>
-          <h2 className="p-0.5 text-sm text-gray-800">{message.role}</h2>
+          <h2 className="p-0.5 text-sm text-text-sec">{message.role}</h2>
         </div>
       )}
-      <div className={`min-w-xs lg:max-w-md xl:max-w-lg  py-3 rounded-2xl shadow-sm ${isSystem ? 'bg-blue-50 text-gray-700 border border-blue-200 text-xs italic' : isUser ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'}`}>
+      <div className={`min-w-xs lg:max-w-md xl:max-w-lg  p-2 rounded-2xl shadow-sm
+         ${isSystem ? 
+        'bg-blue-50 text-gray-700 border border-blue-200 text-xs italic' : isUser ?
+        'bg-blue-600 text-white' : 'bg-bg-sec text-text-pri'}`} >
+          
         <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw,rehypeSanitize]}
@@ -31,7 +35,7 @@ const ChatMessageBubble = ( { message }: ChatMessageBubbleProps) => {
           p:({children})=><p className="text-sm m-0.1 p-1 leading-relaxed whitespace-pre-wrap break-words">{children}</p>,
           li:({children})=><li className="ml-4 list-disc">{children}</li>,
           code: ({ children }) => (
-          <code className="bg-gray-200 text-sm px-1 rounded font-mono">{children}</code>
+          <code className="bg-bg-sec text-sm px-1 rounded font-mono">{children}</code>
              ),
           strong:({children})=>(<strong className="font-semibold">{children}</strong>),
           em:({children})=>(<em className="italic">{children}</em>),

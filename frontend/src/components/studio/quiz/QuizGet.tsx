@@ -138,7 +138,7 @@ interface QuizProps {
         
         {!isRightPanelClose &&(
           <button onClick={(e) => { e.stopPropagation(); handleShowMenu(quiz.quizId); }} 
-            className=" flex-center three-dots">
+            className=" flex-center three-dots bg-bg-tri/50 text-text-pri text-xl">
             &#x22EE;
           </button>
         )}
@@ -148,15 +148,15 @@ interface QuizProps {
       <>
         <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); handleHideMenu(); }}></div>
 
-        <div className="absolute top-10 right-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100">
+        <div className="absolute top-10 right-0 z-20 w-32 rounded shadow-lg bg-bg-sec border border-border-pri">
 
           <button onClick={(e) => { e.stopPropagation(); openDeleteModal(); handleHideMenu(); }} 
-            className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
+            className="w-full text-left p-2 text-m font-bold text-red-600 hover:bg-bg-tri">
             Delete
           </button>
 
           <button onClick={(e) => { e.stopPropagation(); openRenameModal(); handleHideMenu(); }} 
-            className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100">
+            className="w-full text-left p-2 text-m text-text-sec hover:bg-bg-tri">
             Rename
           </button>
         </div>
@@ -167,7 +167,7 @@ interface QuizProps {
     <Modal
       isOpen={isDeleteModalOpen} //changes done here only
       onRequestClose={closeDeleteModal} 
-      overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
+      overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
       className="outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" >
 
       <DeleteQuizOverview 
@@ -179,7 +179,7 @@ interface QuizProps {
     <Modal
       isOpen={isModalOpen}
       onRequestClose={closeModal} //press esc to close
-      overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
+      overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
       className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" >
       
       {specificQuiz && specificQuiz.questions && specificQuiz.questions.length > 0 ? (

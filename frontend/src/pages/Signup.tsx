@@ -62,9 +62,9 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-lg p-8 space-y-6 bg-white shadow-xl rounded-2xl border border-gray-100">
-        <h2 className="text-3xl font-extrabold text-gray-900 text-center">
+    <div className="flex items-center justify-center min-h-screen bg-bg-pri">
+      <div className="w-full max-w-lg p-8 space-y-6 bg-bg-sec shadow-xl rounded-2xl border-2 border-border-pri">
+        <h2 className="text-3xl font-extrabold text-center text-text-pri">
           Create Your Notebook Account
         </h2>
 
@@ -73,33 +73,33 @@ const Signup = () => {
           <div className="flex gap-4">
             {/* First Name */}
             <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
+              <label htmlFor="firstName" className="block text-sm font-medium text-text-pri">First Name</label>
               <input
                 id="firstName"
                 name="firstName"
                 value={form.firstName}
                 onChange={handleChange}
                 placeholder="John"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                className="mt-1 block w-full px-5 py-2 border border-border-sec rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
               />
             </div>
             {/* Last Name */}
             <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
+              <label htmlFor="lastName" className="block text-sm font-medium text-text-pri">Last Name</label>
               <input
                 id="lastName"
                 name="lastName"
                 value={form.lastName}
                 onChange={handleChange}
                 placeholder="Doe"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                className="mt-1 block w-full px-5 py-2 border border-border-sec rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
               />
             </div>
           </div>
 
           {/* Email Input */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email address</label>
+            <label htmlFor="email" className="block text-sm font-medium text-text-sec">Email address</label>
             <input
               id="email"
               name="email"
@@ -107,13 +107,13 @@ const Signup = () => {
               value={form.email}
               onChange={handleChange}
               placeholder="you@example.com"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-border-sec rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             />
           </div>
 
           {/* Password Input */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-text-sec">Password</label>
             <input
               id="password"
               name="password"
@@ -122,7 +122,7 @@ const Signup = () => {
               value={form.password}
               onChange={handleChange}
               placeholder="At least 8 characters"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-border-sec rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             />
           </div>
 
@@ -148,12 +148,12 @@ const Signup = () => {
         </form>
 
         <div className="text-center text-sm">
-          <p className="text-gray-600">
+          <div className="text-text-pri">
             Already have an account?{' '}
             <Link to="/signin" className="font-medium text-green-600 hover:text-green-500">
               Sign In
             </Link>
-          </p>
+          </div>
         </div>
       </div>
     </div>

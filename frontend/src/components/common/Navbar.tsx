@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import ChatTitle from "./ChatTitle";
+import ThemeToggle from "./ThemeToggle"; "./ThemeToggle";
 
 
 const Navbar = () => {
@@ -37,15 +38,15 @@ const Navbar = () => {
   //   );
   // }
 
-
+  
   return (
     // Sticky navbar for a professional feel
-    <nav className="sticky top-0 z-10 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+    <nav className="sticky top-0 z-10 w-full bg-bg-pri/95 text-text-pri backdrop-blur-sm border-b border-border-pri">
       <div className=" mx-auto px-4">
 
         <div className="flex items-center w-full h-12">
           {/* Logo/Branding */}
-          <Link to="/" className="text-2xl font-bold text-gray-900 flex items-center">
+          <Link to="/" className="text-2xl font-bold text-text-pri flex items-center">
             <span className="text-blue-600 mr-1">📝</span> Mindspace
           </Link>
 
@@ -55,18 +56,19 @@ const Navbar = () => {
           )}
 
           <div className="flex items-center space-x-4 ml-auto">
+            <ThemeToggle />
             {isAuthenticated ? (
               // --- Logged In View ---
               <>
                 <Link
                   to="/dashboard"
-                  className="bg-gray-200 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150"
+                  className=" text-text-pri hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150"
                 >
                   Dashboard
-                </Link>
+                </Link>        
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500/80 hover:bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150"
+                  className="bg-red-500/80 hover:bg-red-500 text-text-pri px-4 py-2 rounded-md text-sm font-medium transition duration-150"
                 >
                   Logout
                 </button>
@@ -76,7 +78,7 @@ const Navbar = () => {
               <>
                 <Link
                   to="/signin"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150"
+                  className="text-text-pri hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150"
                 >
                   Sign In
                 </Link>

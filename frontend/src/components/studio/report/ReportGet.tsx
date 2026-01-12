@@ -99,7 +99,7 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
         {!isRightPanelClose &&(
           <button         
             onClick={ (e) => { e.stopPropagation(); handleShowMenu(report.reportId); } } 
-            className="three-dots" >
+            className="flex-center three-dots bg-bg-tri/50 text-text-pri text-xl" >
             &#x22EE;
           </button>
         )}
@@ -112,14 +112,14 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
         <div className="fixed inset-0 z-10" onClick={(e) =>{ e.stopPropagation(); handleHideMenu(); }}></div>
 
         {/* menu options on top of invisible backdrop */}
-        <div className=" absolute top-10 right-0 z-20 w-32 bg-white rounded shadow-lg border border-gray-100 " >
+        <div className=" absolute top-10 right-0 z-20 w-32 rounded shadow-lg bg-bg-sec border border-border-pri " >
           <button onClick={(e) =>{ e.stopPropagation(); openDeleteModal(); handleHideMenu(); }} 
-            className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
+            className="w-full text-left p-2 text-m font-bold text-red-600 hover:bg-bg-tri">
             Delete
           </button>
           {/* when rename is clicked i get old value after i renamed */}
           <button onClick={(e) =>{ e.stopPropagation(); openRenameModal(); handleHideMenu(); }} 
-            className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100">
+            className="w-full text-left p-2 text-m text-text-sec hover:bg-bg-tri">
             Rename
           </button>
         </div>

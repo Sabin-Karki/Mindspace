@@ -3,12 +3,44 @@
 /* hide all scroll bar globally */
 html, body, #root { 
   height: 100%;
-  overflow: hidden; /* THE KEY: Prevents browser-level scrolling */
+  overflow: hidden; /* Prevents browser-level scrolling */
 }
 
-/* @layer base{
+@layer base {
+  :root {
+    /* BACKGROUNDS */
+    --bg-pri: 255 255 255;
+    --bg-sec: 249 250 251;
+    --bg-tri: 243 244 246;
+    
+    /* TEXT */
+    --text-pri: 17 24 39;
+    --text-sec: 75 85 99;
+    --text-tri: 156 163 175;
+    
+    /* BORDERS */
+    --border-pri: 229 231 235;
+    --border-sec: 209 213 219;
+  }
 
-} */
+  .dark {
+    --bg-pri: 17 24 39;
+    --bg-sec: 31 41 55;
+    --bg-tri: 55 65 81;
+    
+    --text-pri: 243 244 246;
+    --text-sec: 209 213 219;
+    --text-tri: 156 163 175;
+    
+    --border-pri: 55 65 81;
+    --border-sec: 75 85 99;
+  }
+
+  body {
+    background-color: rgb(var(--bg-pri));
+    color: rgb(var(--text-pri));
+  }
+}
 
 @layer components{
   .purple-card{
@@ -55,4 +87,18 @@ html, body, #root {
     -ms-overflow-style: none;  /* For IE and Edge */
     scrollbar-width: none;     /* For Firefox */
   }
+}
+
+/* Tailwind v4: Define custom colors using @theme */
+@theme {
+  --color-bg-pri: rgb(var(--bg-pri));
+  --color-bg-sec: rgb(var(--bg-sec));
+  --color-bg-tri: rgb(var(--bg-tri));
+  
+  --color-text-pri: rgb(var(--text-pri));
+  --color-text-sec: rgb(var(--text-sec));
+  --color-text-tri: rgb(var(--text-tri));
+  
+  --color-border-pri: rgb(var(--border-pri));
+  --color-border-sec: rgb(var(--border-sec));
 }

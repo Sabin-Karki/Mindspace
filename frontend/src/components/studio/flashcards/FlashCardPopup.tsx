@@ -105,7 +105,7 @@ const FlashCardPopup = ({
           </div>
           <button
             onClick={closeModal}
-            className="p-2 hover:bg-indigo-500 rounded-lg text-white transition-colors"
+            className="p-2 hover:bg-indigo-500 rounded-lg bg-bg-pri transition-colors"
           >
             <X size={24} />
           </button>
@@ -116,7 +116,7 @@ const FlashCardPopup = ({
           <div className="w-full max-w-2xl space-y-8">
             {/* Position indicator */}
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-sm font-medium bg-bg-sec">
                 Card {currentIndex + 1} of {cardDetails.length}
               </p>
             </div>
@@ -143,7 +143,7 @@ const FlashCardPopup = ({
                   <p className="text-center text-xl md:text-2xl font-semibold leading-relaxed select-none">
                     {currentCard.question}
                   </p>
-                  <p className="text-gray-400 text-sm mt-6">Click to see answer</p>
+                  <p className="bg-bg-sec text-sm mt-6">Click to see answer</p>
                 </div>
 
                 {/* Back - Answer */}
@@ -154,16 +154,16 @@ const FlashCardPopup = ({
                     transform: "rotateY(180deg)",
                   }}
                 >
-                  <p className="text-center text-xl md:text-2xl font-semibold text-gray-900 leading-relaxed select-none">
+                  <p className="text-center text-xl md:text-2xl font-semibold text-text-pri leading-relaxed select-none">
                     {currentCard.answer}
                   </p>
-                  <p className="text-gray-500 text-sm mt-6">Click to see question</p>
+                  <p className="text-text-sec text-sm mt-6">Click to see question</p>
                 </div>
               </div>
             </div>
 
             {/* Controls */}
-            <div className="flex items-center justify-center gap-10">
+            <div className="flex-center gap-10">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -172,7 +172,7 @@ const FlashCardPopup = ({
                 disabled={currentIndex === 0}
                 className="p-3 rounded-full hover:bg-gray-200 disabled:opacity-40 transition-colors"
               >
-                <ChevronLeft size={28} className="text-gray-700" />
+                <ChevronLeft size={28} className="text-text-pri" />
               </button>
 
               <button
@@ -183,7 +183,7 @@ const FlashCardPopup = ({
                 disabled={currentIndex === cardDetails.length - 1}
                 className="p-3 rounded-full hover:bg-gray-200 disabled:opacity-40 transition-colors"
               >
-                <ChevronRight size={28} className="text-gray-700" />
+                <ChevronRight size={28} className="text-text-pri" />
               </button>
             </div>
           </div>

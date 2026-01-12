@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 const NotFound = () => {
   return(
     <>
-    <div className="flex justify-center items-center h-full w-full">
+    <div className="flex-center h-full w-full bg-bg-pri">
       <div className="flex flex-col text-center">
-        <h2 className="text-8xl font-bold mb-4">404</h2>
+        <h2 className="text-8xl font-bold mb-4 text-text-pri">404</h2>
         <p className="text-3xl mb-8"> Page Not found </p>
          <Link
           to="/"
