@@ -69,7 +69,7 @@ const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
 
   return (
     <>
-    <div className="bg-bg-sec text-text-pri p-2 rounded-lg  text-m">
+    <div className="bg-bg-sec text-text-pri p-2 rounded-lg text-m">
       {/* "Select all sources" Row */}
       <div className="flex justify-between items-start mb-4 p-1 border-b border-border-pri">
         <span className="font-semibold ">

@@ -59,8 +59,8 @@ const QuizGenerator = () =>{
 
     return (
       <>
-      <div className="group blue-card">
-        <div onClick={handleGenerateQuizOverview} className="p-2 bg-blue-100 group-hover:bg-blue-200 rounded-lg transition-colors">
+      <div className="group blue-card p-2">
+        <div onClick={handleGenerateQuizOverview} title="Generate Quiz" className="">
           <FileQuestion size={18} className="text-blue-600" />
           { !isRightPanelClose &&
             <div  text-xs font-semibold text-pink-900 mb-1>Quiz</div>

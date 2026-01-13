@@ -123,7 +123,7 @@ const ChatWindow: React.FC = () => {
 
 return (
   <>
-    <div className=" flex flex-col bg-bg-pri text-text-pri text-m relative"> 
+    <div className=" flex flex-col bg-bg-pri text-text-pri text-m relative min-h-[calc(100vh-50px)] "> 
       
       <div className="p-1 border-b border-border-pri">
         <h2>Chat</h2>
@@ -154,7 +154,7 @@ return (
       </div>
 
       {/* input box */}
-      <div className="bottom-0 left-0">
+      <div className="">
         <ChatInput 
           handleSendMessage={handleSendMessage}
           />

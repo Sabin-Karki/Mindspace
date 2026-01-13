@@ -26,7 +26,7 @@ const UploadPanel = ({closeLeftSideBar, openLeftSideBar}: IUploadPanelProps) =>{
   return(
     <>
     {/* vertical */}
-    <div className="h-full flex flex-col bg-bg-pri" >
+    <div className="h-full flex flex-col bg-bg-pri p-2" >
       
       {/* horizantal */}
       <div className="px-4 py-3 border-b border-border-pri flex items-center justify-between">

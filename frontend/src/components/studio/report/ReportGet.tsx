@@ -74,8 +74,8 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
 
   return (
     <>
-    <div className="relative border-amber-600 p-4">
-      <div onClick={ openModal } className="flex justify-between green-hover">
+    <div className="relative p-0">
+      <div onClick={ openModal } className="flex justify-between purple-hover">
         
         <div className="relative flex items-center" >
           {/* this not a popup  just editing mode flash card name */}

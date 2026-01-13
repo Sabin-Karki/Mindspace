@@ -83,7 +83,7 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
   return(
     <>
     <div className="relative">
-      <div onClick={ openModal } className="flex justify-between green-hover">
+      <div onClick={ openModal } className="flex justify-between pink-hover">
         
         <div className="relative flex items-center" >
           {/* this not a popup  just editing mode flash card name */}

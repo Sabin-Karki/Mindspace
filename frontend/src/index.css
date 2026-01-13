@@ -21,6 +21,8 @@ html, body, #root {
     /* BORDERS */
     --border-pri: 229 231 235;
     --border-sec: 209 213 219;
+
+    
   }
 
   .dark {
@@ -44,23 +46,23 @@ html, body, #root {
 
 @layer components{
   .purple-card{
-   @apply cursor-pointer bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-1 hover:shadow-md transition-all;
+   @apply text-gray-800 cursor-pointer bg-gradient-to-br from-purple-300 to-purple-100 border border-purple-200 rounded-lg p-1 hover:shadow-md transition-all;
   }
   .green-card{
-    @apply cursor-pointer bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-1 hover:shadow-md transition-all;
+    @apply text-gray-800 cursor-pointer bg-gradient-to-br from-green-300 to-green-100 border border-green-200 rounded-lg p-1 hover:shadow-md transition-all;
   }
   .blue-card{
-    @apply cursor-pointer bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-1 hover:shadow-md transition-all;
+    @apply text-gray-800 cursor-pointer bg-gradient-to-br from-blue-300 to-blue-100 border border-blue-200 rounded-lg p-1 hover:shadow-md transition-all;
   }
   .pink-card{
-    @apply cursor-pointer  bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 rounded-lg p-1 hover:shadow-md transition-all;
+    @apply text-gray-800 cursor-pointer  bg-gradient-to-br from-pink-300 to-pink-100 border border-pink-200 rounded-lg p-1 hover:shadow-md transition-all;
   }
 
   .purple-hover{
-    @apply cursor-pointer  p-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors;
+    @apply cursor-pointer p-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors;
   }
   .green-hover{
-    @apply cursor-pointer  p-2 bg-green-100 hover:bg-green-200 rounded-lg transition-colors;
+    @apply cursor-pointer p-2 bg-green-100 hover:bg-green-200 rounded-lg transition-colors;
   }
   .blue-hover{
     @apply cursor-pointer p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors;
@@ -79,6 +81,12 @@ html, body, #root {
     @apply inline-flex items-center justify-center shrink-0 ; 
     @apply w-8 h-8 text-base text-gray-900 border border-gray-300 rounded-full hover:bg-gray-100 cursor-pointer;  
   } 
+  .input-pri {
+    @apply flex-grow p-1 text-xl bg-bg-pri text-text-pri border border-border-pri rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ;
+  }
+  .input-sec {
+    @apply flex-grow p-2 border border-border-pri rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500;
+  }
 }
 
 
@@ -101,4 +109,11 @@ html, body, #root {
   
   --color-border-pri: rgb(var(--border-pri));
   --color-border-sec: rgb(var(--border-sec));
+
+
 }
+
+
+/* //make for buttons */
+/* px-10 py-4 m-2 rounded-lg text-text-pri bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 */
+

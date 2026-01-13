@@ -58,8 +58,8 @@ const FlashGenerator = () => {
 
   return(
     <>
-    <div className="group pink-card">
-      <div onClick={handleGenerateFlashCard} className="p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors">
+    <div className="group pink-card p-2">
+      <div onClick={handleGenerateFlashCard} title="Generate Flashcarrd" className="">
         <CreditCard size={18} className="text-pink-600" />
           { !isRightPanelClose &&
             <div  text-xs font-semibold text-pink-900 mb-1>FlashCard</div>

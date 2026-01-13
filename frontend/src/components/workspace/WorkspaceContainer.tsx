@@ -213,7 +213,7 @@ const WorkspaceContainer = () =>{
       <div 
         onMouseDown={() => handleMouseDown("dragpos1")}
         title="Drag to resize" 
-        className="p-0 m-0 w-2 cursor-col-resize bg-bg-tri h-full hover:bg-bg-sec ">
+        className="w-2.5 cursor-col-resize bg-bg-tri h-full hover:bg-bg-tri ">
       </div>
 
 

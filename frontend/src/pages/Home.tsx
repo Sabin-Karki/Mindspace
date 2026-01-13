@@ -18,7 +18,7 @@ const Home = () => {
         </div>
         <Link
           to="/dashboard"
-          className="px-10 py-4 m-2 text-xl rounded-xl text-text-pri bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 "
+          className="px-10 py-4 m-2 text-xl rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 "
         >
           Go to Dashboard
         </Link>
@@ -28,7 +28,7 @@ const Home = () => {
 
   // Marketing page for logged-out users (LLM Notebook Style)
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-bg-pri">
+    <div className="min-h-[calc(100vh-50px)] bg-bg-pri">
       <div className="max-w-7xl mx-auto py-16 px-4 lg:px-8 text-center">
         
         {/* Main Heading/Pitch */}

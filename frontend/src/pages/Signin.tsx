@@ -57,7 +57,7 @@ const Signin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-bg-pri">
+    <div className="flex-center bg-bg-pri min-h-[calc(100vh-50px)]">
       <div className="w-full max-w-md p-8 space-y-6 bg-bg-sec shadow-xl rounded-2xl border-2 border-border-pri">
         <h2 className="text-3xl font-extrabold text-text-pri text-center">
           Sign In to Your Notebook

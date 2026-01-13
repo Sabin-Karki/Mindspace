@@ -120,7 +120,7 @@ interface QuizProps {
   return (
     <>
     <div className="relative">
-      <div onClick={openModal} className="flex justify-between green-hover">
+      <div onClick={openModal} className="flex justify-between blue-hover">
         <div className="relative flex items-center">
           {isRenameModalOpen ? (
             <RenameQuizOverview 

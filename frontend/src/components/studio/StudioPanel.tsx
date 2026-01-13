@@ -30,23 +30,23 @@ const StudioPanel = ({ closeRightSideBar, openRightSideBar }: StudioPanelProps) 
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3">
+      <div className="flex-1 overflow-y-auto p-2">
         {/* generators */}
-        <div className="grid grid-cols-2 gap-2 mb-6">
+        <div className="grid grid-cols-2 gap-3 mb-2">
           <FlashGenerator />
           <QuizGenerator />
           <AudioGenerator />
           <ReportGenerator />
         </div>
 
-        {/* lists */}
-        <div className="space-y-4" onClick={openRightSideBar}>
-          <FlashList />
-          <QuizList />
-          <AudioList />
-          <ReportList />
-        </div>
-
+        <div className='border-b border-border-sec m-2 '></div>
+          {/* lists */}
+          <div className="space-y-2" onClick={openRightSideBar}>
+            <FlashList />
+            <QuizList />
+            <AudioList />
+            <ReportList />
+          </div>
       </div>
     </div>
   );

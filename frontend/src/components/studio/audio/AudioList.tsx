@@ -54,13 +54,13 @@ const AudioList = () =>{
 
   if(!isExpanded){
     return (
-      <div onClick={ handleExtendList } className="group green-card">
+      <div onClick={ handleExtendList } className="group green-hover text-green-600 font-medium">
         <div className="flex items-center justify-between p-2 bg-green-100 group-hover:bg-green-200 rounded-lg transition-colors ">
           <Music size={18} className="text-green-600" />   
             { !isRightPanelClose &&
-              <span className="font-medium text-green-600" >{audios.length<=1 ? "Audio":"Audios"}</span> 
+              <span  >{audios.length<=1 ? "Audio":"Audios"}</span> 
             }
-          <span className="px-1 text-green-600">{audios.length}</span>
+          <span className="px-1">{audios.length}</span>
         </div>
       </div>
     )
@@ -71,15 +71,20 @@ const AudioList = () =>{
 
     { audios.length === 0 ? (
       <> 
-      <div onClick={ handleCloseList } className="green-hover">
-        <button  className="text-green-500"> &lt; Back </button>
-        <div className="text-green-600 font-normal">No audios found</div>
+      <div onClick={ handleCloseList } className="green-hover font-medium text-green-600">
+        <button > &lt; Back </button>
+        <div >No audios found</div>
       </div>
       </>
     ): (
       <>
-        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();}} className="green-hover">
-          <button className="text-green-500"  > &lt; Back </button>
+        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();}} 
+          className="green-hover grid grid-cols-3 p-4 items-center text-green-600 font-medium">
+          <button > &lt; Back </button>
+          <span className="text-center ">
+            {audios.length<=1 ? "Audio":"Audios"}
+          </span>
+          <div></div>
         </div>
         {audios.map( (audio) =>(
           <AudioGet  

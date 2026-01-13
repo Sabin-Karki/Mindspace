@@ -15,10 +15,16 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
   const [isFinished, setIsFinished] = useState(false);
   const [localQuizCardName, setLocalQuizCardName] = useState(quiz.title || "");
 
+
   //for name rename
   const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalQuizCardName(e.target.value);
   }  
+  
+  const handleBlur = () => {
+    setLocalQuizCardName(localQuizCardName);
+    onClose();
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if(e.key === "Enter"){
@@ -73,10 +79,10 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
   if (isFinished) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl w-full max-w-md shadow-xl">
-          <div className="flex justify-between items-center p-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900">Quiz Complete!</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+        <div onClick={(e) => e.stopPropagation()} className="bg-bg-pri rounded-2xl w-full max-w-md shadow-xl">
+          <div className="flex justify-between items-center p-6 border-b border-border-pri">
+            <h2 className="text-2xl font-bold text-text-pri">Quiz Complete!</h2>
+            <button onClick={onClose} className="text-text-sec hover:text-text-tri transition-colors">
               <X size={24} />
             </button>
           </div>
@@ -85,25 +91,25 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
             <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center mx-auto border-4 border-blue-600">
               <div>
                 <p className="text-4xl font-bold text-blue-600">{percentage}%</p>
-                <p className="text-xs text-gray-600 mt-1">Score</p>
+                <p className="text-xs text-text-sec mt-1">Score</p>
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-xl p-6">
-              <p className="text-5xl font-bold text-gray-900 mb-1">{score} / {totalQuestions}</p>
-              <p className="text-gray-600 font-medium text-sm">Correct Answers</p>
+            <div className="bg-bg-pri rounded-xl p-6">
+              <p className="text-5xl font-bold text-text-pri mb-1">{score} / {totalQuestions}</p>
+              <p className="text-text-sec font-medium text-sm">Correct Answers</p>
             </div>
 
-            <p className="text-gray-700">
+            <p className="text-text-pri">
               {percentage >= 80 ? 'Excellent work! You mastered this quiz.' : percentage >= 60 ? 'Good job! Keep practicing to improve.' : 'Keep studying and try again!'}
             </p>
 
             <div className="flex gap-3">
-              <button onClick={handleRestart} className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium rounded-xl transition-colors flex items-center justify-center gap-2">
+              <button onClick={handleRestart} className="flex-1 px-4 py-3 bg-bg-pri hover:bg-bg-sec text-text-pri font-medium rounded-xl transition-colors flex-center gap-2">
                 <RotateCcw size={18} />
                 Retry
               </button>
-              <button onClick={onClose} className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors shadow-sm">
+              <button onClick={onClose} className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-text-pri font-medium rounded-xl transition-colors shadow-sm">
                 Done
               </button>
             </div>
@@ -115,28 +121,31 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl w-full max-w-2xl h-[600px] flex flex-col shadow-xl">
-        <div className="flex justify-between items-center p-6 border-b border-gray-200">
+      <div onClick={(e) => e.stopPropagation()} className="bg-bg-pri rounded-2xl w-full max-w-2xl h-[600px] flex flex-col shadow-xl">
+        <div className="flex justify-between items-center p-6 border-b border-border-sec">
           <div className='flex '>
             <input type="text" 
-              className='text-xl font-bold text-gray-900 focus:ring-0 '
+              className='input-pri'
               value={localQuizCardName} 
               onChange={handleChangeCardName} 
               onKeyDown={handleKeyDown}
+              onBlur={handleBlur}
             />
-            <p className="text-sm text-gray-600 mt-1">Question {currentIndex + 1} of {totalQuestions}</p>
+            <p className="text-sm text-text-sec mt-1">Question {currentIndex + 1} of {totalQuestions}</p>
           </div>
-          <button onClick={onClose} className="flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
+          <button
+            onClick={onClose}
+            className="p-2 bg-bg-sec hover:bg-bg-tri rounded-lg  transition-colors" >
             <X size={24} />
           </button>
         </div>
 
-        <div className="h-1 bg-gray-200">
+        <div className="h-1 bg-bg-sec">
           <div className="h-full bg-blue-600 transition-all duration-300" style={{ width: `${progress}%` }}></div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6 leading-relaxed">{currentQuestion.questionText}</h3>
+        <div className="flex-1 overflow-y-auto p-6 text-text-sec bg-bg-sec">
+          <h3 className="text-xl font-semibold text-text-pri mb-6 leading-relaxed">{currentQuestion.questionText}</h3>
 
           <div className="space-y-3">
             {currentQuestion.options.map((option, idx) => {
@@ -144,7 +153,7 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
               const isCorrect = idx === currentQuestion.correctAnswerIndex;
               const showFeedback = selectedAnswer !== null;
               
-              let borderColor = 'border-gray-200';
+              let borderColor = 'border-border-sec';
               let bgColor = '';
               let showIcon = false;
               let iconColor = '';
@@ -174,13 +183,21 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
                   key={idx} 
                   onClick={() => handleSelectAnswer(idx)} 
                   disabled={selectedAnswer !== null}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all ${borderColor} ${bgColor} ${selectedAnswer !== null ? 'cursor-default' : 'hover:border-blue-300 hover:bg-gray-50'}`}
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all 
+                    ${borderColor} ${bgColor} ${selectedAnswer !== null ? 'cursor-default' : 
+                    'hover:border-blue-300 hover:bg-bg-pri/50'}`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm flex-shrink-0 ${showFeedback && isCorrect ? 'bg-green-600 text-white' : showFeedback && isSelected && !isCorrect ? 'bg-red-600 text-white' : isSelected && !showFeedback ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
+                  <div className="flex items-center gap-3 ">
+                    {/* options A B C D */}
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm flex-shrink-0 
+                        ${showFeedback && isCorrect ? 'bg-green-600 text-white' :
+                        showFeedback && isSelected && !isCorrect ? 'bg-red-600 text-white' :
+                        isSelected && !showFeedback ? 'bg-blue-600 text-white' :
+                        'bg-gray-200 text-gray-700'}`}>
                       {String.fromCharCode(65 + idx)}
                     </div>
-                    <span className="text-gray-900 font-medium flex-1">{option}</span>
+                    {/* actual otpion */}
+                    <span className=" font-medium flex-1 ">{option}</span>
                     {showFeedback && (isCorrect || (isSelected && !isCorrect)) && (
                       <div className={iconColor}>
                         {icon}
@@ -193,12 +210,18 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
           </div>
         </div>
 
-        <div className="border-t border-gray-200 p-4 flex justify-between items-center bg-gray-50">
-          <button onClick={handlePrevious} disabled={currentIndex === 0} className="px-4 py-2 text-gray-700 hover:bg-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent rounded-lg transition-colors flex items-center gap-2 font-medium disabled:cursor-not-allowed">
+        <div className="border-t border-border-sec p-4 flex justify-between items-center text-text-pri">
+          <button onClick={handlePrevious} disabled={currentIndex === 0} 
+            className="px-4 py-2 bg-bg-sec text-text-sec hover:bg-bg-tri
+               disabled:bg-bg-sec disabled:text-text-sec/50 disabled:hover:bg-transparent
+              rounded-lg transition-colors flex items-center gap-2 font-medium disabled:cursor-not-allowed">
             <ChevronLeft size={18} />
             Previous
           </button>
-          <button onClick={handleNext} disabled={selectedAnswer === null} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-lg transition-colors flex items-center gap-2 font-medium shadow-sm disabled:cursor-not-allowed">
+          <button onClick={handleNext} disabled={selectedAnswer === null} 
+            className="px-6 py-2 bg-blue-600 text-text-pri hover:bg-blue-700 
+              disabled:bg-bg-sec disabled:text-text-sec disabled:hover:bg-transparent
+              rounded-lg transition-colors flex items-center gap-2 font-medium shadow-sm disabled:cursor-not-allowed">
             {currentIndex === totalQuestions - 1 ? 'Finish' : 'Next'}
             <ChevronRight size={18} />
           </button>
