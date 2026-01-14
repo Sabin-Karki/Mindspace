@@ -130,7 +130,7 @@ const AllChats = ({ searchQuery }: AllChatsProps) =>{
       filteredSessions.map((session) => (
         <div key={session.sessionId} 
           className="w-48 h-48 flex flex-col justify-between rounded-xl border border-border-pri p-5 text-left shadow-sm transition
-           hover:shadow-md hover:bg-bg-pri hover:bg-bg-tri focus:outline-none">
+           hover:shadow-md hover:bg-bg-tri focus:outline-none">
           
           <button className="flex flex-col gap-1 text-left h-full" onClick={() => handleChatClick(session.sessionId, session.title)}> 
             <h3 className="text-text-pri font-semibold text-sm line-clamp-4">{session.title}</h3>
@@ -141,8 +141,7 @@ const AllChats = ({ searchQuery }: AllChatsProps) =>{
           <div className="relative flex flex-col items-end justify-end">
             <button 
               onClick={ () => handleShowMenu(session.sessionId) } 
-              className=" flex-center w-8 h-8 text-xl  hover:text-text-pri hover:bg-bg-pri -mr-2
-                border border-border-pri rounded-full ">
+              className="flex-center w-8 h-8 text-xl text-gray-600 hover:text-amber-600 -mr-2 hover:bg-gray-100 border border-border-pri rounded-full">
               &#x22EE;
             </button> 
             

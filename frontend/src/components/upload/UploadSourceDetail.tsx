@@ -103,7 +103,7 @@ return (
           { !isLeftPanelClose && (
             <button 
               onClick={ () => handleShowMenu(source.sourceId) } 
-              className="mx-1 flex-center three-dots bg-bg-tri/50 text-text-pri text-xl">
+              className="mx-1 flex-center w-7 h-7 hover:text-gray-500  bg-bg-tri/50 text-text-pri text-xl">
               &#x22EE;
             </button>
           )} 
