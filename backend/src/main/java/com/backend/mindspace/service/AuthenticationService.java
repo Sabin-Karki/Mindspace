@@ -47,6 +47,8 @@ public class AuthenticationService {
         var jwt = jwtService.generateToken(user);
         var response = new JwtAuthenticationResponse();
         response.setToken(jwt);
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
         return response;
     }
 }
