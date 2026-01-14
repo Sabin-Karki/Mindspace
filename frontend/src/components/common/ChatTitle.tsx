@@ -52,7 +52,7 @@ const ChatTitle = () =>{
     <>
     <div className="mx-6">
       <input type="text"   value={localTitle} onChange={handleChatTitle} onKeyDown={handleKeyDown} onBlur={handleBlur}
-        className="flex-grow p-2  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 "/>
+        className="input-sec "/>
       
       { error && <span className="text-red-500">{error}</span>}
     </div>

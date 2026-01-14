@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { IReportResponse } from "../../../types";
 import Modal from "react-modal";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
-import { getReportById } from "../../../api/reportApi";
+import { X } from "lucide-react";
 
 interface ReportCardPopupProps {
   reportId: number;
@@ -18,28 +18,10 @@ const ReportCardPopup = ( {reportId, closeModal, report, handleUpdateReportCardN
   
   const [localReportCardName, setLocalReportCardName] = useState(report.title || "");
 
-  //no need to fetch again 
-  //we have full data of report already
-  // const [cardDetails, setCardDetails] = useState<IReportResponse>();
-  // //fetching specific report card using cardId 
-  // useEffect(() =>{
-  //   const getReportCard = async(cardId: number) =>{
-  //     try {
-  //       //get full reportcard response
-  //       const response: IReportResponse = await getReportById(reportId);
-  //       console.log(response);
-  //       setCardDetails(response);
-    
-  //     } catch (error: any) {
-  //       const serverMessage = error?.response?.data?.message;
-  //       const axiosMessage = error?.message;
-  //       const message = serverMessage || axiosMessage || "Failed to get reportcard details. Please try again.";
-  //       toast.error(message);
-  //     }
-  //   }
-  //   getReportCard(reportId);
-  // },[]);
-  
+  const handleBlur = () => {
+    setLocalReportCardName(localReportCardName);
+    closeModal();
+  };
 
   const handleChangeCardName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalReportCardName(e.target.value);
@@ -53,19 +35,26 @@ const ReportCardPopup = ( {reportId, closeModal, report, handleUpdateReportCardN
   
   return (
     <>
+    <div className="fixed inset-0 bg-black/50 flex-center p-4 z-50">
     <div onClick={(e) => e.stopPropagation()} 
-      // flex flex-col: Stacks the Header, Content, and Footer vertically.
-      className="bg-gray-800 rounded-lg p-4 w-full h-96 flex flex-col text-white" >
+      className="bg-bg-sec text-text-sec rounded-2xl w-full max-w-2xl h-[600px] flex flex-col shadow-xl" >
       
-      <div  className="flex justify-between items-center p-2">
+      <div  className="flex justify-between items-center p-4 border-b border-border-sec">
         <div>
           <input type="text" 
             value={localReportCardName} 
             onChange={handleChangeCardName} 
             onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
+            className='input-pri '
+            placeholder="Set name..."
             />
         </div>
-        <button onClick={closeModal} className="text-xl">&times;</button>
+        <button
+            onClick={closeModal}
+            className="p-2 bg-bg-sec hover:bg-bg-tri rounded-lg  transition-colors" >
+            <X size={24} />
+          </button>
       </div>
       
       {/* flex-1: Tells this div to expand and fill ALL available empty space.
@@ -79,6 +68,7 @@ const ReportCardPopup = ( {reportId, closeModal, report, handleUpdateReportCardN
         </ReactMarkdown>
       </div>
 
+    </div>
     </div>
     </>
   )

@@ -32,11 +32,14 @@ interface RenameQuizOverviewProps{
     }
 
     return(
-        <>
-        <input type="text" onClick={(e)=>e.stopPropagation()} value={localQuizTitle} onChange={handleChangeQuizTitle} onKeyDown={handleKeyDown} onBlur={handleBlur}
-        className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        autoFocus />
-        </>
+        <input type="text" onClick={(e)=>e.stopPropagation()}
+            value={localQuizTitle}
+            onChange={handleChangeQuizTitle}
+            onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
+            className="input-pri"
+            autoFocus 
+        />
     )
 }
 export default RenameQuizOverview;

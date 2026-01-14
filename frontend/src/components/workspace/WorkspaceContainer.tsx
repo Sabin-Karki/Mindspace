@@ -201,7 +201,7 @@ const WorkspaceContainer = () =>{
       ref={containerRef}>
       {/* first content panel */}
       <div
-        className="overflow-auto"
+        className="bg-bg-sec overflow-auto"
         // className="overflow-auto"
         style={{ width: `${panel1}%` }}>
           <UploadPanel 
@@ -213,13 +213,13 @@ const WorkspaceContainer = () =>{
       <div 
         onMouseDown={() => handleMouseDown("dragpos1")}
         title="Drag to resize" 
-        className="p-0 m-0 w-2 cursor-col-resize bg-gray-400 h-full hover:bg-gray-500">
+        className="w-2.5 cursor-col-resize bg-bg-tri h-full hover:bg-bg-tri ">
       </div>
 
 
       {/* another content panel */}
       <div
-        className="bg-gray-100 border-gray-300 overflow-auto scrollbar-hide "
+        className="bg-bg-sec overflow-auto"
         style={{ width: `${panel2}%` }}>
           <ChatWindow />
       </div>
@@ -228,12 +228,12 @@ const WorkspaceContainer = () =>{
       <div 
         onMouseDown={() => handleMouseDown("dragpos2")}
         title="Drag to resize" 
-        className="w-2 cursor-col-resize bg-gray-400 h-full hover:bg-gray-500">
+        className="w-2.5 cursor-col-resize bg-bg-tri h-full hover:bg-bg-tri">
       </div>
 
       { /* another content panel */}
       <div
-        className="bg-gray-100 border-gray-300 overflow-auto "
+        className="bg-bg-sec overflow-auto "
         style={{ width: `${panel3}%` }}>
           <StudioPanel 
             closeRightSideBar={closeRightSideBar}

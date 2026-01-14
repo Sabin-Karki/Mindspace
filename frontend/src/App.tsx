@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import { toast, Toaster } from 'sonner';
 import { useAuthStore } from './store/authStore';
 import { useEffect } from 'react';
+import { useThemeStore } from './store/useThemeStore';
 
 
 //middleware to check if user is authenticated or not
@@ -31,13 +32,15 @@ const ProtectedRoute = ( {isAuthenticated}: {isAuthenticated: boolean} ) => {
 }
 
 
+
 const App = () => {
 
   const token = useAuthStore((state) => state.token);
+  const theme = useThemeStore((state) => state.theme);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50"> 
-    <Toaster position="top-left" richColors={true} expand={false} theme='light' closeButton={true} />
+    <div className="h-screen flex flex-col bg-bg-pri"> 
+    <Toaster position="top-left" richColors={true} expand={false} theme={theme} closeButton={true} />
      <Navbar /> 
       <main className="flex-1 overflow-y-auto "> 
         <Routes>

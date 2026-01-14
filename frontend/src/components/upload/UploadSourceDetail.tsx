@@ -67,7 +67,7 @@ return (
   // vertical
   <div
     key={source.sourceId}
-    className=" flex flex-col py-2 hover:bg-white-700 rounded-md px-1 "
+    className=" flex flex-col py-2 hover:bg-bg-tri rounded-md px-1 "
     onClick={() => handleTitleClick(source.sourceId)} >
 
     {/* //horizontal */}
@@ -75,7 +75,7 @@ return (
 
       {/* clickable title */}
       {/*in parent min-w-0 so it allow shrinking (turncate) */}
-      <div className="relative flex items-center cursor-pointer  font-medium min-w-0 flex-1" title={source.title} >
+      <div className="relative flex items-center cursor-pointer font-medium min-w-0 flex-1" title={source.title} >
 
         <span className={expandedSourceId === source.sourceId ? "rotate-90 transition-transform" : "transition-transform"}>
           <CircleChevronRight />
@@ -99,11 +99,11 @@ return (
         {/* if left panel not close then show  */}
         {/* menu options for delete and rename*/} 
         
-        <div className=" flex-center" onClick={(e) => e.stopPropagation()} >
+        <div className=" flex-center " onClick={(e) => e.stopPropagation()} >
           { !isLeftPanelClose && (
             <button 
               onClick={ () => handleShowMenu(source.sourceId) } 
-              className="flex-center three-dots">
+              className="mx-1 flex-center three-dots bg-bg-tri/50 text-text-pri text-xl">
               &#x22EE;
             </button>
           )} 
@@ -114,12 +114,12 @@ return (
             <div onClick={ (e) =>{ e.stopPropagation(); handleHideMenu(); }} className="fixed inset-0 z-10" ></div> 
               
             {/* actual options  */}
-            <div className="absolute right-0 top-8 z-20 w-32 bg-white rounded shadow-lg border border-gray-100">
+            <div className="absolute right-0 top-8 z-20 w-32 bg-bg-sec rounded shadow-lg border border-border-sec">
               <button onClick={() => {
                 openDeleteModal();
                 handleHideMenu();
                 }} 
-                className="w-full text-left p-2 text-sm text-red-600 hover:bg-gray-100">
+                className="w-full text-left p-2 text-m text-red-600 hover:bg-bg-tri">
                 Delete
               </button>
 
@@ -127,7 +127,7 @@ return (
                 openRenameModal(); 
                 handleHideMenu();
                 }} 
-                className="w-full text-left p-2 text-sm text-gray-800 hover:bg-gray-100"> 
+                className="w-full text-left p-2 text-m text-text-sec hover:bg-bg-tri"> 
                 Rename
               </button>
             </div>
@@ -145,7 +145,7 @@ return (
           type="checkbox"
           onChange={ () => {handleSelectSource(source.sourceId)} }
           checked={selectedSourceIds.includes(source.sourceId)}//checked or not
-          className="form-checkbox h-5 w-5 rounded cursor-pointer accent-gray-200 hover:accent-gray-200 " 
+          className="form-checkbox h-5 w-5 rounded cursor-pointer accent-green-300 hover:accent-green-300 " 
         />
       </div>
 
@@ -154,7 +154,7 @@ return (
     <div className="flex-center">
       {/* Expanded Summary - positioned outside the main flex container for proper flow */}
       {expandedSourceId === source.sourceId && (
-        <p className="text-sm  mt-1 p-2 bg-gray-100 rounded-md w-full">
+        <p className="text-sm  mt-1 p-2 bg-bg-sec rounded-md w-full">
           {source.summary}
         </p>
       )}

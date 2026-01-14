@@ -123,10 +123,11 @@ const ChatWindow: React.FC = () => {
 
 return (
   <>
-    <div className="flex flex-col h-screen">
-      <div className="p-2 border-b">
+    <div className=" flex flex-col bg-bg-pri text-text-pri text-m relative min-h-[calc(100vh-50px)] "> 
+      
+      <div className="p-1 border-b border-border-pri">
         <h2>Chat</h2>
-        {sessionId && <p>Session: {sessionId}</p>}
+        {/* {sessionId && <p>Session: {sessionId}</p>} */}
         {error && (
           <div>
             <p>Error: {error}</p>
@@ -151,16 +152,17 @@ return (
         )}
         <div ref={messagesEndRef} />
       </div>
-      
+
       {/* input box */}
-     
+      <div className="">
         <ChatInput 
           handleSendMessage={handleSendMessage}
-        />
-     
+          />
+      </div>
+
     </div>
   </>
-)
+  )
 };
 
 
@@ -168,3 +170,4 @@ export default ChatWindow;
 
 
 
+// min-h-[calc(100vh-40px)]

@@ -4,8 +4,7 @@ const Workspace = () =>{
 
 return(
   <>
-    <div className="flex h-full w-full border-4 border-gray-400
-      scrollbar-hide">  
+    <div className="flex h-full w-full scrollbar-hide">  
       <WorkspaceContainer />
     </div>
   </>

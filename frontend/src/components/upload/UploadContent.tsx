@@ -172,7 +172,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
   return (
   <>
   <div onClick={onClose} className="fixed inset-0 bg-black/50  flex items-center justify-center z-50">
-  <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg p-4 w-full max-w-md text-gray-700 text-m" >
+  <div onClick={(e) => e.stopPropagation()} className="bg-bg-pri rounded-lg p-4 w-full max-w-md text-text-pri text-m" >
 
     {error && (
       <div style={{ color: 'red', border: '1px solid red', padding: '10px', marginBottom: '15px' }}>
@@ -250,7 +250,7 @@ const UploadContent = ( {onClose} : {onClose: () => void} ): any => {
   {/* when user is dragging file show Full-screen drag overlay */}
     {isDragging && (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] pointer-events-none">
-      <div className="text-white text-3xl border-4 border-dashed border-white rounded-lg p-16 bg-black/40">
+      <div className="text-text-pri text-3xl border-4 border-dashed border-border-pri rounded-lg p-16 bg-black/40">
         <p className="font-bold" >Drop files here</p>
       </div>
     </div>

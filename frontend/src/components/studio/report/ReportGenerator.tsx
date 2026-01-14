@@ -58,8 +58,8 @@ const ReportGenerator = () => {
   }
 
   return (
-    <div className="group purple-card">
-      <div onClick={handleGenerateReport} className="p-2 bg-purple-100 group-hover:bg-purple-200 rounded-lg transition-colors">
+    <div className="group purple-card p-2">
+      <div onClick={handleGenerateReport} title="Generate Report" className="">
         <Newspaper size={18} className="text-purple-600" />
         { !isRightPanelClose &&
           <div  text-xs font-semibold text-pink-900 mb-1>Report</div>

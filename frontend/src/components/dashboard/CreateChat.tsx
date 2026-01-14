@@ -50,23 +50,25 @@ const CreateChat = () =>{
   <>
     <div 
       onClick={handleCreateChat}
-      className={`w-48 h-48 px-2 flex flex-col justify-center items-center rounded-xl bg-white shadow-lg border border-gray-200 text-gray-800 transition duration-200 ease-in-out ${isLoading || error ? 'cursor-not-allowed opacity-60' : 'hover:bg-gray-50 cursor-pointer'}`}
+      className={`w-48 h-48 px-2 flex flex-col justify-center items-center rounded-xl bg-bg-pri shadow-lg
+        border-2 border-border-pri text-text-pri transition duration-200 ease-in-out 
+        ${isLoading || error ? 'cursor-not-allowed opacity-60' : 'hover:bg-bg-tri cursor-pointer'}`}
     >
       <button
         disabled={isLoading || !!error}
         className="flex flex-col justify-center items-center"
       >
         <div 
-          className={`w-16 h-16 rounded-full flex justify-center items-center mb-4 transition-all duration-200 ${isLoading ? 'bg-gray-200 animate-pulse' : 'bg-pink-500 hover:bg-pink-600'}`}
+          className={`w-16 h-16 rounded-full flex-center mb-4 transition-all duration-200 ${isLoading ? 'bg-bg-pri animate-pulse' : 'bg-bg-pri hover:bg-bg-pri'}`}
         >
           {isLoading ? (
-            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-5 h-5 border-2 border-border-pri border-t-transparent rounded-full animate-spin"></div>
           ) : (
-            <span className="text-3xl font-light text-white leading-none">+</span>
+            <span className="text-3xl font-light leading-none">+</span>
           )}
         </div>
 
-        <p className="text-xl text-gray-700 font-medium">
+        <p className="text-xl text-text-sec font-medium">
           {isLoading ? 'Creating Session...' : 'Create new notebook'}
         </p>
       </button>

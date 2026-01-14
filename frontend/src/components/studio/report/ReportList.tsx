@@ -52,13 +52,13 @@ const ReportList = () => {
 
   if(!isExpanded){
     return (
-      <div onClick={ handleExtendList } className="group purple-card">
+      <div onClick={ handleExtendList } className="group purple-hover font-medium text-purple-600">
         <div className="flex items-center justify-between p-2 bg-purple-100 group-hover:bg-purple-200 rounded-lg transition-colors">
-          <Newspaper size={18} className="text-purple-600" />
+          <Newspaper size={18} />
           { !isRightPanelClose && 
-            <span className="font-medium text-purple-600">{reports.length<=1? "Report":"Reports"} </span> 
+            <span >{reports.length<=1? "Report":"Reports"} </span> 
           }
-          <span className='px-1 text-purple-500 '>{reports.length}</span>
+          <span className='px-1 '>{reports.length}</span>
         </div>
       </div>
     )
@@ -68,15 +68,20 @@ const ReportList = () => {
   <>
     { reports.length === 0 ? (
       <>
-      <div onClick={ handleCloseList } className="purple-hover ">
-        <button className="text-purple-500"> &lt; Back </button>
-        <div className="font-normal text-purple-600 ">No reports found</div>
+      <div onClick={ handleCloseList } className="purple-hover font-medium text-purple-600">
+        <button > &lt; Back </button>
+        <div >No reports found</div>
       </div>
       </>
     ): (
       <>
-        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="purple-hover" >
-          <button className="text-purple-600"  > &lt; Back </button>
+        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} }
+          className="purple-hover grid grid-cols-3 p-4 items-center font-medium text-purple-600" >
+          <button > &lt; Back </button>
+          <span className="text-center ">
+            {reports.length<=1? "Report":"Reports"}
+          </span>
+          <div></div>
         </div>
         {reports.map( (report) =>(
           <ReportGet 

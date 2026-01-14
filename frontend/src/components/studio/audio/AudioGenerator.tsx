@@ -61,8 +61,8 @@ const AudioGenerator = () =>{
     {/* show some kind of loading when generating  */}
     {/* show some kind of loading when generating  */}
     {/* show some kind of loading when generating  */}
-    <div className="group green-card">
-        <div onClick={handleGenerateAudio} className="p-2 bg-green-100 group-hover:bg-green-200 rounded-lg transition-colors">
+    <div className="group green-card p-2">
+        <div onClick={handleGenerateAudio} title="Generate Audio" className="">
           <Music size={18} className="text-green-600" />
           { !isRightPanelClose &&
             <div  text-xs font-semibold text-pink-900 mb-1>Audio</div>

@@ -51,13 +51,13 @@ const QuizList = () => {
 
   if(!isExpanded){
     return (
-    <div onClick={ handleExtendList } className="group blue-card">
+    <div onClick={ handleExtendList } className="group blue-hover text-blue-600 font-medium ">
         <div className="flex items-center justify-between  p-2 bg-blue-100 group-hover:bg-blue-200 rounded-lg transition-colors">
-          <FileQuestion size={18} className="text-blue-600" />
+          <FileQuestion size={18} />
           { !isRightPanelClose && 
-            <span className="font-medium text-blue-500">{quizzes.length<=1? "Quiz":"Quizzes"} </span>
+            <span >{quizzes.length<=1? "Quiz":"Quizzes"} </span>
           }
-          <span className='px-1 text-blue-500 '>{quizzes.length}</span>
+          <span className='px-1'>{quizzes.length}</span>
         </div>
     </div>
     )
@@ -67,15 +67,20 @@ const QuizList = () => {
     <>
         { quizzes.length === 0 ? (
         <> 
-        <div onClick={ handleCloseList } className="blue-hover">
-          <button className="text-blue-500"  > &lt; Back </button>
-          <div className="font-normal text-blue-600">No quizzes found</div>
+        <div onClick={ handleCloseList } className=" blue-hover font-medium text-blue-600">
+          <button > &lt; Back </button>
+          <div >No quizzes found</div>
         </div>
         </>
         ): (
         <>
-            <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="blue-hover">
-                <button className="text-blue-500" > &lt; Back </button>
+            <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } 
+              className="grid grid-cols-3 blue-hover  p-4 items-center font-medium text-blue-600">
+                <button > &lt; Back </button>
+                <span className=" text-center">
+                  {quizzes.length<=1? "Quiz":"Quizzes"}
+              </span>
+                <div></div>
             </div>
             {quizzes.map( (quiz) =>(
             <QuizGet

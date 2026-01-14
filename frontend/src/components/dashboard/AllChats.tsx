@@ -125,23 +125,24 @@ const AllChats = ({ searchQuery }: AllChatsProps) =>{
   return (
   <>
     {filteredSessions.length === 0 ? (
-      <div className="p-4 text-center text-gray-500">No notebooks found matching your search.</div>
+      <div className="p-4 text-center text-text-pri">No notebooks found matching your search.</div>
     ) : (
       filteredSessions.map((session) => (
         <div key={session.sessionId} 
-          className="w-48 h-48 flex flex-col justify-between rounded-xl border border-pink-300 p-5 text-left shadow-sm transition hover:shadow-md hover:border-pink-400 hover:bg-pink-50 focus:outline-none">
+          className="w-48 h-48 flex flex-col justify-between rounded-xl border border-border-pri p-5 text-left shadow-sm transition
+           hover:shadow-md hover:bg-bg-pri hover:bg-bg-tri focus:outline-none">
           
           <button className="flex flex-col gap-1 text-left h-full" onClick={() => handleChatClick(session.sessionId, session.title)}> 
-            <h3 className="font-semibold text-gray-900 text-sm line-clamp-4">{session.title}</h3>
-            <span className="text-xs text-gray-500 mt-auto">{new Date(session.createdAt).toLocaleDateString()}</span>
+            <h3 className="text-text-pri font-semibold text-sm line-clamp-4">{session.title}</h3>
+            <span className="text-text-pri text-xs  mt-auto">{new Date(session.createdAt).toLocaleDateString()}</span>
           </button>
 
           {/* menu options : for delete and rename */}
           <div className="relative flex flex-col items-end justify-end">
             <button 
               onClick={ () => handleShowMenu(session.sessionId) } 
-              className=" flex-center w-8 h-8 text-xl text-gray-600 hover:text-amber-600 -mr-2
-                 border border-gray-300 rounded-full hover:bg-gray-100">
+              className=" flex-center w-8 h-8 text-xl  hover:text-text-pri hover:bg-bg-pri -mr-2
+                border border-border-pri rounded-full ">
               &#x22EE;
             </button> 
             
@@ -150,7 +151,7 @@ const AllChats = ({ searchQuery }: AllChatsProps) =>{
               {/* this is invisible div if user click outside menu options they click here which hides the menu options */}
               <div onClick={ (e) =>{ e.stopPropagation(); handleHideMenu(); }} className="relative z-10" > </div>
               {/* actual options */}
-              <div className="absolute right-0 z-20 w-32 top-10 bg-white rounded shadow-lg border border-gray-100">
+              <div className="absolute right-0 z-20 w-32 top-10 bg-bg-pri rounded shadow-lg border border-border-pri">
                 
                 <button onClick={() => {
                   handleShowRenameModal(); 
@@ -158,7 +159,7 @@ const AllChats = ({ searchQuery }: AllChatsProps) =>{
                   handleSelectSession(session.sessionId);
                   handleSelectLocalChatTitle(session.title);
                   }} 
-                  className="w-full text-left p-4 text-m text-gray-800 hover:bg-gray-100"> 
+                  className="w-full text-left p-4 text-m text-text-pri hover:bg-bg-tri"> 
                   Rename
                 </button>
                 <button onClick={() => {
@@ -166,7 +167,7 @@ const AllChats = ({ searchQuery }: AllChatsProps) =>{
                   handleHideMenu();
                   handleSelectSession(session.sessionId);
                   }} 
-                  className="w-full text-left p-4 text-m text-red-600 hover:bg-gray-100">
+                  className="w-full text-left p-4 text-m text-red-600 hover:bg-bg-tri">
                   Delete
                 </button>
                 

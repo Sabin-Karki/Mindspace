@@ -26,7 +26,7 @@ const DeleteUpload = ( {sourceId, closeDeleteModal} :{sourceId : number, closeDe
   return (
     <>
       <div onClick={(e) => e.stopPropagation()}
-        className="bg-gray-800 rounded-lg p-4 w-full flex flex-col text-white" >
+        className="bg-bg-pri rounded-lg p-4 w-full flex flex-col text-text-pri" >
           
         <div className="p-4">Are you sure you want to delete this upload source?</div>
         <div className="flex justify-between items-center">

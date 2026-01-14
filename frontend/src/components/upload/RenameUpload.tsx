@@ -42,7 +42,7 @@ const RenameUpload = ({handleUpdateUploadName, closeRenameModal, source}: Rename
       onBlur={handleBlur}
       onChange={handleChangeCardName}
       onKeyDown={handleKeyDown} 
-      className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 "
+      className="p-2 border border-border-tri rounded focus:outline-none focus:ring-2 focus:ring-blue-500 "
       autoFocus
       />
     </>

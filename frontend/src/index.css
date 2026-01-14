@@ -3,32 +3,66 @@
 /* hide all scroll bar globally */
 html, body, #root { 
   height: 100%;
-  overflow: hidden; /* THE KEY: Prevents browser-level scrolling */
+  overflow: hidden; /* Prevents browser-level scrolling */
 }
 
-/* @layer base{
+@layer base {
+  :root {
+    /* BACKGROUNDS */
+    --bg-pri: 255 255 255;
+    --bg-sec: 249 250 251;
+    --bg-tri: 243 244 246;
+    
+    /* TEXT */
+    --text-pri: 17 24 39;
+    --text-sec: 75 85 99;
+    --text-tri: 156 163 175;
+    
+    /* BORDERS */
+    --border-pri: 229 231 235;
+    --border-sec: 209 213 219;
 
-} */
+    
+  }
+
+  .dark {
+    --bg-pri: 17 24 39;
+    --bg-sec: 31 41 55;
+    --bg-tri: 55 65 81;
+    
+    --text-pri: 243 244 246;
+    --text-sec: 209 213 219;
+    --text-tri: 156 163 175;
+    
+    --border-pri: 55 65 81;
+    --border-sec: 75 85 99;
+  }
+
+  body {
+    background-color: rgb(var(--bg-pri));
+    color: rgb(var(--text-pri));
+  }
+}
 
 @layer components{
   .purple-card{
-   @apply cursor-pointer bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-1 hover:shadow-md transition-all;
+   @apply text-gray-800 cursor-pointer bg-gradient-to-br from-purple-300 to-purple-100 border border-purple-200 rounded-lg p-1 hover:shadow-md transition-all;
   }
   .green-card{
-    @apply cursor-pointer bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-1 hover:shadow-md transition-all;
+    @apply text-gray-800 cursor-pointer bg-gradient-to-br from-green-300 to-green-100 border border-green-200 rounded-lg p-1 hover:shadow-md transition-all;
   }
   .blue-card{
-    @apply cursor-pointer bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-1 hover:shadow-md transition-all;
+    @apply text-gray-800 cursor-pointer bg-gradient-to-br from-blue-300 to-blue-100 border border-blue-200 rounded-lg p-1 hover:shadow-md transition-all;
   }
   .pink-card{
-    @apply cursor-pointer  bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 rounded-lg p-1 hover:shadow-md transition-all;
+    @apply text-gray-800 cursor-pointer  bg-gradient-to-br from-pink-300 to-pink-100 border border-pink-200 rounded-lg p-1 hover:shadow-md transition-all;
   }
 
   .purple-hover{
-    @apply cursor-pointer  p-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors;
+    @apply cursor-pointer p-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors;
   }
   .green-hover{
-    @apply cursor-pointer  p-2 bg-green-100 hover:bg-green-200 rounded-lg transition-colors;
+    @apply cursor-pointer p-2 bg-green-100 hover:bg-green-200 rounded-lg transition-colors;
   }
   .blue-hover{
     @apply cursor-pointer p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors;
@@ -47,6 +81,12 @@ html, body, #root {
     @apply inline-flex items-center justify-center shrink-0 ; 
     @apply w-8 h-8 text-base text-gray-900 border border-gray-300 rounded-full hover:bg-gray-100 cursor-pointer;  
   } 
+  .input-pri {
+    @apply flex-grow p-1 text-xl bg-bg-pri text-text-pri border border-border-pri rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ;
+  }
+  .input-sec {
+    @apply flex-grow p-2 border border-border-pri rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500;
+  }
 }
 
 
@@ -56,3 +96,24 @@ html, body, #root {
     scrollbar-width: none;     /* For Firefox */
   }
 }
+
+/* Tailwind v4: Define custom colors using @theme */
+@theme {
+  --color-bg-pri: rgb(var(--bg-pri));
+  --color-bg-sec: rgb(var(--bg-sec));
+  --color-bg-tri: rgb(var(--bg-tri));
+  
+  --color-text-pri: rgb(var(--text-pri));
+  --color-text-sec: rgb(var(--text-sec));
+  --color-text-tri: rgb(var(--text-tri));
+  
+  --color-border-pri: rgb(var(--border-pri));
+  --color-border-sec: rgb(var(--border-sec));
+
+
+}
+
+
+/* //make for buttons */
+/* px-10 py-4 m-2 rounded-lg text-text-pri bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 */
+

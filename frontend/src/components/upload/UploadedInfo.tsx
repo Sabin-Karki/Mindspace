@@ -69,9 +69,9 @@ const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
 
   return (
     <>
-    <div className="bg-white p-2 rounded-lg text-gray-700 text-m">
+    <div className="bg-bg-sec text-text-pri p-2 rounded-lg text-m">
       {/* "Select all sources" Row */}
-      <div className="flex justify-between items-start mb-4 p-1 border-b border-gray-700">
+      <div className="flex justify-between items-start mb-4 p-1 border-b border-border-pri">
         <span className="font-semibold ">
           Select all
         </span>
@@ -79,7 +79,7 @@ const UploadedInfo = ({openLeftSideBar} :{ openLeftSideBar: ()=> void; }) => {
           type="checkbox"
           checked={isSelectAllChecked}  //this shows checked or not
           onChange={() => handleSelectAll()}
-          className="form-checkbox h-5 w-5 rounded cursor-pointer accent-gray-200 hover:accent-gray-200"
+          className="form-checkbox h-5 w-5 rounded cursor-pointer accent-green-300 hover:accent-green-300"
         />
       </div>
 

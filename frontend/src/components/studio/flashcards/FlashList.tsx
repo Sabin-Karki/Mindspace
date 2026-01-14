@@ -54,13 +54,13 @@ const FlashList = () => {
   if(!isExpanded){
     return (
       <>
-      <div onClick={ handleExtendList } className="group pink-card">
+      <div onClick={ handleExtendList } className="group pink-hover text-pink-600 font-medium">
           <div className="flex items-center justify-between p-2 bg-pink-100 group-hover:bg-pink-200 rounded-lg transition-colors"> 
-            <CreditCard size={18} className="text-pink-600" />
+            <CreditCard size={18}  />
               { !isRightPanelClose &&
-                <span className="font-medium text-pink-600"> {flashCards.length<=1?"Flashcard":"Flashcards"} </span>
+                <span > {flashCards.length<=1?"Flashcard":"Flashcards"} </span>
               }
-            <span className="px-1 text-pink-500"> {flashCards.length} </span>
+            <span className="px-1"> {flashCards.length} </span>
         </div>
       </div>
       </>
@@ -71,16 +71,22 @@ const FlashList = () => {
     <>
     { flashCards.length === 0 ? (
       <> 
-      <div onClick={ handleCloseList } className="pink-hover">
-        <button  className="text-pink-500"> &lt; Back </button>
-        <div className="font-normal text-pink-600">No flashcards found</div>
+      <div onClick={ handleCloseList } className="pink-hover font-medium text-pink-600">
+        <button> &lt; Back </button>
+        <div >No flashcards found</div>
       </div>
       </>
     ): (
       <>
-        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} } className="pink-hover">
-          <button className="text-pink-500"  > &lt; Back </button>
+        <div onClick={ (e) => {e.stopPropagation(); handleCloseList();} }
+          className="pink-hover grid grid-cols-3 p-4 items-center font-medium text-pink-600">
+          <button > &lt; Back </button>
+          <span className=" text-center">
+            {flashCards.length<=1?"Flashcard":"Flashcards"}
+          </span>
+          <div></div>
         </div>
+        
         {flashCards.map( (flashCard) =>(
           <FlashGet
             key={flashCard.cardOverViewId}

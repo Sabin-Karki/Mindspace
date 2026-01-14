@@ -35,8 +35,8 @@ const ChatInput = ({handleSendMessage }: ChatInputProps) => {
 
   return (
     <>
-    <div className="flex items-center  space-x-2 p-2 border-t border-gray-300">
-     <textarea
+    <div className="flex items-center space-x-2 p-2 border-t-2 border-border-pri ">
+      <textarea
           autoFocus
           value={localInput}
           onChange={handleInputChange}
@@ -49,7 +49,7 @@ const ChatInput = ({handleSendMessage }: ChatInputProps) => {
         <button onClick={() =>handleSendClick() }>
           Send
         </button>
-        </div>
+    </div>
     </>
   );
 };
