@@ -46,13 +46,13 @@ const Home = () => {
           <div className="m-10 flex justify-center space-y-4 text-xl font-semibold" >
             <Link
               to="/signup"
-              className="px-10 py-4 m-2 rounded-lg text-text-pri bg-green-600 hover:bg-green-700 transition duration-300 shadow-2xl shadow-green-500"
+              className="px-10 py-4 m-2 rounded-lg text-white bg-green-600 hover:bg-green-700 transition duration-300 shadow-2xl shadow-green-500"
             >
               Start Taking Notes
             </Link>
             <Link 
               to="/signin"
-              className="px-10 py-4 m-2 rounded-lg text-text-pri bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 "
+              className="px-10 py-4 m-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 "
             >
               Already a User? Sign In
             </Link>
@@ -62,21 +62,46 @@ const Home = () => {
         {/* Mockup/Feature Block (Visual Appeal) */}
         <div className="mt-20">
           <h2 className="text-3xl font-bold text-text-sec mb-8">Features Designed for Clarity</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+            <FeatureCard 
+              icon="📓" 
+              title="Smart Notebooks" 
+              description="Create organized notebooks to keep all your study materials and notes in one place."
+            />
+            <FeatureCard 
+              icon="📄" 
+              title="Upload Anything" 
+              description="Upload PDFs, Word documents, and text files as source materials for your learning."
+            />
+            <FeatureCard 
+              icon="💬" 
+              title="Chat with Materials" 
+              description="Have conversations with your source materials and get instant answers to your questions."
+            />
             <FeatureCard 
               icon="✨" 
-              title="Instant Summaries" 
-              description="Let the LLM condense pages of text into concise, actionable summaries."
+              title="AI-Powered Summaries" 
+              description="Generate concise summaries from lengthy documents to grasp key concepts quickly."
             />
             <FeatureCard 
-              icon="🧠" 
-              title="Contextual Drafts" 
-              description="Generate follow-up notes or expand on ideas with AI that understands your context."
+              icon="🎴" 
+              title="Flashcards" 
+              description="Auto-generate flashcards from your materials to memorize important information."
             />
             <FeatureCard 
-              icon="📂" 
-              title="Seamless Sync" 
-              description="Secure JWT authentication ensures your data is safe and accessible everywhere."
+              icon="📝" 
+              title="Interactive Quizzes" 
+              description="Test your knowledge with AI-generated quizzes and track your scores over time."
+            />
+            <FeatureCard 
+              icon="🎧" 
+              title="Audio Learning" 
+              description="Convert your notes and materials into audio format to learn on the go."
+            />
+            <FeatureCard 
+              icon="📊" 
+              title="Smart Reports" 
+              description="Get detailed reports and insights on your learning."
             />
           </div>
         </div>
