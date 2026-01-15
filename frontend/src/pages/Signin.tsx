@@ -46,7 +46,7 @@ const Signin = () => {
 
     try {
       const res: JwtResponse = await signin(form);
-      login(res.token);
+      login(res.token, res.firstName, res.lastName);
       navigate("/dashboard");
       toast.success("Login successful");
     } catch (err) {

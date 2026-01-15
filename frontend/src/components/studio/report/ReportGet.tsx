@@ -93,7 +93,7 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
         </div>
 
         {/* we only have 1 sources so not checking no. of sources*/}
-        <p>{report.sourceId.length ?? 0}</p>
+        {/* <p>{report.sourceId.length ?? 0}</p> */}
         
         {/* menu options */}
         {!isRightPanelClose &&(
@@ -104,7 +104,7 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
           </button>
         )}
       </div>
-      
+    
       {openMenuId === report.reportId && (
         <>
 
@@ -125,6 +125,8 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
         </div>
         </>
       )}
+      
+    </div>
 
       {/* Delete Modal */}
       <Modal
@@ -143,8 +145,8 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal} //press esc to close
-        overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
-        className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" 
+        overlayClassName="fixed inset-0 bg-white/50 flex items-center justify-center z-50" 
+        className=" outline-none w-full max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" 
       >
         <ReportCardPopup 
           reportId={report.reportId}
@@ -154,7 +156,7 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
         />
       </Modal>
 
-    </div>
+    
     </>
   )
 }

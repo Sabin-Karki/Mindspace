@@ -72,6 +72,8 @@ export interface ISourceUpdateDTO {
 
 export interface JwtResponse {
   token: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface IAudioResponseDTO {

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import type { IReportResponse } from "../../../types";
-import Modal from "react-modal";
 import ReactMarkdown from "react-markdown";
-import { toast } from "sonner";
 import { X } from "lucide-react";
+import Modal from 'react-modal';
+
+Modal.setAppElement("#root");
 
 interface ReportCardPopupProps {
   reportId: number;
@@ -35,10 +36,8 @@ const ReportCardPopup = ( {reportId, closeModal, report, handleUpdateReportCardN
   
   return (
     <>
-    <div className="fixed inset-0 bg-black/50 flex-center p-4 z-50">
-    <div onClick={(e) => e.stopPropagation()} 
-      className="bg-bg-sec text-text-sec rounded-2xl w-full max-w-2xl h-[600px] flex flex-col shadow-xl" >
-      
+    <div className="bg-bg-sec text-text-sec rounded-2xl flex flex-col shadow-xl" >
+
       <div  className="flex justify-between items-center p-4 border-b border-border-sec">
         <div>
           <input type="text" 
@@ -68,7 +67,6 @@ const ReportCardPopup = ( {reportId, closeModal, report, handleUpdateReportCardN
         </ReactMarkdown>
       </div>
 
-    </div>
     </div>
     </>
   )

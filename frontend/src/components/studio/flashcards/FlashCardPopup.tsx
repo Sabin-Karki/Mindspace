@@ -94,8 +94,7 @@ const FlashCardPopup = ({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-bg-pri rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-bg-pri p-4 rounded-2xl overflow-hidden flex flex-col shadow-2xl">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-border-sec">
           <div >
@@ -170,8 +169,7 @@ const FlashCardPopup = ({
             {/* Controls */}
             <div className="flex-center gap-10">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   handlePrev();
                 }}
                 disabled={currentIndex === 0}
@@ -181,8 +179,7 @@ const FlashCardPopup = ({
               </button>
 
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   handleNext();
                 }}
                 disabled={currentIndex === cardDetails.length - 1}
@@ -194,21 +191,7 @@ const FlashCardPopup = ({
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
 export default FlashCardPopup;
-//notes 
-  // return (
-  //   <>
-  //     <div onClick={closeModal} className="fixed inset-0 bg-black/50  flex items-center justify-center z-50">
-  //     <div onClick={(e) => e.stopPropagation()} className="bg-gray-800 rounded-lg p-4 w-full max-w-md text-white" >
-      
-  //       {/* {currentCard.cardId} */}
-  //       {currentCard.question}
-  //       {currentCard.answer}
-  //       </div>
-  //     </div>
-  //   </>
-  // )

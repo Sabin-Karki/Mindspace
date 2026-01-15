@@ -134,7 +134,11 @@ interface QuizProps {
         </div>
 
         
-        <p >{quiz.sourceId.length ?? 0 }</p>
+        {/* {quiz.sourceId.length > 0 && (
+          <span className="font-light text-xs text-blue-700 ">
+            {quiz.sourceId.length} {quiz.sourceId.length === 1 ? 'source' : 'sources'}
+          </span>
+        )} */}
         
         {!isRightPanelClose &&(
           <button onClick={(e) => { e.stopPropagation(); handleShowMenu(quiz.quizId); }} 
@@ -147,7 +151,7 @@ interface QuizProps {
       {openMenuId === quiz.quizId && (
       <>
         <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); handleHideMenu(); }}></div>
-
+        
         <div className="absolute top-10 right-0 z-20 w-32 rounded shadow-lg bg-bg-sec border border-border-pri">
 
           <button onClick={(e) => { e.stopPropagation(); openDeleteModal(); handleHideMenu(); }} 
@@ -180,7 +184,7 @@ interface QuizProps {
       isOpen={isModalOpen}
       onRequestClose={closeModal} //press esc to close
       overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
-      className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" >
+      className=" outline-none w-full max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" >
       
       {specificQuiz && specificQuiz.questions && specificQuiz.questions.length > 0 ? (
         <QuizViewer

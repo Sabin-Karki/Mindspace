@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useSessionStore } from "../../store/sessionStore";
-import { renameChatTitle } from "../../api/chatApi";
+import { useSessionStore } from "../../../store/sessionStore";
+import { renameChatTitle } from "../../../api/chatApi";
 import { toast } from "sonner";
 
 const ChatTitle = () =>{

@@ -4,9 +4,14 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
-  login: (token: string) => void; 
+  login: (newToken: string, firstName?: string, lastName?: string) => void; 
   logout: () => void;
   hasHydrated: boolean;
+
+  firstName :string | null;
+  lastName :string | null;
+  setFirstName: (newName: string) => void;
+  setLastName: (newName: string) => void;
 }
 
 
@@ -17,24 +22,45 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isAuthenticated: false,
       hasHydrated: false,   //data hasnot loaded from local storage yet so false 
-      //login fn
-      login: (token: string) =>{
-        //set token and isAuthenticated true if there is token
-        set({ token, isAuthenticated: !!token });
-      },
 
-      //logout fn
-      logout : ()=>{
-        set({token: null, isAuthenticated: false });
-      }
+      firstName : null,
+      lastName : null,
+
+      //login fn
+      login: (newToken: string, firstName?: string, lastName?: string) => 
+        set( () => ({
+          token: newToken,
+          isAuthenticated: true,
+          firstName: firstName || null,
+          lastName: lastName || null,
+        })
+      ),
+
+      logout: () => 
+        set( () => ({
+          token: null,
+          isAuthenticated: false,
+          firstName: null,
+          lastName: null 
+          })
+      ),
+
+      setFirstName: (newName: string) => set(
+        () => ({firstName: newName, })
+      ),
+      setLastName: (newName: string) => set(
+        () => ({lastName: newName, })
+      ),
     }),
 
     {
       name: "auth-token-storage",
       storage: createJSONStorage( () => localStorage),
 
-      //only save token to local storage//
-      partialize: (state) =>({token: state.token}),
+      //save token and names
+      partialize: (state) =>({
+        token: state.token, firstName: state.firstName, lastName: state.lastName
+      }),
 
       // onRehydrateStorage It gives a place to run code after the localStorage data has successfully loaded.
       onRehydrateStorage:() =>{
@@ -54,7 +80,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }
 
-  ),
+  )
 );
 
 

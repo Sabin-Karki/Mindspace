@@ -50,7 +50,7 @@ const Signup = () => {
 
     try {
       const res = await signup(form);
-      login(res.token);
+      login(res.token, res.firstName, res.lastName);
       navigate("/dashboard");
       toast.success("Signup successful");
 

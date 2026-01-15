@@ -1,5 +1,5 @@
 import {  Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import Navbar from './components/common/Navbar';
+import {Navbar} from './components/common/index';
 import Home from './pages/Home';
 import Signin from './pages/Signin';
 import Signup from './pages/Signup';
@@ -48,7 +48,7 @@ const App = () => {
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
 
-          <Route element= { <ProtectedRoute isAuthenticated={!!token}/> } >
+          <Route element = { <ProtectedRoute isAuthenticated = {!!token}/> } >
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/chat" element={<ThreeWindowPanel />} />
           </Route>
