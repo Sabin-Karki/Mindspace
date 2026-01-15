@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { X, RotateCcw, ChevronLeft, ChevronRight, Check, X as XIcon } from 'lucide-react';
 import type { IQuizOverviewResponse } from '../../../types'
+import Modal from 'react-modal';
+
+Modal.setAppElement("#root");
 
 interface QuizViewerProps {
   quiz: IQuizOverviewResponse;
@@ -78,8 +81,7 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
 
   if (isFinished) {
     return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <div onClick={(e) => e.stopPropagation()} className="bg-bg-pri rounded-2xl w-full max-w-md shadow-xl">
+        <div className="bg-bg-pri rounded-2xl  shadow-xl">
           <div className="flex justify-between items-center p-6 border-b border-border-pri">
             <h2 className="text-2xl font-bold text-text-pri">Quiz Complete!</h2>
             <button onClick={onClose} className="text-text-sec hover:text-text-tri transition-colors">
@@ -115,13 +117,11 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
             </div>
           </div>
         </div>
-      </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div onClick={(e) => e.stopPropagation()} className="bg-bg-pri rounded-2xl w-full max-w-2xl h-[600px] flex flex-col shadow-xl">
+      <div  className="bg-bg-pri rounded-2xl flex flex-col shadow-xl">
         <div className="flex justify-between items-center p-6 border-b border-border-sec">
           <div className='flex '>
             <input type="text" 
@@ -227,7 +227,6 @@ export const QuizViewer = ({ quiz, onClose, handleUpdateQuizName }: QuizViewerPr
           </button>
         </div>
       </div>
-    </div>
   );
 };
 

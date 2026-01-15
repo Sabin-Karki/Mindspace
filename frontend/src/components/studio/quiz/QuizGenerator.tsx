@@ -30,10 +30,14 @@ const QuizGenerator = () =>{
         toast.error("No sources available. Please upload a source first to generate.");
         return;
       }
+      if(sources.length > 3){
+        toast.error("Please select only 3 documents.");
+        return;
+      }
       let sIds:number[] = [];
       if(selectedSourceIds.length === 0){
         //if nothing selected then get all source ids
-        const sourceIds = sources.map(s => s.sourceId);
+        const sourceIds = sources.slice(0,3).map(s => s.sourceId);
         sIds = sourceIds;
       }else{
         //if there is selected source ids then use it 

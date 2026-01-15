@@ -152,8 +152,8 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal} //press esc to close
-        overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
-        className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" 
+        overlayClassName="fixed inset-0 bg-white/50 flex-center z-50" 
+        className=" outline-none w-[95%] max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" 
       >
         <FlashCardPopup 
           cardId={flashCard.cardOverViewId}

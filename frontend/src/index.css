@@ -22,7 +22,10 @@ html, body, #root {
     --border-pri: 229 231 235;
     --border-sec: 209 213 219;
 
-    
+    --bg-pri-hov: 249 250 251;
+    --bg-sec-hov: 243 244 246;
+    --bg-tri-hov: 229 231 235;
+
   }
 
   .dark {
@@ -36,6 +39,11 @@ html, body, #root {
     
     --border-pri: 55 65 81;
     --border-sec: 75 85 99;
+
+    --bg-pri-hov: 31 41 55;
+    --bg-sec-hov: 55 65 81;
+    --bg-tri-hov: 75 85 99; 
+    
   }
 
   body {
@@ -110,7 +118,9 @@ html, body, #root {
   --color-border-pri: rgb(var(--border-pri));
   --color-border-sec: rgb(var(--border-sec));
 
-
+  --color-bg-pri-hov: rgb(var(--bg-pri-hov));
+  --color-bg-sec-hov: rgb(var(--bg-sec-hov));
+  --color-bg-tri-hov: rgb(var(--bg-tri-hov));
 }
 
 

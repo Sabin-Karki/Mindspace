@@ -50,7 +50,7 @@ const Signup = () => {
 
     try {
       const res = await signup(form);
-      login(res.token);
+      login(res.token, res.firstName, res.lastName);
       navigate("/dashboard");
       toast.success("Signup successful");
 
@@ -221,12 +221,12 @@ const Signup = () => {
             </button>
 
             {/* Terms */}
-            <p className="text-center text-xs text-text-tri pt-2">
+            {/* <p className="text-center text-xs text-text-tri pt-2">
               By signing up, you agree to our{' '}
               <a href="#" className="text-text-sec hover:text-blue-500 transition-colors">Terms</a>
               {' '}and{' '}
               <a href="#" className="text-text-sec hover:text-blue-500 transition-colors">Privacy Policy</a>
-            </p>
+            </p> */}
           </form>
         </div>
       </div>

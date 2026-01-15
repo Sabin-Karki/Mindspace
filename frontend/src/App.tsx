@@ -1,15 +1,10 @@
 import {  Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import Navbar from './components/common/Navbar';
-import Home from './pages/Home';
-import Signin from './pages/Signin';
-import Signup from './pages/Signup';
-import ThreeWindowPanel from './pages/Workspace';
-import Dashboard from './pages/Dashboard';
-import NotFound from './pages/NotFound';
 import { toast, Toaster } from 'sonner';
-import { useAuthStore } from './store/authStore';
 import { useEffect } from 'react';
-import { useThemeStore } from './store/useThemeStore';
+import { Dashboard, Home, NotFound, Signin, Signup } from './pages';
+import { useAuthStore, useThemeStore, } from './store/index';
+import {Navbar} from './components/common/index';
+import WorkspaceContainer from './components/workspace/WorkspaceContainer';
 
 
 //middleware to check if user is authenticated or not
@@ -48,9 +43,9 @@ const App = () => {
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
 
-          <Route element= { <ProtectedRoute isAuthenticated={!!token}/> } >
+          <Route element = { <ProtectedRoute isAuthenticated = {!!token}/> } >
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/chat" element={<ThreeWindowPanel />} />
+            <Route path="/chat" element={<WorkspaceContainer />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />

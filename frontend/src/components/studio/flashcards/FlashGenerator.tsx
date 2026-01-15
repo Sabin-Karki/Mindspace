@@ -31,10 +31,14 @@ const FlashGenerator = () => {
         toast.error("No sources available. Please upload a document first.");
         return;
       }
+      if(sources.length > 3){
+        toast.error("Please select only 3 documents.");
+        return;
+      }
       let sId:number[] = [];
       if(selectedSourceIds.length === 0){
-        //if nothing selected then get all source ids
-        const sourceIds = sources.map(s => s.sourceId);
+        //if nothing selected then get 3 source ids
+        const sourceIds = sources.slice(0,3).map(s => s.sourceId);
         sId = sourceIds;
       }else{
         //if there is selected source ids then use it 

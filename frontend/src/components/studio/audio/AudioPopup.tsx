@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { X } from "lucide-react";
 
 interface AudioCardPopupProps {
-  audioId: number;
   closeModal: () => void;
   audio: IAudioResponseDTO;
   handleUpdateAudioCardName: (input: string) => void;
@@ -13,7 +12,7 @@ interface AudioCardPopupProps {
 
 Modal.setAppElement("#root");
 
-const AudioCardPopup = ({ audioId, closeModal, audio, handleUpdateAudioCardName }: AudioCardPopupProps) => {
+const AudioCardPopup = ({ closeModal, audio, handleUpdateAudioCardName }: AudioCardPopupProps) => {
   
   const [localAudioCardName, setLocalAudioCardName] = useState(audio.title || "");
 
@@ -40,25 +39,25 @@ const AudioCardPopup = ({ audioId, closeModal, audio, handleUpdateAudioCardName 
   };
 
  return (
-  <div onClick={(e) => e.stopPropagation()} className="bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-xl p-6 w-full h-96 flex flex-col text-text-pri shadow-2xl border border-border-pri">
+  <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-xl p-6 w-full h-96 flex flex-col text-text-pri shadow-2xl border border-border-pri">
     
     {/* Header */}
-      <div  className="flex justify-between items-center p-4 border-b border-border-sec">
-        <div >
-          <input type="text" 
-            value={localAudioCardName}
-            onChange={handleChangeCardName} 
-            onKeyDown={handleKeyDown} 
-            onBlur={handleBlur}
-            placeholder="Audio title" 
-            className="input-pri" />
-        </div>
-        <button
-          onClick={closeModal}
-          className="p-2 bg-bg-sec hover:bg-bg-tri rounded-lg  transition-colors" >
-          <X size={24} />
-        </button>   
+    <div  className="flex justify-between items-center p-4 border-b border-border-sec">
+      <div >
+        <input type="text" 
+          value={localAudioCardName}
+          onChange={handleChangeCardName} 
+          onKeyDown={handleKeyDown} 
+          onBlur={handleBlur}
+          placeholder="Audio title" 
+          className="input-pri" />
       </div>
+      <button
+        onClick={closeModal}
+        className="p-2 bg-bg-sec hover:bg-bg-tri rounded-lg  transition-colors" >
+        <X size={24} />
+      </button>   
+    </div>
 
     {/* Content */}
     <div className="p-5 flex-1 overflow-y-auto space-y-4">

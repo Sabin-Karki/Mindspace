@@ -106,7 +106,7 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
       <>
 
       {/* invisible backdrop for menu // covers whole screen //closes menu on click */}
-      <div className="fixed inset-0 z-10" onClick={(e) =>{ e.stopPropagation(); handleHideMenu(); }}></div>
+      <div className="fixed inset-0 z-10" onClick={(e) =>{ handleHideMenu(); }}></div>
 
       {/* menu options on top of invisible backdrop */}
       <div className=" absolute top-10 right-0 z-20 w-32 rounded shadow-lg bg-bg-sec border border-border-pri" >
@@ -140,11 +140,10 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
     <Modal
       isOpen={isModalOpen}
       onRequestClose={closeModal} //press esc to close
-      overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
-      className=" outline-none w-full max-w-md mx-4 overflow-hidden shadow-xl" 
+      overlayClassName="fixed inset-0 bg-white/50 flex-center z-50" 
+      className=" outline-none max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" 
     >
       <AudioCardPopup 
-        audioId={audio.id}
         closeModal={closeModal}   
         audio={audio}
         handleUpdateAudioCardName={handleUpdateAudioCardName}
