@@ -6,9 +6,9 @@ import type { IChatSession } from "../../types";
 import { toast } from "sonner";
 
 
-const CreateChat = () =>{
+const CreateChat = () => {
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const setSessionId = useSessionStore((state) => state.setSessionId);
   const changeChatTitle = useSessionStore((state) => state.changeChatTitle);
   const clearSources = useSessionStore((state) => state.clearSources);
@@ -17,71 +17,64 @@ const CreateChat = () =>{
   const [error, setError] = useState<string | null>(null);
 
 
-  const handleCreateChat = async() =>{
+  const handleCreateChat = async () => {
     try {
       setIsLoading(true);
       setError(null);
       const response: IChatSession = await createChatSession();
-      
-      if(response && response.sessionId && response.title){
+
+      if (response && response.sessionId && response.title) {
         //set new id title and clear previous sources
         setSessionId(response.sessionId);
         changeChatTitle(response.title);
         clearSources();
 
         navigate(`/chat`); //navigate to /chat after creating a chat
-      }else {
+      } else {
         setError("Failed to create chat session. Please try again.");
         toast.error("Failed to create chat session. Please try again.");
       }
 
     } catch (error: any) {
-      const serverMessage = error?.response?.data?.message; 
-      const axiosMessage = error?.message; 
+      const serverMessage = error?.response?.data?.message;
+      const axiosMessage = error?.message;
       const message = serverMessage || axiosMessage || "Failed to create chat session. Please try again.";
       setError(message);
       toast.error(message);
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   }
 
   return (
-  <>
-    <div 
+    <button
       onClick={handleCreateChat}
-      className={`w-48 h-48 px-2 flex flex-col justify-center items-center rounded-xl bg-bg-pri shadow-lg
-        border-2 border-border-pri text-text-pri transition duration-200 ease-in-out 
-        ${isLoading || error ? 'cursor-not-allowed opacity-60' : 'hover:bg-bg-tri cursor-pointer'}`}
+      disabled={isLoading || !!error}
+      className={`group h-52 rounded-xl bg-bg-sec
+        flex flex-col items-center justify-center gap-2 transition-all duration-200
+        ${isLoading || error
+          ? 'cursor-not-allowed opacity-50'
+          : 'hover:bg-bg-tri cursor-pointer'}`}
     >
-      <button
-        disabled={isLoading || !!error}
-        className="flex flex-col justify-center items-center"
+      {/* Plus Icon */}
+      <div className={`w-10 h-10 rounded-full border-2 border-dashed border-text-tri
+        flex items-center justify-center transition-all duration-200
+        ${isLoading ? '' : 'group-hover:border-text-sec group-hover:scale-105'}`}
       >
-        <div 
-          className={`w-16 h-16 rounded-full flex-center mb-4 transition-all duration-200 ${isLoading ? 'bg-bg-pri animate-pulse' : 'bg-bg-pri hover:bg-bg-pri'}`}
-        >
-          {isLoading ? (
-            <div className="w-5 h-5 border-2 border-border-pri border-t-transparent rounded-full animate-spin"></div>
-          ) : (
-            <span className="text-3xl font-light leading-none">+</span>
-          )}
-        </div>
-
-        <p className="text-xl text-text-sec font-medium">
-          {isLoading ? 'Creating Session...' : 'Create new notebook'}
-        </p>
-      </button>
-    </div>
-
-    {/* Error Display - Placed outside the card but in the component */}
-    {error && (
-      <div className="mt-4 p-2 bg-red-100 border border-red-300 text-red-700 rounded-md">
-        <p className="text-sm font-semibold">Error:</p>
-        <p className="text-sm">{error}</p>
+        {isLoading ? (
+          <div className="w-4 h-4 border-2 border-text-tri border-t-blue-500 rounded-full animate-spin" />
+        ) : (
+          <svg className="w-5 h-5 text-text-tri group-hover:text-text-sec transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        )}
       </div>
-    )}
-  </>
+
+      {/* Text */}
+      <span className="text-sm text-text-sec">
+        {isLoading ? 'Creating...' : 'Create new notebook'}
+      </span>
+    </button>
   );
 }
 
