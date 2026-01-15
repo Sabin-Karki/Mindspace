@@ -58,7 +58,7 @@ const ReportCardPopup = ( {reportId, closeModal, report, handleUpdateReportCardN
       
       {/* flex-1: Tells this div to expand and fill ALL available empty space.
         overflow-y-auto: If text is too long, a scrollbar appears INSIDE here. */}
-      <div className="p-4 flex-1 overflow-y-auto" >
+      <div className="p-4 flex-1 overflow-auto" >
         {reportId}
         {report.title}
         based on {report.sourceId.length} sources

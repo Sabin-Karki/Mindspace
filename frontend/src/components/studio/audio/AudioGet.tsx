@@ -81,11 +81,13 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
       <div className="relative flex items-center" >
         {/* this not a popup  just editing mode flash card name */}
         {isRenameModalOpen ?(
-          <RenameAudioCard 
+          <div className="truncate ml-1">
+            <RenameAudioCard 
             handleUpdateAudioCardName={handleUpdateAudioCardName}
             closeRenameModal={closeRenameModal}
             audio={audio}
-          />
+            />
+        </div>
         ):(
           <p className="text-green-700 font-light">
             {audio.title}
@@ -140,7 +142,7 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
     <Modal
       isOpen={isModalOpen}
       onRequestClose={closeModal} //press esc to close
-      overlayClassName="fixed inset-0 bg-white/50 flex-center z-50" 
+      overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
       className=" outline-none max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" 
     >
       <AudioCardPopup 

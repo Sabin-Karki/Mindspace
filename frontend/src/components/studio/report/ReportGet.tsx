@@ -77,14 +77,16 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
     <div className="relative p-0">
       <div onClick={ openModal } className="flex justify-between purple-hover">
         
-        <div className="relative flex items-center" >
+        <div className="relative flex items-center min-w-0 flex-1" >
           {/* this not a popup  just editing mode flash card name */}
           {isRenameModalOpen ?(
-            <RenameReportCard 
-              handleUpdateReportCardName={handleUpdateReportCardName}
-              closeRenameModal={closeRenameModal}
-              report={report}
-            />
+            <div className="truncate ml-1">
+              <RenameReportCard 
+                handleUpdateReportCardName={handleUpdateReportCardName}
+                closeRenameModal={closeRenameModal}
+                report={report}
+                />
+            </div>
           ):(
             <p className="font-light text-purple-700">
               {report.title}
@@ -145,7 +147,7 @@ const ReportGet = ({report}: {report: IReportResponse}) => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal} //press esc to close
-        overlayClassName="fixed inset-0 bg-white/50 flex items-center justify-center z-50" 
+        overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center z-50" 
         className=" outline-none w-full max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" 
       >
         <ReportCardPopup 

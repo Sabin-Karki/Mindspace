@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-/* hide all scroll bar globally */
-html, body, #root { 
-  height: 100%;
-  overflow: hidden; /* Prevents browser-level scrolling */
-}
 
 @layer base {
   :root {
