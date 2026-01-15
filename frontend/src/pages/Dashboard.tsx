@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AllChats, CreateChat } from "../components/dashboard";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,24 +17,41 @@ const Dashboard = () => {
     };
   }, []);
 
-  return(
-    <div className="p-6 bg-bg-pri">
-      <div className="flex justify-between items-center mb-4 bg-bg-pri text-text-pri">
-        <h1 className="text-2xl font-bold text-text-pri">My Notebooks</h1>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-text-pri" />
-          <input
-            type="text"
-            placeholder="Search notebooks..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-64 p-2 pl-10 border-2 border-border-pri bg-bg-pri rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
-          />
+  return (
+    <div className="min-h-[calc(100vh-64px)] bg-bg-pri">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <h1 className="text-xl font-semibold text-text-pri">Recent notebooks</h1>
+
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-tri" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full sm:w-56 h-9 pl-9 pr-8 bg-bg-sec text-sm text-text-pri placeholder-text-tri rounded-full
+                border-none focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-text-tri hover:text-text-sec transition-colors"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="flex flex-wrap gap-6">
-        <CreateChat />
-        <AllChats searchQuery={searchQuery} />
+
+        {/* Notebooks Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <CreateChat />
+          <AllChats searchQuery={searchQuery} />
+        </div>
       </div>
     </div>
   )
