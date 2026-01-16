@@ -121,13 +121,15 @@ interface QuizProps {
     <>
     <div className="relative">
       <div onClick={openModal} className="flex justify-between blue-hover">
-        <div className="relative flex items-center">
+        <div className="relative flex items-center min-w-0 flex-1">
           {isRenameModalOpen ? (
-            <RenameQuizOverview 
-              handleUpdateQuizTitle={handleUpdateQuizName}
-              closeRenameModal={closeRenameModal}
-              quiz={quiz}
-            />
+            <div className="truncate ml-1">
+              <RenameQuizOverview 
+                handleUpdateQuizTitle={handleUpdateQuizName}
+                closeRenameModal={closeRenameModal}
+                quiz={quiz}
+              />
+            </div>
           ) : (
             <p className="font-light text-blue-700">{quiz.title}</p>
           )}
@@ -184,7 +186,7 @@ interface QuizProps {
       isOpen={isModalOpen}
       onRequestClose={closeModal} //press esc to close
       overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
-      className=" outline-none w-full max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" >
+      className=" outline-none w-full max-w-5xl max-h-[90vh] mx-4 overflow-auto shadow-xl" >
       
       {specificQuiz && specificQuiz.questions && specificQuiz.questions.length > 0 ? (
         <QuizViewer

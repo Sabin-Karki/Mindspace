@@ -85,14 +85,16 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
     <div className="relative">
       <div onClick={ openModal } className="flex justify-between pink-hover">
         
-        <div className="relative flex items-center" >
-          {/* this not a popup  just editing mode flash card name */}
+        <div className="relative flex items-center min-w-0 flex-1" >
+        {/* this not a popup  just editing mode flash card name */}
         {isRenameModalOpen ?(
-          <RenameFlashCard 
-            handleUpdateFlashCardName={handleUpdateFlashCardName}
-            closeRenameModal={closeRenameModal}
-            flashCard={flashCard}
-          />
+          <div className="truncate ml-1">
+            <RenameFlashCard 
+              handleUpdateFlashCardName={handleUpdateFlashCardName}
+              closeRenameModal={closeRenameModal}
+              flashCard={flashCard}
+            />
+          </div>
         ):(
           <p className="font-light text-pink-700">
             {flashCard.title}
@@ -152,8 +154,8 @@ const FlashGet = ( {flashCard}: FlashCardProps ) => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal} //press esc to close
-        overlayClassName="fixed inset-0 bg-white/50 flex-center z-50" 
-        className=" outline-none w-[95%] max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" 
+        overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
+        className=" outline-none w-[95%] max-w-5xl max-h-[90vh] mx-4 overflow-auto shadow-xl" 
       >
         <FlashCardPopup 
           cardId={flashCard.cardOverViewId}
