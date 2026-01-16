@@ -143,7 +143,7 @@ const AudioGet = ({audio}: {audio: IAudioResponseDTO}) =>{
       isOpen={isModalOpen}
       onRequestClose={closeModal} //press esc to close
       overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
-      className=" outline-none max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" 
+      className=" outline-none max-w-5xl max-h-[90vh] mx-4 overflow-auto shadow-xl" 
     >
       <AudioCardPopup 
         closeModal={closeModal}   

@@ -186,7 +186,7 @@ interface QuizProps {
       isOpen={isModalOpen}
       onRequestClose={closeModal} //press esc to close
       overlayClassName="fixed inset-0 bg-black/50 flex-center z-50" 
-      className=" outline-none w-full max-w-5xl max-h-[90vh] mx-4 overflow-hidden shadow-xl" >
+      className=" outline-none w-full max-w-5xl max-h-[90vh] mx-4 overflow-auto shadow-xl" >
       
       {specificQuiz && specificQuiz.questions && specificQuiz.questions.length > 0 ? (
         <QuizViewer
