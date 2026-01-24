@@ -26,7 +26,7 @@ public class AudioService {
     private final GeminiService geminiService;
     private final SourceRepository sourceRepository;
     private final AudioRepository audioRepository;
-    private final Path audioStoragePath = Paths.get("src/main/resources/static/audio");
+    private final Path audioStoragePath = Paths.get("audio");
 
     public AudioService(GeminiService geminiService, SourceRepository sourceRepository, AudioRepository audioRepository) {
         this.geminiService = geminiService;
