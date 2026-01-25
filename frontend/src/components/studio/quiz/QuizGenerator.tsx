@@ -1,10 +1,10 @@
 import { toast } from "sonner";
-import { useEffect,useState } from "react";
+import { useState } from "react";
 import { useQuizStore } from "../../../store/quizStore";
 import { useSessionStore } from "../../../store/sessionStore";
 import { generateQuiz } from "../../../api/quizApi";
 import type  { IQuizOverviewResponse, IUploadResponse } from "../../../types";
-import { FileQuestion } from "lucide-react";
+import { FileQuestion, Loader } from "lucide-react";
 import { useLayoutStore } from "../../../store/layoutStore";
 
 const QuizGenerator = () =>{
@@ -17,8 +17,8 @@ const QuizGenerator = () =>{
     const addQuiz = useQuizStore((state)=>state.addQuiz);
     const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
-    const[error,setError] = useState<string|null>(null);
-    const[loading,setIsLoading]=useState(false);
+    const[error, setError] = useState<string|null>(null);
+    const[isLoading, setIsLoading]=useState(false);
 
     const handleGenerateQuizOverview=async()=>{
       try{
@@ -66,6 +66,9 @@ const QuizGenerator = () =>{
       <div className="group blue-card p-2">
         <div onClick={handleGenerateQuizOverview} title="Generate Quiz" className="">
           <FileQuestion size={18} className="text-blue-600" />
+          { isLoading && (
+            <Loader  className="animate-spin text-blue-600"/>
+          )}
           { !isRightPanelClose &&
             <div  text-xs font-semibold text-pink-900 mb-1>Quiz</div>
           }
