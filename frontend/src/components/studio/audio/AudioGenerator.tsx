@@ -3,7 +3,7 @@ import { useSessionStore } from "../../../store/sessionStore";
 import type { IAudioResponseDTO, IUploadResponse } from "../../../types";
 import { generateAudioOverview } from "../../../api/audioApi";
 import { toast } from "sonner";
-import { Music } from "lucide-react";
+import { Loader, Music } from "lucide-react";
 import { useLayoutStore } from "../../../store/layoutStore";
 
 const AudioGenerator = () =>{
@@ -57,13 +57,12 @@ const AudioGenerator = () =>{
 
   return(
     <>
-    {/* show some kind of loading when generating  */}
-    {/* show some kind of loading when generating  */}
-    {/* show some kind of loading when generating  */}
-    {/* show some kind of loading when generating  */}
     <div className="group green-card p-2">
         <div onClick={handleGenerateAudio} title="Generate Audio" className="">
           <Music size={18} className="text-green-600" />
+          { isLoading && (
+            <Loader  className="animate-spin text-green-600"/>
+          )}
           { !isRightPanelClose &&
             <div  text-xs font-semibold text-pink-900 mb-1>Audio</div>
           }

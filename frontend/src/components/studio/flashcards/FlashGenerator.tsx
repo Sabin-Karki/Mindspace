@@ -4,7 +4,7 @@ import { useSessionStore } from "../../../store/sessionStore";
 import {  useState } from "react";
 import { useFlashCardStore } from "../../../store/flashCardStore";
 import type { ICardOverview, IUploadResponse } from "../../../types";
-import { CreditCard } from "lucide-react";
+import { CreditCard, Loader } from "lucide-react";
 import { useLayoutStore } from "../../../store/layoutStore";
 
 const FlashGenerator = () => {
@@ -65,6 +65,9 @@ const FlashGenerator = () => {
     <div className="group pink-card p-2">
       <div onClick={handleGenerateFlashCard} title="Generate Flashcarrd" className="">
         <CreditCard size={18} className="text-pink-600" />
+          { isLoading && (
+            <Loader  className="animate-spin text-pink-600"/>
+          )}
           { !isRightPanelClose &&
             <div  text-xs font-semibold text-pink-900 mb-1>FlashCard</div>
           }

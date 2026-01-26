@@ -3,7 +3,7 @@ import { useSessionStore } from "../../../store/sessionStore";
 import type { IReportResponse, IUploadResponse } from "../../../types";
 import { toast } from "sonner";
 import { generateReport } from "../../../api/reportApi";
-import { Newspaper } from "lucide-react";
+import { Loader, Newspaper } from "lucide-react";
 import { useLayoutStore } from "../../../store/layoutStore";
 import { useReportCardStore } from "../../../store/reportStore";
 
@@ -64,6 +64,9 @@ const ReportGenerator = () => {
     <div className="group purple-card p-2">
       <div onClick={handleGenerateReport} title="Generate Report" className="">
         <Newspaper size={18} className="text-purple-600" />
+        { isLoading && (
+          <Loader  className="animate-spin text-purple-600"/>
+        )}
         { !isRightPanelClose &&
           <div  text-xs font-semibold text-pink-900 mb-1>Report</div>
         }
