@@ -5,13 +5,15 @@ import { generateAudioOverview } from "../../../api/audioApi";
 import { toast } from "sonner";
 import { Loader, Music } from "lucide-react";
 import { useLayoutStore } from "../../../store/layoutStore";
+import { useAudioCardStore } from "../../../store";
 
 const AudioGenerator = () =>{
   
   const sessionId = useSessionStore((state) => state.sessionId);
   const sources: IUploadResponse[] = useSessionStore((state) => state.sources);
   const selectedSourceIds = useSessionStore((state) => state.selectedSourceIds);
-  const [audioCards, setAudioCards] = useState<IAudioResponseDTO>();
+  // const [audioCards, setAudioCards] = useState<IAudioResponseDTO>(); //this is local and this replaced previous list with only this new one
+  const addAudioCard = useAudioCardStore((state) => state.addAudioCard);
   const isRightPanelClose = useLayoutStore((state) => state.isRightPanelClose);
 
   const [error, setError ] = useState<string | null>(null);
@@ -41,7 +43,7 @@ const AudioGenerator = () =>{
 
       const response: IAudioResponseDTO = await generateAudioOverview(sId);
       console.log(response);
-      setAudioCards(response);
+      addAudioCard(response);
 
       // toast.promise("");
     } catch (error: any) {

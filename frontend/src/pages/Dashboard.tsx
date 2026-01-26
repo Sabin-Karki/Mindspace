@@ -18,7 +18,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-bg-pri">
+    <div className="min-h-[calc(100vh-64px)] bg-bg-sec">
       <div className="max-w-6xl mx-auto px-6 py-8">
 
         {/* Header */}
@@ -33,7 +33,7 @@ const Dashboard = () => {
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full sm:w-56 h-9 pl-9 pr-8 bg-bg-sec text-sm text-text-pri placeholder-text-tri rounded-full
+              className="w-full sm:w-56 h-9 pl-9 pr-8 bg-bg-tri  text-sm text-text-sec placeholder-text-tri rounded-full
                 border-none focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all"
             />
             {searchQuery && (

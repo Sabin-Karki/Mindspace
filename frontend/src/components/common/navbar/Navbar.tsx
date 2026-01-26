@@ -39,7 +39,9 @@ const Navbar = () => {
         <div className="flex items-center w-full h-12">
           {/* Logo/Branding */}
           <Link to="/" className="text-2xl font-bold text-text-pri flex items-center">
-            <span className="text-blue-600 mr-1">📝</span> Mindspace
+            <span className="text-blue-600 mr-1">
+              <img src="/main.svg" alt="Calendar" width="24" height="24" />
+            </span> Mindspace
           </Link>
 
           {/* if it is chat page then show chat title in navbar */}
