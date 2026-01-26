@@ -1,8 +1,41 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bg-pri: rgb(var(--bg-pri));
+  --color-bg-sec: rgb(var(--bg-sec));
+  --color-bg-tri: rgb(var(--bg-tri));
+  
+  --color-text-pri: rgb(var(--text-pri));
+  --color-text-sec: rgb(var(--text-sec));
+  --color-text-tri: rgb(var(--text-tri));
+  
+  --color-border-pri: rgb(var(--border-pri));
+  --color-border-sec: rgb(var(--border-sec));
+
+  --color-bg-pri-hov: rgb(var(--bg-pri-hov));
+  --color-bg-sec-hov: rgb(var(--bg-sec-hov));
+  --color-bg-tri-hov: rgb(var(--bg-tri-hov));
+}
 
 @layer base {
   :root {
+    --bg-pri: 17 24 39;
+    --bg-sec: 31 41 55;
+    --bg-tri: 55 65 81;
+    
+    --text-pri: 243 244 246;
+    --text-sec: 209 213 219;
+    --text-tri: 156 163 175;
+    
+    --border-pri: 55 65 81;
+    --border-sec: 75 85 99;
+
+    --bg-pri-hov: 31 41 55;
+    --bg-sec-hov: 55 65 81;
+    --bg-tri-hov: 75 85 99; 
+  }
+
+  .light {
     /* BACKGROUNDS */
     --bg-pri: 255 255 255;
     --bg-sec: 249 250 251;
@@ -21,24 +54,6 @@
     --bg-sec-hov: 243 244 246;
     --bg-tri-hov: 229 231 235;
 
-  }
-
-  .dark {
-    --bg-pri: 17 24 39;
-    --bg-sec: 31 41 55;
-    --bg-tri: 55 65 81;
-    
-    --text-pri: 243 244 246;
-    --text-sec: 209 213 219;
-    --text-tri: 156 163 175;
-    
-    --border-pri: 55 65 81;
-    --border-sec: 75 85 99;
-
-    --bg-pri-hov: 31 41 55;
-    --bg-sec-hov: 55 65 81;
-    --bg-tri-hov: 75 85 99; 
-    
   }
 
   body {
@@ -101,24 +116,5 @@
 }
 
 /* Tailwind v4: Define custom colors using @theme */
-@theme {
-  --color-bg-pri: rgb(var(--bg-pri));
-  --color-bg-sec: rgb(var(--bg-sec));
-  --color-bg-tri: rgb(var(--bg-tri));
-  
-  --color-text-pri: rgb(var(--text-pri));
-  --color-text-sec: rgb(var(--text-sec));
-  --color-text-tri: rgb(var(--text-tri));
-  
-  --color-border-pri: rgb(var(--border-pri));
-  --color-border-sec: rgb(var(--border-sec));
 
-  --color-bg-pri-hov: rgb(var(--bg-pri-hov));
-  --color-bg-sec-hov: rgb(var(--bg-sec-hov));
-  --color-bg-tri-hov: rgb(var(--bg-tri-hov));
-}
-
-
-/* //make for buttons */
-/* px-10 py-4 m-2 rounded-lg text-text-pri bg-blue-600 hover:bg-blue-700 transition duration-300 shadow-2xl shadow-blue-500 */
 

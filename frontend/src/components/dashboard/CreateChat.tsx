@@ -50,7 +50,7 @@ const CreateChat = () => {
     <button
       onClick={handleCreateChat}
       disabled={isLoading || !!error}
-      className={`group h-52 rounded-xl bg-bg-sec
+      className={`group h-52 rounded-xl bg-bg-tri border-2 border-border-pri
         flex flex-col items-center justify-center gap-2 transition-all duration-200
         ${isLoading || error
           ? 'cursor-not-allowed opacity-50'

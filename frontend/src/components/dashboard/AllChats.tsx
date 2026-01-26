@@ -14,12 +14,12 @@ interface AllChatsProps {
 
 // Card background colors - soft pastels like NotebookLM
 const cardColors = [
-  "bg-amber-100/70 dark:bg-amber-900/40",
-  "bg-sky-100/70 dark:bg-sky-900/40",
-  "bg-violet-100/70 dark:bg-violet-900/40",
-  "bg-emerald-100/70 dark:bg-emerald-900/40",
-  "bg-rose-100/70 dark:bg-rose-900/40",
-  "bg-orange-100/70 dark:bg-orange-900/40",
+  "bg-amber-900/80  hover:bg-amber-800",
+  "bg-sky-900/80    hover:bg-sky-800",
+  "bg-violet-900/80 hover:bg-violet-800",
+  "bg-emerald-900/80 hover:bg-emerald-800",
+  "bg-rose-900/80   hover:bg-rose-800",
+  "bg-orange-900/80 hover:bg-orange-800",
 ];
 
 // Topic-based emojis for variety
@@ -168,7 +168,7 @@ const AllChats = ({ searchQuery }: AllChatsProps) => {
         <div
           key={session.sessionId}
           className={`group relative h-52 rounded-xl ${getCardColor(session.sessionId)}
-            transition-all duration-200 hover:shadow-md cursor-pointer`}
+            transition-all duration-200 hover:shadow-lg hover: cursor-pointer`}
           onClick={() => handleChatClick(session.sessionId, session.title)}
         >
           {/* Card Content */}
@@ -177,27 +177,27 @@ const AllChats = ({ searchQuery }: AllChatsProps) => {
             <span className="text-4xl mb-3">{getCardEmoji(session.sessionId)}</span>
 
             {/* Title */}
-            <h3 className="text-gray-800 dark:text-gray-100 font-medium text-sm leading-snug line-clamp-3 flex-1">
+            <h3 className="text-gray-100  font-medium text-sm leading-snug line-clamp-3 flex-1">
               {session.title}
             </h3>
 
             {/* Date */}
-            <span className="text-text-tri text-xs">{formatDate(session.createdAt)}</span>
+            <span className="text-gray-100 text-xs">{formatDate(session.createdAt)}</span>
           </div>
 
           {/* Menu button - top right */}
-          <button
+          <button         
             onClick={(e) => { e.stopPropagation(); handleShowMenu(session.sessionId); }}
-            className={`absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center
-              transition-all duration-200
-              ${openMenuId === session.sessionId
-                ? 'bg-black/10 dark:bg-white/10'
-                : 'opacity-0 group-hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10'}`}
-          >
-            <svg className="w-4 h-4 text-text-sec" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-            </svg>
-          </button>
+            className={`
+              inline-flex items-center justify-center shrink-0 absolute top-3 right-3 w-8 h-8 p-4
+              border-none rounded-full cursor-pointer  transition-all duration-200 text-gray-100
+              opacity-100 md:opacity-0 md:group-hover:opacity-100 
+               ${openMenuId === session.sessionId // Keep visible if menu is open else hover
+                ? 'bg-black/10 '
+                : 'hover:bg-black/10 '}
+              `}>
+            <span className="text-white text-xl font-bold">&#x22EE;</span>
+          </button>  
 
           {/* Dropdown Menu */}
           {openMenuId === session.sessionId && (
@@ -223,7 +223,7 @@ const AllChats = ({ searchQuery }: AllChatsProps) => {
                     handleHideMenu();
                     handleSelectSession(session.sessionId);
                   }}
-                  className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                  className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50  transition-colors"
                 >
                   Delete
                 </button>
