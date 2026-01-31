@@ -1,6 +1,6 @@
-import { credApi } from '../config/axios'; 
-import type{ ChatSessionGetDTO, IChatMessage, IChatRenameRequest, IChatRequest, IChatSession } from '../types/index';
-import type{ AxiosResponse } from 'axios';
+import { credApi } from '../config/axios';
+import type { ChatSessionGetDTO, IChatMessage, IChatRenameRequest, IChatRequest, IChatSession } from '../types/index';
+import type { AxiosResponse } from 'axios';
 
 //dashboard apis
 export const createChatSession = async (): Promise<IChatSession> => {
@@ -13,7 +13,7 @@ export const renameChatTitle = async (sessionId: number, title: string): Promise
   const chatRenameDto: IChatRenameRequest = { title };
 
   const res: AxiosResponse<IChatSession> = await credApi.patch(`/chat/session/${sessionId}`, chatRenameDto);
-  return res.data; 
+  return res.data;
 };
 
 export const deleteChat = async (sessionId: number): Promise<void> => {
@@ -28,7 +28,7 @@ export const fetchAllChatSessions = async (): Promise<ChatSessionGetDTO[]> => {
 
 
 //chat bot apis
-export const askQuestion = async (sessionId: number|null, question: string): Promise<IChatMessage> => {
+export const askQuestion = async (sessionId: number | null, question: string): Promise<IChatMessage> => {
   const chatRequest: IChatRequest = { question };
 
   const res: AxiosResponse<IChatMessage> = await credApi.post(`/chat/${sessionId}/ask`, chatRequest);
@@ -36,7 +36,7 @@ export const askQuestion = async (sessionId: number|null, question: string): Pro
 };
 
 
-export const getChatHistory = async (sessionId: number|null): Promise<IChatMessage[]> => {
+export const getChatHistory = async (sessionId: number | null): Promise<IChatMessage[]> => {
 
   const res: AxiosResponse<IChatMessage[]> = await credApi.get(`/chat/session/${sessionId}`);
   return res.data;
