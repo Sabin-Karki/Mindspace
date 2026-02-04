@@ -10,16 +10,12 @@ import com.backend.mindspace.entity.User;
 import com.backend.mindspace.repository.ChatSessionRepository;
 import com.backend.mindspace.service.ChatService;
 
-import jakarta.persistence.EntityNotFoundException;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -74,23 +70,10 @@ public class ChatController {
     }
 
     @PatchMapping("session/{sessionId}")
-    public ResponseEntity<ChatSession> renameChatTitle (@AuthenticationPrincipal User user,
-    		@PathVariable Long sessionId,
-    		@RequestBody ChatTitleRenameRequest renameRequest) {
+    public ResponseEntity<ChatSessionGetDTO> renameChatTitle (@AuthenticationPrincipal User user  ,@PathVariable Long sessionId, @RequestBody ChatTitleRenameRequest renameRequest) {
     	try{    		
-    		System.out.println(sessionId);
-    		ChatSession existingChatSession = chatSessionRepository.findById(sessionId)
-    				.orElseThrow(() -> new EntityNotFoundException("ChatSession not found with id: " + sessionId));
-
-    		if(existingChatSession.getTitle().equals(renameRequest.getTitle()) ) {
-    			return ResponseEntity.ok(existingChatSession);
-    		}
-    		
-    		//update title
-    		existingChatSession.setTitle(renameRequest.getTitle());
-    		
-    		ChatSession savedSession = chatSessionRepository.save(existingChatSession);
-    		return ResponseEntity.ok(savedSession);
+    	  ChatSessionGetDTO savedSession = chatService.getRenamedChatTitle(user.getUserId(),sessionId,renameRequest.getTitle());
+          return ResponseEntity.ok(savedSession);
     	}catch (RuntimeException e){
             return ResponseEntity.notFound().build();
         }
