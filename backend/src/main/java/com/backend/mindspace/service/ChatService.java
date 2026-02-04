@@ -154,6 +154,24 @@ public class ChatService {
                 .toList();
     }
 
+    @Transactional
+    public ChatSessionGetDTO getRenamedChatTitle(Long userId,Long sessionId,String title){
+        try {
+            ChatSession existingChatSession = chatSessionRepository.findById(sessionId)
+                    .orElseThrow(()->new RuntimeException("session id not found" ));
+            if(!existingChatSession.getUser().getUserId().equals(userId)){
+                throw new RuntimeException("Incorrect user id");
+            }
+            existingChatSession.setTitle(title);
+            chatSessionRepository.save(existingChatSession);
+            return new ChatSessionGetDTO(existingChatSession.getSessionId(),existingChatSession.getCreatedAt(),existingChatSession.getTitle());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public void deleteChatSession(Long sessionId){
         if(!chatSessionRepository.existsById(sessionId)){
             throw new RuntimeException("Chat session not found with id: " + sessionId);
