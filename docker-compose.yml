@@ -1,0 +1,58 @@
+services:
+  #Database
+  mindspace-db:
+    image: ankane/pgvector:latest
+    container_name: mindspace-db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: mindspace_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - mindspace_db_data:/var/lib/postgresql/data
+    networks:
+      - mindspace-net
+
+  # Backend
+  backend:
+    build:
+      context: ./backend
+    container_name: mindspace-backend
+    environment:
+      DB_HOST: mindspace-db
+      DB_PORT: 5432 # using internal container port
+      DB_NAME: mindspace_db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    depends_on:
+      - mindspace-db
+    volumes:
+      - ./backend/audio:/app/audio:Z
+    ports:
+      - "8080:8080"
+    networks:
+      - mindspace-net
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+    container_name: mindspace-frontend
+    ports:
+      - "8081:80"
+    depends_on:
+      - backend
+    networks:
+      - mindspace-net
+
+# Define the shared network
+networks:
+  mindspace-net:
+    driver: bridge
+
+# Define the persistent storage for the DB
+volumes:
+  mindspace_db_data:
