@@ -17,8 +17,8 @@ class QuizServiceTest {
 
         //service will read the user id from scontext
         User principal = new User();
-        principal.setUserId(5l);
-        principal.setEmail"test-user1@example.com");
+        principal.setUserId(5L);
+        principal.setEmail("test-user1@example.com");
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal,null,principal.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -77,14 +77,14 @@ class QuizServiceTest {
         QuizOverviewResponse response = quizService.generateAndSaveQuiz(sessionId,sourceIds);
 
         //verify
-        assetEquals(99L,response.getId());
+        assertEquals(99L,response.getId());
         assertEquals("Hannibal Revenge",response.getTitle());
         assertEquals(List.of(101L,102L),response.getSourceId());
         assertNull(response.getCardDetails());
 
         //verifying if repository actually got quiz with 2 question
         ArgumentCaptor<QuizOverview> captor = ArgumentCaptor.forClass(QuizOverview.class);
-        verify(quizOverviewRepository).save(Captor.captor());
+        verify(quizOverviewRepository).save(captor.capture());
 
         QuizOverview savedQuiz= captor.getValue();
         assertEquals(2,savedQuiz.getQuestions().size());
