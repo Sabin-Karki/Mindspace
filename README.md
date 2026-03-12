@@ -5,9 +5,9 @@ MindSpace is a comprehensive, AI-powered productivity and learning platform desi
 ---
 
 *Intelligent workspace for all your learning needs.*
-![Dashboard Preview](../../Pictures/Screenshots/Mindspace/dashboard.png)
+![Dashboard Preview](./backend/src/main/resources/static/images/dashboard.png)
 
-![Chatwindow](../../Pictures/Screenshots/Mindspace/chatwindow.png)
+![Chatwindow](./backend/src/main//resources/static/images/chatwindow.png)
 *Interactive Chat Interface.*
 
 
