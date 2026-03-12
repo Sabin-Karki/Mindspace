@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         try {
             userEmail = jwtService.extractUsername(jwt);
-            System.out.println("✅ Token is valid! User: " + userEmail);
+            System.out.println(" Token is valid! User: " + userEmail);
             
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
@@ -64,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            System.out.println("❌ Token validation failed: " + e.getMessage());
+            System.out.println(" Token validation failed: " + e.getMessage());
             // Don't throw - just continue without authentication
         }
         
