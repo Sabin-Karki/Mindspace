@@ -1,7 +1,6 @@
 backend/bin/*
 
 HELP.md
-GEMINI.md
 Goal.md
 target/
 .mvn/wrapper/maven-wrapper.jar
