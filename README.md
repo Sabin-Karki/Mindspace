@@ -7,8 +7,12 @@ MindSpace is a comprehensive, AI-powered productivity and learning platform desi
 *Intelligent workspace for all your learning needs.*
 ![Dashboard Preview](./backend/src/main/resources/static/images/dashboard.png)
 
-![Chatwindow](./backend/src/main//resources/static/images/chatwindow.png)
 *Interactive Chat Interface.*
+![Chatwindow](./backend/src/main//resources/static/images/chatwindow.png)
+
+*Working Mechanism.*
+![DFD](/backend/src/main/resources/static/images/Mechanism.png)
+
 
 
 ---
@@ -76,7 +80,7 @@ MindSpace/
 ├── backend/            # Spring Boot application & Dockerfile
 ├── frontend/           # React application & Dockerfile
 ├── docker-compose.yml  # Container orchestration
-└── .env               # Environment variables (Not committed to VCS)
+└── .env               # Environment variables 
 ```
 
 # License
