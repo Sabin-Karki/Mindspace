@@ -1,5 +1,6 @@
 backend/bin/*
 
+backend/audio
 HELP.md
 Goal.md
 target/
