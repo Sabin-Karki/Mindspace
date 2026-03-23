@@ -11,7 +11,7 @@ MindSpace is a comprehensive, AI-powered productivity and learning platform desi
 ![Chatwindow](./backend/src/main//resources/static/images/chatwindow.png)
 
 *Working Mechanism.*
-![DFD](/backend/src/main/resources/static/images/Mechanism.png)
+![DFD](./backend/src/main/resources/static/images/Mechanism.png)
 
 
 
