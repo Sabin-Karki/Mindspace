@@ -1,26 +1,59 @@
+package com.backend.mindspace.service;
+
+import com.backend.mindspace.entity.*;
+import com.backend.mindspace.repository.*;
+import com.backend.mindspace.dto.QuizOverviewResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+
 @ExtendWith(MockitoExtension.class)
 class QuizServiceTest {
+
     @Mock
     private SourceRepository sourceRepository;
+
     @Mock
     private GeminiService geminiService;
+
     @Mock
     private QuizOverviewRepository quizOverviewRepository;
 
     private QuizService quizService;
 
-    //method will be executed before the test method
     @BeforeEach
     void setUp() {
-        //objectmapper used for s-d of data for proper traversal
-        quizService = new QuizService(sourceRepository,geminiService,quizOverviewRepository,new ObjectMapper());
+        quizService = new QuizService(geminiService, sourceRepository,quizOverviewRepository, new ObjectMapper());
 
-        //service will read the user id from scontext
         User principal = new User();
         principal.setUserId(5L);
         principal.setEmail("test-user1@example.com");
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal,null,principal.getAuthorities());
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        principal,
+                        null,
+                        principal.getAuthorities()
+                );
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
@@ -31,8 +64,8 @@ class QuizServiceTest {
 
     @Test
     void generateAndSaveQuizResponse() {
-        Long sessionId= 12L;
-        List<Long> sourceIds = List.of(101L,102L);
+        Long sessionId = 12L;
+        List<Long> sourceIds = List.of(101L, 102L);
 
         Source sourceA = new Source();
         sourceA.setSourceId(101L);
@@ -45,8 +78,9 @@ class QuizServiceTest {
         sourceB.setCreatedAt(LocalDate.now());
 
         String combinedContent = sourceA.getContent() + "\n\n---\n\n" + sourceB.getContent();
+
         String quizJson = """
-                 [
+                [
                   {
                     "questionText": "Who is the son of hamilcar ?",
                     "options": ["Paris", "Rome", "Hannibal", "Berlin"],
@@ -60,38 +94,47 @@ class QuizServiceTest {
                 ]
                 """;
 
-        when(sourceRepository.findByChatSession_SessionIdAndUser_UserIdAndSourceIdIn(sessionId,5L,sourceIds))
-                .thenReturn(Optional.of(List.of(sourceA,sourceB)));
+        when(sourceRepository
+                .findByChatSession_SessionIdAndUser_UserIdAndSourceIdIn(sessionId, 5L, sourceIds))
+                .thenReturn(Optional.of(List.of(sourceA, sourceB)));
 
-        //when (k-v matches) then return
-        when(geminiService.generateTitle(combinedContent)).thenReturn("Hannibal Revenge");
-        when(geminiService.generateQuiz(combinedContent)).thenReturn(quizJson);
+        when(geminiService.generateTitle(combinedContent))
+                .thenReturn("Hannibal Revenge");
 
-        //simulating id being set
-        when(quizOverviewRepository.save(any(QuizOverview.class))).thenAnswer(invocation ->{
-            QuizOverview overview = invocation.getArgument(0);
-            overview.setId(99L);
-            return overview;
-        });
-        // trigger the method
-        QuizOverviewResponse response = quizService.generateAndSaveQuiz(sessionId,sourceIds);
+        when(geminiService.generateQuiz(combinedContent))
+                .thenReturn(quizJson);
 
-        //verify
-        assertEquals(99L,response.getId());
-        assertEquals("Hannibal Revenge",response.getTitle());
-        assertEquals(List.of(101L,102L),response.getSourceId());
-        assertNull(response.getCardDetails());
+        when(quizOverviewRepository.save(any(QuizOverview.class)))
+                .thenAnswer(invocation -> {
+                    QuizOverview overview = invocation.getArgument(0);
+                    overview.setId(99L);
+                    return overview;
+                });
 
-        //verifying if repository actually got quiz with 2 question
-        ArgumentCaptor<QuizOverview> captor = ArgumentCaptor.forClass(QuizOverview.class);
+        QuizOverviewResponse response =
+                quizService.generateAndSaveQuiz(sessionId, sourceIds);
+
+        assertEquals(99L, response.getQuizId());
+        assertEquals("Hannibal Revenge", response.getTitle());
+        assertEquals(List.of(101L, 102L), response.getSourceId());
+        assertNull(response.getQuestions());
+
+        ArgumentCaptor<QuizOverview> captor =
+                ArgumentCaptor.forClass(QuizOverview.class);
+
         verify(quizOverviewRepository).save(captor.capture());
 
-        QuizOverview savedQuiz= captor.getValue();
-        assertEquals(2,savedQuiz.getQuestions().size());
-        assertEquals("Who is the son of hamilcar ?" , savedQuiz.getQuestions().get(0).getQuestionText());
+        QuizOverview savedQuiz = captor.getValue();
 
-        assertEquals(savedQuiz,savedQuiz.getQuestions().get(0).getQuiz());
+        assertEquals(2, savedQuiz.getQuestions().size());
+        assertEquals(
+                "Who is the son of hamilcar ?",
+                savedQuiz.getQuestions().get(0).getQuestionText()
+        );
 
-
+        assertEquals(
+                savedQuiz,
+                savedQuiz.getQuestions().get(0).getQuiz()
+        );
     }
 }
