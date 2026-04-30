@@ -69,8 +69,8 @@ class QuizServiceTest {
 
         //simulating id being set
         when(quizOverviewRepository.save(any(QuizOverview.class))).thenAnswer(invocation ->{
-            QuizOverview overview = invocation.getArgument(0)l
-                    overview.setId(99L);
+            QuizOverview overview = invocation.getArgument(0);
+            overview.setId(99L);
             return overview;
         });
         // trigger the method
