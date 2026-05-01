@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance } from "axios";
 import { useAuthStore } from "../store/authStore"; 
 
-const BASE_URL = "http://localhost:8080/api/v1";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1";
 
 //Unauthenticated API instance
 export const api: AxiosInstance = axios.create({
