@@ -1,4 +1,4 @@
-import { PanelRightClose, PanelRightOpen } from 'lucide-react';
+import { CreditCard, Loader, PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { AudioGenerator, AudioList } from "./audio";
 import { FlashGenerator, FlashList } from "./flashcards";
 import { QuizGenerator, QuizList } from "./quiz";
@@ -46,6 +46,7 @@ const StudioPanel = ({ closeRightSideBar, openRightSideBar }: StudioPanelProps) 
             <QuizList />
             <AudioList />
             <ReportList />
+
           </div>
       </div>
     </div>
